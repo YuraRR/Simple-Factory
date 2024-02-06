@@ -1,0 +1,84 @@
+[data-building-type="road"] {
+  outline: 1px solid transparent !important;
+  background-image: url(/img/textures/road.png) !important;
+  position: relative;
+}
+.truck {
+  img {
+    width: 70px;
+  }
+  background-color: rgba(0, 0, 0, 0);
+  background-size: cover;
+  transform: rotateZ(323deg) rotateY(68deg) rotate3d(8, -11, -5, 11deg);
+  position: absolute;
+  pointer-events: none;
+  z-index: 100;
+
+  top: -16px;
+  left: -22px;
+  transition: all 0.7s linear;
+}
+
+@mixin route {
+  content: "";
+  display: block;
+  background-color: red;
+}
+.topRoute,
+.rightRoute,
+.downRoute,
+.leftRoute {
+  position: relative;
+}
+.topRoute:after {
+  @include route();
+  position: absolute;
+  height: 100%;
+  width: 2.5px;
+  margin: auto;
+  margin-left: 19px;
+  bottom: 20px;
+  z-index: 1;
+}
+
+.downRoute:after {
+  @include route();
+  position: absolute;
+  height: 100%;
+  width: 2.5px;
+  margin: auto;
+  margin-left: 19px;
+  top: 20px;
+  z-index: 1;
+}
+
+.leftRoute:after {
+  @include route();
+  position: absolute;
+  width: 100%;
+  height: 2.5px;
+  margin-top: 20px;
+  left: -20px;
+  z-index: 1;
+}
+.rightRoute:after {
+  @include route();
+  position: absolute;
+  width: 100%;
+  height: 2.5px;
+  margin-top: 20px;
+  right: -21.5px;
+  z-index: 1;
+}
+.pointRoute:before {
+  content: "";
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background-color: red;
+  z-index: 2;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

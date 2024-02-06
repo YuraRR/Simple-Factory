@@ -1,0 +1,169 @@
+@mixin conveyorBase {
+  background-image: url(/img/conveyors/belt.png) !important;
+  background-size: 40px 40px !important;
+  border: 1px solid transparent !important;
+  animation: slideBackground 10s linear infinite;
+}
+@mixin connectorBase {
+  background-image: url(/img/buildings/connector.png) !important;
+  background-size: 40px 40px !important;
+}
+@mixin splitterBase {
+  background-image: url(/img/buildings/splitterModel.png) !important;
+  background-size: 40px 40px !important;
+}
+@mixin pipeBase {
+  @include buildingBase;
+  top: -13px;
+  left: -13px;
+  width: 60px;
+}
+// @mixin conveyorBase {
+//   position: relative;
+//   img {
+//     top: -13px;
+//     left: -33px;
+//     width: 100px;
+//   }
+// }
+
+// [data-building-type="conveyor"] {
+//   @include conveyorBase();
+//   img {
+//     @include buildingBase();
+//   }
+// }
+
+.conveyorUp {
+  @include conveyorBase();
+}
+.conveyorRight {
+  @include conveyorBase();
+  transform: rotate(90deg);
+}
+
+.conveyorDown {
+  @include conveyorBase();
+  transform: rotate(180deg);
+}
+
+.conveyorLeft {
+  @include conveyorBase();
+  transform: rotate(270deg);
+}
+
+// .conveyorTopRightCorner {
+//   @include conveyorBase();
+// }
+// .conveyorRightBottomCorner {
+//   @include conveyorBase();
+// }
+// .conveyorBottomLeftCorner {
+//   @include conveyorBase();
+// }
+// .conveyorLeftTopCorner {
+//   @include conveyorBase();
+// }
+
+.connectorUp {
+  @include connectorBase();
+}
+
+.connectorRight {
+  @include connectorBase();
+  transform: rotate(90deg);
+}
+
+.connectorDown {
+  @include connectorBase();
+  transform: rotate(180deg);
+}
+
+.connectorLeft {
+  @include connectorBase();
+  transform: rotate(270deg);
+}
+.splitterUp {
+  @include splitterBase();
+}
+
+.splitterRight {
+  @include splitterBase();
+  transform: rotate(90deg);
+}
+
+.splitterDown {
+  @include splitterBase();
+  transform: rotate(180deg);
+}
+
+.splitterLeft {
+  @include splitterBase();
+  transform: rotate(270deg);
+}
+
+.pipeUp {
+  @include pipeBase();
+  transform: rotate(313deg);
+}
+.pipeRight {
+  @include pipeBase();
+  transform: rotate(316deg);
+}
+.pipeDown {
+  @include pipeBase();
+  transform: rotate(313deg);
+}
+.pipeLeft {
+  @include pipeBase();
+  transform: rotate(316deg);
+}
+.pipeTopRightCorner {
+  @include pipeBase();
+  transform: rotate(322deg);
+  top: -21px;
+  left: -3px;
+}
+.pipeRightBottomCorner {
+  @include pipeBase();
+  transform: rotate(312deg);
+  top: -13px;
+  left: -8px;
+}
+.pipeBottomLeftCorner {
+  @include pipeBase();
+  transform: rotate(310deg);
+  top: -5px;
+  left: -19px;
+}
+.pipeLeftTopCorner {
+  @include pipeBase();
+  transform: rotate(310deg);
+  top: -20px;
+  left: -21px;
+}
+.fluidSplitterUp,
+.fluidSplitterRight,
+.fluidSplitterDown,
+.fluidSplitterLeft {
+  @include buildingBase;
+  background-image: url(/img/buildings/fluidSplitterModel.png);
+  top: -13px;
+  left: -10px;
+  width: 60px;
+  transform: rotate(307deg);
+}
+
+.fluidConnector {
+  @include connectorBase();
+  background-image: url(/img/buildings/liquidConnectorModel.png) !important;
+}
+
+@keyframes slideBackground {
+  0% {
+    background-position: 0 0; /* Изображение находится внизу */
+  }
+  100% {
+    background-position: 0 10000%; /* Изображение смещается вверх и исчезает */
+  }
+}

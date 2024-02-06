@@ -1,0 +1,155 @@
+@mixin ghostBase {
+  border: 1px solid transparent !important;
+  opacity: 80%;
+  background-repeat: no-repeat;
+  transform: rotate(313.5deg);
+}
+@mixin ghostPipeBase {
+  background-image: url(/img/conveyors/pipe.svg) !important;
+  background-size: 40px 40px !important;
+}
+//CONVEYOR GHOST
+.conveyorUp-hover:hover {
+  @include conveyorBase();
+  opacity: 70%;
+}
+
+.conveyorRight-hover:hover {
+  @include conveyorBase();
+  transform: rotate(90deg);
+  opacity: 70%;
+}
+
+.conveyorDown-hover:hover {
+  @include conveyorBase();
+  transform: rotate(180deg);
+  opacity: 70%;
+}
+
+.conveyorLeft-hover:hover {
+  @include conveyorBase();
+  transform: rotate(270deg);
+  opacity: 70%;
+}
+
+//CONNECTOR GHOSTS
+.connectorUp-hover:hover {
+  @include connectorBase();
+  opacity: 70%;
+}
+
+.connectorRight-hover:hover {
+  @include connectorBase();
+  transform: rotate(90deg);
+  opacity: 70%;
+}
+
+.connectorDown-hover:hover {
+  @include connectorBase();
+  transform: rotate(180deg);
+  opacity: 70%;
+}
+
+.connectorLeft-hover:hover {
+  @include connectorBase();
+  transform: rotate(270deg);
+  opacity: 70%;
+}
+
+//SPLITTER GHOSTS
+.splitterUp-hover:hover {
+  @include splitterBase();
+  opacity: 70%;
+}
+
+.splitterRight-hover:hover {
+  @include splitterBase();
+  transform: rotate(90deg);
+  opacity: 70%;
+}
+
+.splitterDown-hover:hover {
+  @include splitterBase();
+  transform: rotate(180deg);
+  opacity: 70%;
+}
+
+.splitterLeft-hover:hover {
+  @include splitterBase();
+  transform: rotate(270deg);
+  opacity: 70%;
+}
+//PIPE GHOST
+.pipeUp-hover:hover {
+  @include ghostPipeBase();
+  opacity: 70%;
+}
+.pipeRight-hover:hover {
+  @include ghostPipeBase();
+  transform: rotate(90deg);
+  opacity: 70%;
+}
+.pipeDown-hover:hover {
+  @include ghostPipeBase();
+  transform: rotate(180deg);
+  opacity: 70%;
+}
+.pipeLeft-hover:hover {
+  @include ghostPipeBase();
+  transform: rotate(270deg);
+  opacity: 70%;
+}
+
+//MINESHAFT GHOST
+.mineshaft-hover {
+  @include buildingBase;
+  width: 113px !important;
+  top: -95px !important;
+  left: -71px !important;
+}
+//SMELTER GHOST
+.smelter-hover:hover {
+  @include ghostBase();
+  background-image: url(/img/buildings/smelter.png) !important;
+}
+//SMELTER GHOST
+.oreProcessing-hover {
+  @include buildingBase;
+  width: 220px !important;
+  top: -153px !important;
+  left: -126px !important;
+}
+.assembler-hover {
+  @include buildingBase;
+  width: 558px !important;
+  top: -120px !important;
+  left: -238px !important;
+}
+.road-hover {
+  outline: 1px solid transparent !important;
+  background-image: url(/img/textures/road.png) !important;
+  position: relative;
+  opacity: 80%;
+}
+//STORAGE GHOST
+.storage-hover:hover {
+  @include ghostBase();
+  background-image: url(/img/buildings/storage.png) !important;
+}
+//DEMOLITION GHOST
+.demolition-hover:hover {
+  filter: grayscale(100%) sepia(50%) hue-rotate(320deg) saturate(600%);
+  z-index: 100;
+}
+//CONNECTION GHOST
+.connection-hover {
+  filter: grayscale(100%) sepia(50%) hue-rotate(13deg) saturate(600%);
+}
+//BORDER GHOST
+.canBePlaced {
+  border: 3px solid white !important;
+}
+.cantBePlaced {
+  border: 3px solid red !important;
+  z-index: 100 !important;
+}

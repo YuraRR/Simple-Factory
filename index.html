@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/styles/css/mainStyles.min.css" />
+    <link rel="icon" type="image/x-icon" href="/img/Снимок экрана 2023-12-12 142811.png" />
+    <title>2D Game</title>
+  </head>
+  <body>
+    <div id="game-container">
+      <div id="limit-container">
+        <div class="grid-container"></div>
+      </div>
+      <div class="interface-container">
+        <div id="menu-container"></div>
+        <div class="tool-menu">
+          <div class="tool-menu__groupNames">
+            <span>Source </span>
+            <span>Processing </span>
+            <span>Storage </span>
+            <span>Transportation </span>
+          </div>
+          <div class="tool-menu__buttons">
+            <!-- SOURCE BUIDINGS -->
+            <div class="tool-menu__group">
+              <div class="tool-menu__block">
+                <button class="tool-menu__btn" id="mineshaft">
+                  <img src="/img/toolButtons/mineshaft.png" draggable="false" />
+                </button>
+                <span>Mineshaft</span>
+              </div>
+
+              <div class="tool-menu__block">
+                <button class="tool-menu__btn" id="waterPump">
+                  <img src="/img/toolButtons/pumpIcon.png" alt="" draggable="false" />
+                </button>
+                <span>Water Pump</span>
+              </div>
+            </div>
+            <!-- PROCESSING BUIDINGS -->
+
+            <div class="tool-menu__group">
+              <div class="tool-menu__block">
+                <button class="tool-menu__btn" id="oreProcessing">
+                  <img src="/img/toolButtons/oreProccesing.jpg" draggable="false" />
+                </button>
+                <span>Ore Processing</span>
+              </div>
+
+              <div class="tool-menu__block">
+                <button class="tool-menu__btn" id="smelter">
+                  <img src="/img/toolButtons/smelter.png" draggable="false" />
+                </button>
+                <span>Smelter</span>
+              </div>
+              <div class="tool-menu__block">
+                <button class="tool-menu__btn" id="assembler">
+                  <img src="/img/toolButtons/assemblerFactory.png" draggable="false" />
+                </button>
+                <span>Assembler</span>
+              </div>
+            </div>
+
+            <!-- STORAGE BUIDINGS -->
+            <div class="tool-menu__group">
+              <div class="tool-menu__block">
+                <button class="tool-menu__btn" id="storage">
+                  <img src="/img/toolButtons/storage.png" draggable="false" />
+                </button>
+                <span>Storage</span>
+              </div>
+            </div>
+            <!-- TRANSPORTATION BUIDINGS -->
+            <div class="tool-menu__group">
+              <div class="tool-menu__block">
+                <button class="tool-menu__btn" id="conveyor">
+                  <img src="/img/toolButtons/conveyor.png" draggable="false" />
+                </button>
+                <span>Conveyor</span>
+              </div>
+
+              <div class="tool-menu__block">
+                <button class="tool-menu__btn" id="connector">
+                  <img src="/img/toolButtons/connector.png" alt="" draggable="false" />
+                </button>
+                <span>Connector</span>
+              </div>
+
+              <div class="tool-menu__block">
+                <button class="tool-menu__btn" id="splitter">
+                  <img src="/img/toolButtons/spliterIcon.png" alt="" draggable="false" />
+                </button>
+                <span>Splitter</span>
+              </div>
+
+              <div class="tool-menu__block">
+                <button class="tool-menu__btn" id="pipe">
+                  <img src="/img/toolButtons/pipeIcon.png" alt="" draggable="false" />
+                </button>
+                <span>Pipe</span>
+              </div>
+
+              <div class="tool-menu__block">
+                <button class="tool-menu__btn" id="fluidSplitter">
+                  <img src="/img/toolButtons/pipeIcon.png" alt="" draggable="false" />
+                </button>
+                <span>Fluid Splitter</span>
+              </div>
+
+              <div class="tool-menu__block">
+                <button class="tool-menu__btn" id="road">
+                  <img src="/img/toolButtons/road.jpg" alt="" draggable="false" />
+                </button>
+                <span>Road</span>
+              </div>
+              <div class="tool-menu__block">
+                <button class="tool-menu__btn" id="cargoStation">
+                  <img src="/img/toolButtons/road.jpg" alt="" draggable="false" />
+                </button>
+                <span>Cargo Station</span>
+              </div>
+              <div class="tool-menu__block">
+                <button class="tool-menu__btn" id="pointB">
+                  <img src="/img/toolButtons/road.jpg" alt="" draggable="false" />
+                </button>
+                <span>Point B</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="information-menu">
+          <h2>Information</h2>
+          <p id="ironOreCounter">Iron ore Amount:</p>
+          <p id="copperOreCounter">Copper ore Amount:</p>
+        </div>
+        <div id="customContextMenu" class="context-menu">
+          <button class="contextMenu-button" id="demolitionButton">Demolition Mode</button>
+          <button class="contextMenu-button" id="undergroundButton">Undeground Mode</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="/js/Misc/mixins.js"></script>
+    <script src="/js/variables.js"></script>
+    <script src="js/Misc/gridSettings.js"></script>
+    <script src="/js/Interface/buildingsMenu.js"></script>
+    <script src="/js/Interface/interface.js"></script>
+    <script src="/js/Logic/buildingPlacing.js"></script>
+    <script src="/js/Logic/mainBuildingLogic.js"></script>
+    <script src="/js/Logic/transportationBuildingLogic.js"></script>
+    <script src="/js/Logic/buildingsLogic.js"></script>
+    <script src="/js/Logic/processingBuildingsLogic.js"></script>
+    <script src="/js/Logic/upgradesLogic.js"></script>
+    <script src="/js/Logic/pathFindfingLogic.js"></script>
+    <script src="/js/Misc/savingGame.js"></script>
+    <script src="/js/Misc/worldGeneration.js"></script>
+    <script src="/js/playerActions.js"></script>
+    <script src="/js/Misc/keybinds.js"></script>
+    <script src="/js/Misc/sounds.js"></script>
+  </body>
+</html>

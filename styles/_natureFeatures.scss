@@ -1,0 +1,22 @@
+[data-type="water"] {
+  background-image: url(/img/textures/water.jpg) !important;
+  outline: none !important;
+}
+[data-type="sand"] {
+  background-image: url(/img/textures/sand.jpg) !important;
+  outline: none !important;
+}
+[data-features-type="tree"] {
+  position: relative;
+  .tree {
+    transform: rotate(313.5deg);
+    border: none !important;
+    max-width: 40px;
+    position: absolute;
+    top: -26px;
+    left: -20px;
+    user-select: none;
+    pointer-events: none;
+    z-index: 100;
+  }
+}

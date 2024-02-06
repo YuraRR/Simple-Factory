@@ -1,0 +1,45 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto:300,regular,500,700,900);
+@import "grid.scss";
+@import "building.scss";
+@import "conveyors.scss";
+@import "items.scss";
+@import "natureFeatures.scss";
+@import "ghosts.scss";
+@import "menu.scss";
+@import "transport.scss";
+
+:root {
+  --black: #222222;
+  --midDarkGray: #333333;
+  --midGray: #424141;
+  --darkGray: #3b3b3b;
+  --gray: #4e4d4d;
+  --midLightGray: #5c5c5c;
+  --lightGray: #6b6b6b;
+  --white: #ccc;
+  --lightWhite: #e0e0e0;
+
+  --darkGreen: #00796b;
+  --green: #4caf50;
+  --lightGreen: #8bc34a;
+
+  --darkYellow: #ff9800;
+  --yellow: #ffeb3b;
+  --lightYellow: #fff176;
+}
+* {
+  padding: 0;
+  margin: 0;
+  user-select: none;
+  font-family: "Roboto";
+  font-weight: 400;
+}
+.buttonActive {
+  outline: 3px solid black;
+}
+body {
+  overflow: hidden;
+}
+.hidden {
+  display: none !important;
+}

@@ -1,0 +1,34 @@
+.ore {
+  background-image: url("/img/belt_IronOre.png") !important;
+
+  /* Другие стили, которые вы хотите применить */
+}
+
+[data-ore-type="iron"] {
+  background-image: url(/img/ores/iron_ore.jpeg) !important;
+
+  /* Добавьте другие стили по вашему выбору */
+}
+[data-ore-type="copper"] {
+  background-image: url(/img/ores/copper_ore.png) !important;
+  /* Добавьте другие стили по вашему выбору */
+}
+
+[data-item-type="Raw iron ore"][data-building-type="conveyor"] {
+  background-image: url(/img/conveyors/belt_IronOre.png) !important;
+}
+[data-item-type="Raw copper ore"][data-building-type="conveyor"] {
+  background-image: url(/img/conveyors/belt_copperOre.png) !important;
+}
+[data-item-type="Refined iron ore"][data-building-type="conveyor"] {
+  background-image: url(/img/conveyors/belt_RefinedIronOre.png) !important;
+}
+[data-item-type="Refined copper ore"][data-building-type="conveyor"] {
+  background-image: url(/img/conveyors/belt_RefinedIronOre.png) !important;
+}
+[data-item-type="Iron ingot"][data-building-type="conveyor"] {
+  background-image: url(/img/conveyors/belt_IronIngot.png) !important;
+}
+[data-item-type="Copper ingot"][data-building-type="conveyor"] {
+  background-image: url(/img/conveyors/belt_copperIngot.png) !important;
+}
