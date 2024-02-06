@@ -4,11 +4,6 @@
   position: relative;
 }
 .truck {
-  img {
-    width: 70px;
-  }
-  background-color: rgba(0, 0, 0, 0);
-  background-size: cover;
   transform: rotateZ(323deg) rotateY(68deg) rotate3d(8, -11, -5, 11deg);
   position: absolute;
   pointer-events: none;
@@ -17,6 +12,29 @@
   top: -16px;
   left: -22px;
   transition: all 0.7s linear;
+  img {
+    background-color: rgba(0, 0, 0, 0);
+    background-size: cover;
+    width: 70px;
+  }
+  span {
+    position: absolute;
+    left: 45px;
+    top: -7px;
+    color: white;
+    font-size: 12px;
+  }
+  .resource-marker {
+    position: relative;
+    img {
+      width: 30px;
+      height: 30px;
+
+      top: -15px;
+      left: 15px;
+      position: absolute;
+    }
+  }
 }
 
 @mixin route {
@@ -38,7 +56,8 @@
   margin: auto;
   margin-left: 19px;
   bottom: 20px;
-  z-index: 1;
+  left: 0;
+  z-index: 99;
 }
 
 .downRoute:after {
@@ -49,7 +68,8 @@
   margin: auto;
   margin-left: 19px;
   top: 20px;
-  z-index: 1;
+  left: 0;
+  z-index: 99;
 }
 
 .leftRoute:after {
@@ -59,7 +79,8 @@
   height: 2.5px;
   margin-top: 20px;
   left: -20px;
-  z-index: 1;
+  top: 0px;
+  z-index: 99;
 }
 .rightRoute:after {
   @include route();
@@ -68,7 +89,8 @@
   height: 2.5px;
   margin-top: 20px;
   right: -21.5px;
-  z-index: 1;
+  top: 0px;
+  z-index: 99;
 }
 .pointRoute:before {
   content: "";

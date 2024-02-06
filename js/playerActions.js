@@ -186,15 +186,7 @@ function handleMouseEnter(event) {
               } else {
                 tile.classList.add("cantBePlaced");
               }
-              if (currentTool == "cargoStation" && tile.classList.contains("canBePlaced")) {
-                const mainFactoryTile = findTargetTileByDirection(tile);
-                if (mainFactoryTile) {
-                  mainFactoryTile.children[0].classList.add("connection-hover");
-                } else {
-                  let connectedBuilding = document.querySelector(".connection-hover");
-                  if (connectedBuilding) connectedBuilding.classList.remove("connection-hover");
-                }
-              }
+              factoryConnectionCheck(tile);
             }
           }
         }
@@ -205,7 +197,17 @@ function handleMouseEnter(event) {
     }
   }
 }
-
+function factoryConnectionCheck(tile) {
+  if (currentTool == "cargoStation" && tile.classList.contains("canBePlaced")) {
+    const mainFactoryTile = findTargetTileByDirection(tile);
+    if (mainFactoryTile) {
+      mainFactoryTile.children[0].classList.add("connection-hover");
+    } else {
+      let connectedBuilding = document.querySelector(".connection-hover");
+      connectedBuilding && connectedBuilding.classList.remove("connection-hover");
+    }
+  }
+}
 function handleMouseLeave() {
   removeGhostBorders();
   currentHoveredCell = null;
@@ -265,7 +267,7 @@ function resetGhost() {
     });
   }
   let connectedBuilding = document.querySelector(".connection-hover");
-  if (connectedBuilding) connectedBuilding.classList.remove("connection-hover");
+  connectedBuilding && connectedBuilding.classList.remove("connection-hover");
   CELLS.forEach((cell) => {
     cell.removeEventListener("mouseenter", handleMouseEnter);
     cell.removeEventListener("mouseleave", handleMouseLeave);

@@ -182,7 +182,8 @@ function cargoStationCreating(event) {
   if (event.target.classList.contains("grid-cell")) {
     const cell = event.target;
     const cellData = cell.dataset;
-    if (cellData.type == "empty") {
+    const factoryTile = findTargetTileByDirection(cell);
+    if (cellData.type == "empty" && factoryTile) {
       //Object creation
       let newBuilding = new CargoStation(cell);
       newBuilding.getId(cell.id);
@@ -193,7 +194,6 @@ function cargoStationCreating(event) {
       cellData.cargoStationType = "Export";
       cellData.cargoStationItem = "Empty";
 
-      const factoryTile = findTargetTileByDirection(cell);
       let stationData = newBuilding.updateData(factoryTile);
       cellData.connectedTo = factoryTile.dataset.buildingType;
       //Menu creation

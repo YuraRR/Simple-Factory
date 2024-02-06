@@ -90,14 +90,14 @@ class OreProccesingMenu extends BuildingMenu {
       <div class="proccessingBlock">
         <div class="itemsBlock">
           <div class="materialBlock">
-            <img src="img/buttonIcons/noItem.svg" class = "materialImage"/>
+            <img src="img/resourcesIcons/noItem.svg" class = "materialImage"/>
             <span class = "materialAmount">${this.tile.dataset.itemAmount}</span>
           </div>
           <div class="arrowBlock">
             <img src="img/buttonIcons/arrow.png" />
           </div>
           <div class="productBlock">
-            <img src="img/buttonIcons/noItem.svg" class = "productImage"/>
+            <img src="img/resourcesIcons/noItem.svg" class = "productImage"/>
             <span class = "productAmount">0</span>
           </div>
         </div>
@@ -108,7 +108,7 @@ class OreProccesingMenu extends BuildingMenu {
         </div>
         <div class="fuelBlock">
           <div class="fuel">
-            <img src="img/buttonIcons/coalOre.png" alt="" />
+            <img src="img/resourcesIcons/coalOre.png" alt="" />
             <span></span>
           </div>
           <div class="fuelProgressBar"></div>
@@ -135,12 +135,12 @@ class OreProccesingMenu extends BuildingMenu {
     setInterval(() => {
       switch (this.tile.dataset.itemType) {
         case "ironOre":
-          materialImage.src = "/img/buttonIcons/ironOre-icon.svg";
-          productImage.src = "/img/buttonIcons/ironIngot.svg";
+          materialImage.src = "/img/resourcesIcons/ironOre-icon.svg";
+          productImage.src = "/img/resourcesIcons/ironIngot.svg";
           break;
         case "copperOre":
-          materialImage.src = "/img/buttonIcons/copperOre-icon.svg";
-          productImage.src = "/img/buttonIcons/copperIngot.svg";
+          materialImage.src = "/img/resourcesIcons/copperOre-icon.svg";
+          productImage.src = "/img/resourcesIcons/copperIngot.svg";
           break;
       }
       materialAmount.textContent = this.tile.dataset.itemAmount;
@@ -192,14 +192,14 @@ class SmelterMenu extends BuildingMenu {
       <div class="proccessingBlock">
         <div class="itemsBlock">
           <div class="materialBlock">
-            <img src="img/buttonIcons/noItem.svg" class = "materialImage"/>
+            <img src="img/resourcesIcons/noItem.svg" class = "materialImage"/>
             <span class = "materialAmount">${this.tile.dataset.itemAmount}</span>
           </div>
           <div class="arrowBlock">
             <img src="img/buttonIcons/arrow.png" />
           </div>
           <div class="productBlock">
-            <img src="img/buttonIcons/noItem.svg" class = "productImage"/>
+            <img src="img/resourcesIcons/noItem.svg" class = "productImage"/>
             <span class = "productAmount">0</span>
           </div>
         </div>
@@ -210,7 +210,7 @@ class SmelterMenu extends BuildingMenu {
         </div>
         <div class="fuelBlock">
           <div class="fuel">
-            <img src="img/buttonIcons/coalOre.png" alt="" />
+            <img src="img/resourcesIcons/coalOre.png" alt="" />
             <span></span>
           </div>
           <div class="fuelProgressBar"></div>
@@ -219,7 +219,6 @@ class SmelterMenu extends BuildingMenu {
       <button class="close-button"></button>
       <div class="upgradesBlock"></div>`;
     menu.innerHTML = menuContent;
-    console.log(this.id);
     menu.dataset.smelterId = this.id;
     menu.dataset.parentTileId = this.tile.id;
     container.appendChild(menu);
@@ -238,12 +237,12 @@ class SmelterMenu extends BuildingMenu {
     setInterval(() => {
       switch (this.tile.dataset.itemType) {
         case "ironOre":
-          materialImage.src = "/img/buttonIcons/ironOre-icon.svg";
-          productImage.src = "/img/buttonIcons/ironIngot.svg";
+          materialImage.src = "/img/resourcesIcons/ironOre-icon.svg";
+          productImage.src = "/img/resourcesIcons/ironIngot.svg";
           break;
         case "copperOre":
-          materialImage.src = "/img/buttonIcons/copperOre-icon.svg";
-          productImage.src = "/img/buttonIcons/copperIngot.svg";
+          materialImage.src = "/img/resourcesIcons/copperOre-icon.svg";
+          productImage.src = "/img/resourcesIcons/copperIngot.svg";
           break;
       }
       materialAmount.textContent = this.tile.dataset.itemAmount;
@@ -302,14 +301,14 @@ class AssemblerMenu extends BuildingMenu {
       <div class="proccessingBlock">
         <div class="itemsBlock">
           <div class="materialBlock">
-            <img src="img/buttonIcons/noItem.svg" class = "materialImage"/>
+            <img src="img/resourcesIcons/noItem.svg" class = "materialImage"/>
             <span class = "materialAmount">${this.tile.dataset.itemAmount}</span>
           </div>
           <div class="arrowBlock">
             <img src="img/buttonIcons/arrow.png" />
           </div>
           <div class="productBlock">
-            <img src="img/buttonIcons/noItem.svg" class = "productImage"/>
+            <img src="img/resourcesIcons/noItem.svg" class = "productImage"/>
             <span class = "productAmount">0</span>
           </div>
         </div>
@@ -320,7 +319,7 @@ class AssemblerMenu extends BuildingMenu {
         </div>
         <div class="fuelBlock">
           <div class="fuel">
-            <img src="img/buttonIcons/coalOre.png" alt="" />
+            <img src="img/resourcesIcons/coalOre.png" alt="" />
             <span></span>
           </div>
           <div class="fuelProgressBar"></div>
@@ -345,12 +344,12 @@ class AssemblerMenu extends BuildingMenu {
     setInterval(() => {
       switch (this.tile.dataset.itemType) {
         case "ironOre":
-          materialImage.src = "/img/buttonIcons/ironOre-icon.svg";
-          productImage.src = "/img/buttonIcons/ironIngot.svg";
+          materialImage.src = "/img/resourcesIcons/ironOre-icon.svg";
+          productImage.src = "/img/resourcesIcons/ironIngot.svg";
           break;
         case "copperOre":
-          materialImage.src = "/img/buttonIcons/copperOre-icon.svg";
-          productImage.src = "/img/buttonIcons/copperIngot.svg";
+          materialImage.src = "/img/resourcesIcons/copperOre-icon.svg";
+          productImage.src = "/img/resourcesIcons/copperIngot.svg";
           break;
       }
       materialAmount.textContent = this.tile.dataset.itemAmount;
@@ -400,7 +399,7 @@ class StorageMenu extends BuildingMenu {
       </div>
       <div class="itemBlock">
         <div class="itemImage">
-          <img src="img/buttonIcons/noItem.svg" />
+          <img src="img/resourcesIcons/noItem.svg" />
         </div>
         <span class="itemAmount">0</span>
       </div>
@@ -425,16 +424,16 @@ class StorageMenu extends BuildingMenu {
     setInterval(() => {
       switch (this.tile.dataset.itemType) {
         case "ironOre":
-          itemImage.src = "/img/buttonIcons/ironOre-icon.svg";
+          itemImage.src = "/img/resourcesIcons/ironOre-icon.svg";
           break;
         case "copperOre":
-          itemImage.src = "/img/buttonIcons/copperOre-icon.svg";
+          itemImage.src = "/img/resourcesIcons/copperOre-icon.svg";
           break;
         case "ironIngot":
-          itemImage.src = "/img/buttonIcons/ironIngot.svg";
+          itemImage.src = "/img/resourcesIcons/ironIngot.svg";
           break;
         case "copperIngot":
-          itemImage.src = "/img/buttonIcons/copperIngot.svg";
+          itemImage.src = "/img/resourcesIcons/copperIngot.svg";
           break;
       }
       itemAmount.textContent = this.tile.dataset.itemAmount;
@@ -475,7 +474,7 @@ class MineshaftMenu extends BuildingMenu {
       </div>
       <div class="itemBlock">
         <div class="itemImage">
-          <img src="img/buttonIcons/noItem.svg" />
+          <img src="img/resourcesIcons/noItem.svg" />
         </div>
         <span class="itemAmount">0</span>
       </div>
@@ -498,10 +497,10 @@ class MineshaftMenu extends BuildingMenu {
     setInterval(() => {
       switch (this.tile.dataset.itemType) {
         case "ironOre":
-          itemImage.src = "/img/buttonIcons/ironOre-icon.svg";
+          itemImage.src = "/img/resourcesIcons/ironOre-icon.svg";
           break;
         case "copperOre":
-          itemImage.src = "/img/buttonIcons/copperOre-icon.svg";
+          itemImage.src = "/img/resourcesIcons/copperOre-icon.svg";
           break;
       }
       itemAmount.textContent = `${this.tile.dataset.itemType} - ${this.tile.dataset.itemAmountOutput}`;
@@ -607,6 +606,7 @@ class CargoStationMenu extends BuildingMenu {
     const itemEfficency = menu.querySelector(".itemEff");
     const itemName = menu.querySelector(".itemName");
     const trucksAvailableText = menu.querySelector(".trucks__available");
+
     let item;
     let stationObj = defaultItem.stationObj;
     setInterval(() => {
@@ -628,6 +628,21 @@ class CargoStationMenu extends BuildingMenu {
       itemImg.src = item.imgSrc;
       this.updateTrucksAmountInfo(trucksAvailableText);
       this.tile.dataset.cargoStationItem = item.name;
+
+      if (
+        this.tile.dataset.routeTo &&
+        menu.style.display != "none" &&
+        !this.tile.classList.contains("pointRoute")
+      ) {
+        const stationB = document.querySelector(`[data-station-id="${this.tile.dataset.routeTo}"]`);
+        const currentRoute = allRoutesList.find(
+          (routeObj) =>
+            (routeObj.stationA == this.tile && routeObj.stationB == stationB) ||
+            (routeObj.stationA == stationB && routeObj.stationB == this.tile)
+        );
+        currentRoute &&
+          stationObj.drawRoute(currentRoute.routePointsList, currentRoute.directionsList);
+      }
     }, 1000);
     this.selectImportMaterial(menu, defaultItem);
   }
@@ -648,7 +663,6 @@ class CargoStationMenu extends BuildingMenu {
     menu.querySelector(".addTruck").onclick = () => {
       if (trucksOnRoute != maxTrucksOnRoute && trucksAvailable > 0) {
         let route = newBuilding.startMoving([this.tile, []]);
-        route.map((tile) => (tile.style.color = "red"));
         newBuilding.createRouteDirections(route);
         trucksAvailable--, trucksOnRoute++;
         this.updateTrucksAmountInfo(trucksAvailableText);
@@ -690,7 +704,6 @@ class CargoStationMenu extends BuildingMenu {
         type: data.cargoStationType,
         provideItemName: data.cargoStationItem || "Empty",
       };
-      console.log(stationObj);
       if (stationObj.type != targetStation.dataset.cargoStationType) {
         const routeElem = document.createElement("div");
         routeElem.classList.add("destinationBlock__route");
@@ -711,10 +724,8 @@ class CargoStationMenu extends BuildingMenu {
   }
   updateRoutesList() {
     const allStationsMenu = document.querySelectorAll(".cargoStationMenu");
-    console.log(allStationsMenu);
     allStationsMenu.forEach((menu) => {
       this.createRouteBlock(menu);
-      console.log(menu);
     });
   }
   selectStation(menu) {

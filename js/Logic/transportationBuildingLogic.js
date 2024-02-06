@@ -382,30 +382,42 @@ class CargoStation extends Building {
     let transportHasStarted;
 
     const truckBlock = document.createElement("div");
-    const img = document.createElement("img");
+    const truckImg = document.createElement("img");
+
+    const resourceMarkerBlock = document.createElement("div");
+    const resourceMarkerImg = document.createElement("img");
+    const resourceMarkerQuantify = document.createElement("span");
+
+    resourceMarkerBlock.classList.add("resource-marker", "hidden");
+
+    resourceMarkerBlock.appendChild(resourceMarkerImg);
+    resourceMarkerBlock.appendChild(resourceMarkerQuantify);
+
     truckBlock.classList.add("truck");
-    truckBlock.appendChild(img);
-    routePointsList[0].appendChild(truckBlock);
+    truckBlock.appendChild(resourceMarkerBlock);
+    truckBlock.appendChild(truckImg);
+    exportStation.appendChild(truckBlock);
+    //Starting position
     switch (directionsList[1]) {
       case "top":
-        truckBlock.style.top = "-24px";
-        truckBlock.style.left = "-20px";
-        img.src = "/img/transport/truckTop.png";
+        truckBlock.style.top = "-14px";
+        truckBlock.style.left = "-11px";
+        truckImg.src = "/img/transport/truckTop.png";
         break;
       case "right":
         truckBlock.style.top = "-5px";
-        truckBlock.style.left = "-24px";
-        img.src = "/img/transport/truckRight.png";
+        truckBlock.style.left = "-20px";
+        truckImg.src = "/img/transport/truckRight.png";
         break;
       case "down":
         truckBlock.style.top = "-5px";
         truckBlock.style.left = "-30px";
-        img.src = "/img/transport/truckDown.png";
+        truckImg.src = "/img/transport/truckDown.png";
         break;
       case "left":
         truckBlock.style.top = "-25px";
         truckBlock.style.left = "-15px";
-        img.src = "/img/transport/truckLeft.png";
+        truckImg.src = "/img/transport/truckLeft.png";
         break;
     }
 
@@ -417,6 +429,17 @@ class CargoStation extends Building {
       ) {
         if (exportStation.dataset.cargoStationType == "Export") {
           exportBuilding.dataset.itemAmountOutput -= 8;
+          //Resource marker
+          resourceMarkerBlock.classList.remove("hidden");
+          resourceMarkerQuantify.textContent = "8/8";
+          const itemName = exportStation.dataset.cargoStationItem;
+          allItems.find((item) => {
+            if (item.name == itemName) {
+              resourceMarkerImg.src = item.src;
+            }
+          });
+        } else {
+          resourceMarkerBlock.classList.add("hidden");
         }
 
         let index = 0;
@@ -434,26 +457,26 @@ class CargoStation extends Building {
               case "top":
                 property = "top";
                 offset = nextDir === "left" ? -50 : nextDir === "right" ? -35 : -40;
-                img.src = "/img/transport/truckTop.png";
+                truckImg.src = "/img/transport/truckTop.png";
                 break;
               case "right":
                 property = "left";
                 offset = nextDir === "top" ? 50 : nextDir === "down" ? 30 : 40;
-                img.src = "/img/transport/truckRight.png";
+                truckImg.src = "/img/transport/truckRight.png";
                 break;
               case "down":
                 property = "top";
                 offset = nextDir === "right" ? 55 : nextDir === "left" ? 30 : 40;
-                img.src = "/img/transport/truckDown.png";
+                truckImg.src = "/img/transport/truckDown.png";
                 break;
               case "left":
                 property = "left";
                 offset = nextDir === "down" ? -50 : nextDir === "top" ? -30 : -40;
-                img.src = "/img/transport/truckLeft.png";
+                truckImg.src = "/img/transport/truckLeft.png";
                 break;
             }
 
-            currentStyle = parseInt(getComputedStyle(img)[property]) || 0;
+            currentStyle = parseInt(getComputedStyle(truckBlock)[property]) || 0;
             truckBlock.style[property] = currentStyle + offset + "px";
 
             index++;
@@ -504,17 +527,23 @@ class CargoStation extends Building {
     });
   }
   drawRoute(routePointsList, directionsList) {
-    removeRoutes();
-    console.log(routePointsList);
-    console.log(directionsList);
-    routePointsList[0].classList.toggle("pointRoute");
-    routePointsList[routePointsList.length - 1].classList.toggle("pointRoute");
+    const stationA = routePointsList[0];
+    const stationB = routePointsList[routePointsList.length - 1];
+    stationA.classList.add("pointRoute");
+    stationB.classList.add("pointRoute");
     for (let i = 0; i < directionsList.length; i++) {
       let dir = directionsList[i];
-      routePointsList[i].classList.toggle(`${dir}Route`);
+      routePointsList[i].classList.add(`${dir}Route`);
     }
+    const routeObj = {
+      id: routeId++,
+      stationA: stationA,
+      stationB: stationB,
+      routePointsList: routePointsList,
+      directionsList: directionsList,
+    };
+    allRoutesList.push(routeObj);
   }
-  deliveryItem() {}
 }
 class PointB extends Building {
   constructor(id, type) {
@@ -525,7 +554,7 @@ class PointB extends Building {
   }
 }
 
-function removeRoutes() {
+function hideRoutes() {
   const allRouteTiles = document.querySelectorAll(
     ".pointRoute, .topRoute, .rightRoute, .downRoute, .leftRoute"
   );

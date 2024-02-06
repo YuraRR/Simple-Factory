@@ -1,11 +1,18 @@
 // KEYBINDS
-document.addEventListener("keydown", function (event) {
+let hoveredElement;
+
+function handleMouseOver(event) {
+  hoveredElement = event.target;
+}
+gridContainer.addEventListener("mouseover", handleMouseOver);
+document.addEventListener("keydown", (event) => {
   if (event.code === "KeyR") {
     buildingDirection = (buildingDirection + 1) % 4;
     ghostRotating();
+
+    factoryConnectionCheck(hoveredElement);
   }
 });
-let isAlternateState = false; // Флаг для отслеживания текущего состояния
 
 document.addEventListener("keydown", (event) => {
   if (event.code === "KeyU") {
@@ -48,7 +55,7 @@ document.addEventListener("keyup", (event) => {
 document.addEventListener("keydown", (event) => {
   if (event.code == "Escape") {
     resetGhost();
-    removeRoutes();
+    hideRoutes();
     if (undergroundOpened) showUnderground();
     if (!undergroundOpened) transperentBuildingsRemove();
   }

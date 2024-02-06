@@ -156,6 +156,8 @@ function startIntervals(tile, foundTile) {
       splitter: Splitter,
       pipe: Pipe,
       fluidSplitter: FluidSplitter,
+      road: Road,
+      cargoStation: CargoStation,
     };
 
     let newBuilding = new buildingClasses[className](tile);
