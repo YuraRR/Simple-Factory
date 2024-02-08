@@ -8,10 +8,11 @@
 
 #limit-container {
   display: flex;
+  position: relative;
   overflow: hidden;
   margin: 0 auto;
   padding: 20px 0;
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   background-color: #dddddd13; /* Колір фону сітки */
   align-items: center;

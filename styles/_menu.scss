@@ -238,6 +238,7 @@
   height: 30px;
   margin-bottom: auto;
   pointer-events: all;
+  border: none;
 }
 
 .storageMenu {
@@ -324,10 +325,17 @@
 .cargoStationMenu {
   display: none;
   position: relative;
-  width: 100%;
-  align-items: flex-end;
-  justify-content: space-between;
-  margin-bottom: 90px;
+  right: -130px;
+  top: 20px;
+  flex-direction: column;
+  background-color: var(--darkGray);
+  width: 400px;
+  height: 515px;
+  h2 {
+    background-color: var(--white);
+    text-transform: capitalize;
+    font-size: 20px;
+  }
   h3 {
     text-align: center;
     color: #ccc;
@@ -335,185 +343,191 @@
     font-size: 17px;
     text-transform: uppercase;
   }
-  .ItemInfoBlock {
+
+  text-align: center;
+  pointer-events: all;
+
+  &__trucks {
     display: flex;
-    flex-direction: column;
-    background-color: var(--darkGray);
-    width: 400px;
-    height: 400px;
-    pointer-events: all;
+    gap: 10px;
+    align-items: center;
+    background-color: var(--gray);
+    padding-top: 10px;
 
-    p {
+    button {
+      border: none;
+      background-color: var(--white);
+      text-transform: uppercase;
+      padding: 3px;
+    }
+
+    div {
       display: flex;
-      padding: 5px 10px;
-      gap: 5px;
-    }
-    &__prices {
-      background-color: var(--gray);
-    }
-    &__efficiency {
-      background-color: var(--gray);
-      img {
-        width: 18px;
-      }
-    }
-    &__itemCapacity {
-      background-color: var(--gray);
-    }
-    &__item {
-      display: flex;
-      position: relative;
       flex-direction: column;
-      width: 160px;
-      margin: auto;
-      border: 3px solid var(--black);
+      flex: 1;
+    }
 
-      span {
-        position: absolute;
-        right: 3px;
-        bottom: 0px;
-        font-size: 28px;
+    .trucks {
+      &__available {
+        background-color: var(--lightGreen);
+        height: 40px;
+        padding: 0 5px;
       }
-      img {
-        width: 100px;
-        margin: auto;
+
+      &__current {
+        background-color: var(--lightYellow);
+        height: 40px;
+        padding: 0 5px;
       }
     }
   }
-  .routeInfo {
+
+  &__routes {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 140px;
+    gap: 5px;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #4a4a4a;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: var(--midLightGray);
+    }
+  }
+
+  &__route {
+    display: flex;
+    padding: 5px;
+    height: 35px;
+    background-color: var(--lightGray);
+
+    span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    img {
+      width: 30px;
+      height: 30px;
+    }
+
+    input {
+      margin-left: auto;
+      width: 25px;
+    }
+  }
+  &__noStations {
+    background-color: var(--midLightGray);
+    font-size: 18px;
+    padding: 10px;
+  }
+  &__mode {
+    display: flex;
+    align-items: end;
+    justify-content: space-evenly;
+    padding: 5px 10px;
+    align-items: center;
+
+    button {
+      img {
+        max-height: 80px;
+        max-width: 80px;
+      }
+    }
+  }
+
+  &__button {
+    display: flex;
+    flex-direction: column;
+    color: #ccc;
+    text-transform: uppercase;
+    position: relative;
+
+    .importSelect,
+    .exportSelect {
+      display: grid;
+      grid-template-columns: auto auto auto auto;
+      grid-template-rows: auto auto auto;
+      padding: 10px 15px;
+      background-color: var(--black);
+      position: absolute;
+      top: 100px;
+      align-self: center;
+      z-index: 999;
+
+      div {
+        width: 110px;
+        padding: 0 5px;
+      }
+      button {
+        width: 100px;
+        background-color: var(--lightGray);
+      }
+      span {
+        font-size: 10px;
+      }
+    }
+  }
+  &__routeInfo {
     display: flex;
     flex-direction: column;
     pointer-events: all;
     align-items: center;
+
     button {
+      position: absolute;
+      top: 0;
+      right: 0;
       background-image: url(/img/buttonIcons/close-btn.png);
-      width: 40px;
-      height: 40px;
+      width: 23px;
+      height: 23px;
       background-size: contain;
     }
     span {
       display: flex;
       background-color: var(--black);
-      padding: 10px;
+      justify-content: center;
+      padding: 10px 0;
+      width: 100%;
       color: var(--lightWhite);
     }
   }
-  .destinationBlock {
+  &__item {
     display: flex;
+    position: relative;
     flex-direction: column;
-    justify-content: right;
-    background-color: var(--darkGray);
-    width: 400px;
-    height: 400px;
-    // padding: 15px;
+    margin-right: auto;
+    background-color: var(--gray);
+    gap: 10px;
     pointer-events: all;
-    text-align: center;
-    &__trucks {
-      display: flex;
-      gap: 10px;
-      // padding: 15px 0;
-      align-items: center;
-      background-color: var(--gray);
-      padding-top: 10px;
-
-      button {
-        border: none;
-        background-color: var(--white);
-        text-transform: uppercase;
-      }
-
-      div {
-        display: flex;
-        flex-direction: column;
-        flex: 1;
-      }
-
-      .trucks {
-        &__available {
-          background-color: var(--lightGreen);
-          height: 40px;
-          padding: 0 5px;
-        }
-        &__current {
-          background-color: var(--lightYellow);
-          height: 40px;
-          padding: 0 5px;
-        }
-      }
+    width: 50%;
+    span {
+      position: absolute;
+      right: 7px;
+      bottom: 27px;
+      font-size: 24px;
     }
 
-    &__routes {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      height: 200px;
-      gap: 5px;
-      overflow-y: auto;
-      &::-webkit-scrollbar {
-        width: 12px;
-      }
-      &::-webkit-scrollbar-thumb {
-        background-color: #4a4a4a;
-      }
-      &::-webkit-scrollbar-track {
-        background-color: var(--midLightGray);
-      }
+    img {
+      width: 85px;
+      height: 85px;
+      margin: auto;
     }
-    &__route {
-      display: flex;
-      padding: 5px;
-      height: 35px;
-      background-color: var(--lightGray);
-      span {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-      }
-      img {
-        width: 30px;
-        height: 30px;
-      }
-      input {
-        margin-left: auto;
-        width: 25px;
-      }
-    }
-
-    &__state {
-      display: flex;
-      align-items: end;
-      justify-content: space-evenly;
-      height: 150px;
-      align-items: center;
-      button {
-        img {
-          max-height: 80px;
-          max-width: 80px;
-        }
-      }
-    }
-    &__button {
-      display: flex;
-      flex-direction: column;
-      color: #ccc;
-      text-transform: uppercase;
-      position: relative;
-      .importSelect {
-        display: flex;
-        gap: 15px;
-        padding: 10px 15px;
-        background-color: var(--black);
-        position: absolute;
-        top: -100px;
-        align-self: center;
-        margin: auto;
-        img {
-          width: 60px;
-        }
-        span {
-          font-size: 10px;
-        }
-      }
+    h3 {
+      padding: 3px;
     }
   }
+}
+
+.highlightElem {
+  background-color: rgba(169, 169, 69, 0.628);
 }

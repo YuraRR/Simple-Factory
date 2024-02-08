@@ -12,6 +12,7 @@ class BuildingMenu {
       this.tile.children[1].style.pointerEvents = "all";
       menuOpened = false;
       switchUpgrades();
+      hideRoutes();
     });
 
     document.addEventListener("keydown", (event) => {
@@ -511,6 +512,7 @@ class CargoStationMenu extends BuildingMenu {
   constructor(tile, id) {
     super(tile, id);
     this.tile = tile;
+    this.tileData = tile.dataset;
     this.id = id;
     this.name = "Cargo Station";
   }
@@ -518,45 +520,33 @@ class CargoStationMenu extends BuildingMenu {
     const container = document.querySelector("#menu-container");
     let menu = document.createElement("div");
     menu.classList.add("cargoStationMenu");
+    menu.id = `CargoStation${this.id}`;
     let pointA;
     let pointB;
     let menuContent = `
-    <div class="ItemInfoBlock">
-      <div class="ItemInfoBlock__prices">
-        <h3>Prices</h3>
-        <p class="sellPrice">Sell ${item.sellPrise}$ for 1 — ${item.sellPrise * item.amount}$ for ${
-      item.amount
-    }</p>
-        <p class="buyPrice">Buy ${item.buyPrise}$ for 1 — ${item.buyPrise * item.amount} for ${
-      item.amount
-    }</p>
+    <h2>${this.name} ${this.id} (${this.tileData.connectedTo})</h2>
+    <h3>Choose mode</h3>
+    <div class="cargoStationMenu__mode">
+      <div class ="cargoStationMenu__button">
+        <button class="stationExport">
+          <img src="/img/buttonIcons/exportLogo.png" />
+        </button>
+        <span>Export</span>
+        <div class="exportSelect hidden"> </div>
       </div>
-      <div class="ItemInfoBlock__efficiency">
-        <h3>Factory efficiency</h3>
-        <p class="itemEff">${item.amountPerMin} ${item.name} — 60 
-        <img src="img/buttonIcons/clock.png" alt="" /></p>
-      </div>
-      <div class="ItemInfoBlock__itemCapacity">
-        <h3>Storage</h3>
-        <p>Fuel capacity — 20</p>
-        <p>Item capacity — 50</p>
-      </div>
-      <div class="ItemInfoBlock__item">
-        <h3 class="itemName">${item.name}</h3>
-        <img class="itemImg" src="${item.imgSrc}" />
-        <span class="itemAmount">${item.amount}</span>
+      <div class ="cargoStationMenu__button">
+        <button class="stationImport">
+          <img src="/img/buttonIcons/importLogo.png" />
+        </button>
+        <span>Import</span>
+        <div class="importSelect hidden"> </div>
       </div>
     </div>
-    <div class="routeInfo">
-      <button class="close-button"></button>
-      <span>CURRENT ROUTE: ${pointA} — ${pointB} — ${item.name}</span>
-    </div>
-    <div class="destinationBlock">
       <h3>Create route</h3>
-      <div class="destinationBlock__routes">
-        <span>No other stations </span>
+      <div class="cargoStationMenu__routes">
+      <span class="cargoStationMenu__noStations">Wrong Station mode or no accessible stations</span>
       </div>
-      <div class="destinationBlock__trucks">
+      <div class="cargoStationMenu__trucks">
         <div>
           <span class="trucks__available">Trucks available —  ${trucksAvailable}/${trucksTotal}</span>
           <button class="buyTruck">Buy truck</button>
@@ -566,26 +556,19 @@ class CargoStationMenu extends BuildingMenu {
           <button class="addTruck">Add truck</button>
         </div>
       </div>
-      <h3>Choose mode</h3>
-      <div class="destinationBlock__state">
-        <div class ="destinationBlock__button">
-          <button class="stationExport">
-            <img src="/img/buttonIcons/exportLogo.png" />
-          </button>
-          <span>Export</span>
-        </div>
-        <div class ="destinationBlock__button">
-          <button class="stationImport">
-            <img src="/img/buttonIcons/importLogo.png" />
-          </button>
-          <span>Import</span>
-          <div class="importSelect hidden"> </div>
-        </div>
-      </div>
-    </div>`;
+      <div class="cargoStationMenu__routeInfo">
+        <button class="close-button"></button>
+        <span class="cargoStationMenu__routeInfo-span">Route not selected</span>
+     </div>
+     <div class="cargoStationMenu__item">
+        <img class="itemImg" src="${item.imgSrc}" />
+        <span class="itemAmount">${item.amount}</span>
+        <h3 class="itemName">${item.name}</h3>
+   </div>`;
+
     menu.innerHTML = menuContent;
     menu.dataset.cargoStationId = this.id;
-    this.tile.dataset.stationId = this.id;
+    this.tileData.stationId = this.id;
     menu.dataset.parentTileId = this.tile.id;
     menu.querySelectorAll("img").forEach((image) => {
       image.draggable = false;
@@ -596,7 +579,8 @@ class CargoStationMenu extends BuildingMenu {
     this.closeButton(menu);
     this.createRouteBlock(menu);
     this.updateRoutesList();
-    this.selectStation(menu);
+
+    dragElement(menu.id);
   }
   menuUpdate(menu, defaultItem) {
     const itemPriceSell = menu.querySelector(".sellPrice");
@@ -610,31 +594,33 @@ class CargoStationMenu extends BuildingMenu {
     let item;
     let stationObj = defaultItem.stationObj;
     setInterval(() => {
-      if (this.tile.dataset.cargoStationType == "Export") {
-        item = stationObj.updateData(defaultItem.mainFactoryTile, "export");
+      let selectedExportItem = this.tileData.cargoStationItem;
+      if (this.tileData.cargoStationType == "Export") {
+        item = stationObj.updateData(defaultItem.mainFactoryTile, "export", selectedExportItem);
       } else {
         item = stationObj.updateData(defaultItem.mainFactoryTile, "import");
       }
 
       //prettier-ignore
       {
-      itemPriceBuy.textContent = `Buy 1 for ${item.buyPrice}$  —  ${item.amount} for ${item.buyPrice * item.amount}$ `
-      itemPriceSell.textContent = `Sell 1 for ${item.sellPrice}$  —  ${item.amount} for ${item.sellPrice * item.amount}$ `
-      itemEfficency.innerHTML = `${item.amountPerMin} ${item.name} — 60 <img src="img/buttonIcons/clock.png" alt="" />`
+      // itemPriceBuy.textContent = `Buy 1 for ${item.buyPrice}$  —  ${item.amount} for ${item.buyPrice * item.amount}$ `
+      // itemPriceSell.textContent = `Sell 1 for ${item.sellPrice}$  —  ${item.amount} for ${item.sellPrice * item.amount}$ `
+      // itemEfficency.innerHTML = `${item.amountPerMin} ${item.name} — 60 <img src="img/buttonIcons/clock.png" alt="" />`
       
     }
+      console.log(item);
       itemName.textContent = item.name;
       itemAmount.textContent = item.amount;
       itemImg.src = item.imgSrc;
-      this.updateTrucksAmountInfo(trucksAvailableText);
-      this.tile.dataset.cargoStationItem = item.name;
+      if (this.tileData.connectedTo != "tradingTerminal") {
+        this.tileData.cargoStationItem = item.name;
+      }
 
-      if (
-        this.tile.dataset.routeTo &&
-        menu.style.display != "none" &&
-        !this.tile.classList.contains("pointRoute")
-      ) {
-        const stationB = document.querySelector(`[data-station-id="${this.tile.dataset.routeTo}"]`);
+      this.updateTrucksAmountInfo(trucksAvailableText);
+
+      if (menu.style.display != "none" && !this.tile.classList.contains("pointRoute")) {
+        const stationBId = this.tileData.routeTo ?? this.tileData.routeFrom;
+        const stationB = document.querySelector(`[data-station-id="${stationBId}"]`);
         const currentRoute = allRoutesList.find(
           (routeObj) =>
             (routeObj.stationA == this.tile && routeObj.stationB == stationB) ||
@@ -645,6 +631,7 @@ class CargoStationMenu extends BuildingMenu {
       }
     }, 1000);
     this.selectImportMaterial(menu, defaultItem);
+    this.selectExportMaterial(menu, defaultItem);
   }
   menuButtons(menu, defaultItem) {
     //Route visual
@@ -662,6 +649,7 @@ class CargoStationMenu extends BuildingMenu {
 
     menu.querySelector(".addTruck").onclick = () => {
       if (trucksOnRoute != maxTrucksOnRoute && trucksAvailable > 0) {
+        this.selectStation(menu);
         let route = newBuilding.startMoving([this.tile, []]);
         newBuilding.createRouteDirections(route);
         trucksAvailable--, trucksOnRoute++;
@@ -673,13 +661,13 @@ class CargoStationMenu extends BuildingMenu {
       stationExportBtn.classList.add("buttonActive");
     } else {
       stationExportBtn.onclick = () => {
-        this.tile.dataset.cargoStationType = "Export";
+        this.tileData.cargoStationType = "Export";
         stationExportBtn.classList.add("buttonActive");
         stationImportBtn.classList.remove("buttonActive");
-        this.updateRoutesList();
+        menu.querySelector(".exportSelect").classList.remove("hidden");
       };
       stationImportBtn.onclick = () => {
-        this.tile.dataset.cargoStationType = "Import";
+        this.tileData.cargoStationType = "Import";
         stationImportBtn.classList.add("buttonActive");
         stationExportBtn.classList.remove("buttonActive");
         menu.querySelector(".importSelect").classList.remove("hidden");
@@ -691,22 +679,24 @@ class CargoStationMenu extends BuildingMenu {
   }
   createRouteBlock(menu) {
     const allStations = document.querySelectorAll(`[data-building-type="cargoStation"]`);
-    const routeContainer = menu.querySelector(".destinationBlock__routes");
+    const routeContainer = menu.querySelector(".cargoStationMenu__routes");
     const targetStation = document.querySelector(
       `[data-station-id="${menu.dataset.cargoStationId}"]`
     );
-    routeContainer.innerHTML = "";
+    const noStationsText = menu.querySelector(".cargoStationMenu__noStations");
+    if (!noStationsText) routeContainer.innerHTML = "";
     allStations.forEach((cargoStation) => {
-      console.log(cargoStation);
       const data = cargoStation.dataset;
       const stationObj = {
         id: data.stationId,
         type: data.cargoStationType,
         provideItemName: data.cargoStationItem || "Empty",
       };
+
       if (stationObj.type != targetStation.dataset.cargoStationType) {
+        if (noStationsText) routeContainer.innerHTML = "";
         const routeElem = document.createElement("div");
-        routeElem.classList.add("destinationBlock__route");
+        routeElem.classList.add("cargoStationMenu__route");
         const htmlContent = `
             <span>
             Cargo Station ${stationObj.id} — <img src="/img/buttonIcons/${stationObj.type}Small.png" title="${stationObj.type}" /> —
@@ -716,11 +706,12 @@ class CargoStationMenu extends BuildingMenu {
             </span>
             <input type="radio" id="Cargo Station ${stationObj.id}" name="selectStation" />`;
         routeElem.innerHTML = htmlContent;
+        if (stationObj.provideItemName == targetStation.dataset.cargoStationItem) {
+          routeElem.classList.add("highlightElem");
+        }
         routeContainer.appendChild(routeElem);
       }
     });
-
-    this.selectStation(menu);
   }
   updateRoutesList() {
     const allStationsMenu = document.querySelectorAll(".cargoStationMenu");
@@ -729,20 +720,31 @@ class CargoStationMenu extends BuildingMenu {
     });
   }
   selectStation(menu) {
-    const stationsRadioBtns = menu.querySelectorAll('input[name="selectStation"]');
-    const routeInfo = menu.querySelector(".routeInfo");
-    const tile = document.getElementById(menu.dataset.parentTileId);
-    stationsRadioBtns.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        tile.dataset.routeTo = parseInt(btn.id.split(" ").pop(), 10);
-        routeInfo.children[1].textContent = `CURRENT ROUTE: Cargo Station ${tile.dataset.stationId} 
-        — Cargo Station ${tile.dataset.routeTo} — ${tile.dataset.cargoStationItem}`;
-        const targetStationId = parseInt(btn.id.split(" ").pop(), 10);
-        let targetStation = document.querySelector(`[data-station-id="${targetStationId}"]`);
-        console.log(targetStation);
-        targetStation.dataset.routeFrom = `${tile.dataset.stationId}`;
+    currentStationChangeText(menu);
+    function currentStationChangeText(menu) {
+      console.log(menu);
+      const stationsRadioBtns = menu.querySelectorAll('input[name="selectStation"]');
+      const routeInfoText = menu.querySelector(".cargoStationMenu__routeInfo-span");
+      const tile = document.getElementById(menu.dataset.parentTileId);
+      stationsRadioBtns.forEach((btn) => {
+        if (btn.checked) {
+          tile.dataset.routeTo = parseInt(btn.id.split(" ").pop(), 10);
+          routeInfoText.textContent = `Cargo Station ${tile.dataset.stationId} 
+            — Cargo Station ${tile.dataset.routeTo} — ${tile.dataset.cargoStationItem}`;
+          targetStationChangeText(btn.id, tile);
+        }
       });
-    });
+    }
+
+    function targetStationChangeText(id, tile) {
+      const targetStationId = parseInt(id.split(" ").pop(), 10);
+      const targetStation = document.querySelector(`[data-station-id="${targetStationId}"]`);
+      targetStation.dataset.routeFrom = `${tile.dataset.stationId}`;
+      const menu = document.querySelector(`[data-cargo-station-id="${targetStationId}"]`);
+      const routeInfoText = menu.querySelector(".cargoStationMenu__routeInfo-span");
+      routeInfoText.textContent = `Cargo Station ${tile.dataset.stationId} 
+          — Cargo Station ${tile.dataset.routeTo} — ${tile.dataset.cargoStationItem}`;
+    }
   }
   selectImportMaterial(menu, { mainFactoryTile, stationTile }) {
     const buildingName = mainFactoryTile.dataset.buildingType;
@@ -762,6 +764,25 @@ class CargoStationMenu extends BuildingMenu {
         mainFactoryTile.dataset.itemType = item.name;
         stationTile.dataset.cargoStationItem = item.name;
         importSelect.classList.add("hidden");
+        this.updateRoutesList();
+      };
+    });
+  }
+  selectExportMaterial(menu, { stationTile }) {
+    const exportSelect = menu.querySelector(".exportSelect");
+    allItems.forEach((item) => {
+      const itemBlock = document.createElement("div");
+      itemBlock.classList.add("exportItem");
+      itemBlock.innerHTML = `
+      <button class="exportItem-button">
+      <img src="${item.src}"/>
+      </button>
+      <span>${item.name}:</span>
+       `;
+      exportSelect.appendChild(itemBlock);
+      itemBlock.querySelector(".exportItem-button").onclick = () => {
+        stationTile.dataset.cargoStationItem = item.name;
+        exportSelect.classList.add("hidden");
         this.updateRoutesList();
       };
     });

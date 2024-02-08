@@ -88,3 +88,30 @@ function cameraMoveCenter(event) {
   gridContainer.style.transform = `scale(${scale}) translate(${newOffsetX}px, ${newOffsetY}px) rotateX(45deg) rotateZ(45deg)`;
   document.removeEventListener("click", cameraMoveCenter);
 }
+
+function dragElement(id) {
+  const position = { x: 0, y: 0 };
+  const container = document.querySelector("#limit-container");
+  interact(`#${id}`).draggable({
+    modifiers: [
+      interact.modifiers.restrictRect({
+        restriction: container,
+      }),
+    ],
+
+    listeners: {
+      start(event) {
+        blockCameraMove = true;
+      },
+      move(event) {
+        position.x += event.dx;
+        position.y += event.dy;
+
+        event.target.style.transform = `translate(${position.x}px, ${position.y}px)`;
+      },
+      end(event) {
+        blockCameraMove = false;
+      },
+    },
+  });
+}

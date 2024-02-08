@@ -53,8 +53,8 @@ class Conveyor extends Building {
   }
 }
 class Connector extends Conveyor {
-  constructor(id, type) {
-    super(id, type);
+  constructor(tile, id, type) {
+    super(tile, id, type);
     this.direction = buildingDirection;
     this.name = "connector";
     this.tile = tile;
@@ -249,13 +249,13 @@ class CargoStation extends Building {
     Object.assign(this, findTarget);
   }
 
-  updateData(mainFactoryTile, type) {
+  updateData(mainFactoryTile, type, selectedExportItem) {
     if (mainFactoryTile) {
       const data = mainFactoryTile.dataset;
       let itemName, itemAmount, multiplyMaterials;
       if (type == "export") {
-        itemName = data.itemTypeOutput;
-        itemAmount = data.itemAmountOutput;
+        itemName = selectedExportItem ?? data.itemTypeOutput;
+        itemAmount = 99 ?? data.itemAmountOutput;
       } else if (type == "import" && data.buildingType == "assembler") {
         multiplyMaterials = {
           firstMatName: data.firstMatName,
@@ -263,6 +263,7 @@ class CargoStation extends Building {
           secondMatName: data.secondMatName,
           secondMatAmount: data.secondMatAmount,
         };
+      } else if (type == "export" && data.buildingType == "tradingTerminal") {
       } else {
         itemName = data.itemType;
         itemAmount = mainFactoryTile.dataset.itemAmount;
@@ -307,7 +308,7 @@ class CargoStation extends Building {
 
     if (currentTile.id != pointB.id) {
       let neighborsTilesFunc = findNeighbors.bind(this, currentX, currentZ);
-      let neighborsTiles = neighborsTilesFunc();
+      const neighborsTiles = neighborsTilesFunc();
       let openTilesList = [];
       neighborsTiles.forEach((tile) => {
         if (tile.dataset.buildingType == "road" || tile.dataset.routeFrom) {
@@ -466,12 +467,12 @@ class CargoStation extends Building {
                 break;
               case "down":
                 property = "top";
-                offset = nextDir === "right" ? 55 : nextDir === "left" ? 30 : 40;
+                offset = nextDir === "right" ? 50 : nextDir === "left" ? 30 : 40;
                 truckImg.src = "/img/transport/truckDown.png";
                 break;
               case "left":
                 property = "left";
-                offset = nextDir === "down" ? -50 : nextDir === "top" ? -30 : -40;
+                offset = nextDir === "down" ? -50 : nextDir === "top" ? -35 : -40;
                 truckImg.src = "/img/transport/truckLeft.png";
                 break;
             }
@@ -535,21 +536,42 @@ class CargoStation extends Building {
       let dir = directionsList[i];
       routePointsList[i].classList.add(`${dir}Route`);
     }
-    const routeObj = {
-      id: routeId++,
-      stationA: stationA,
-      stationB: stationB,
-      routePointsList: routePointsList,
-      directionsList: directionsList,
-    };
-    allRoutesList.push(routeObj);
+
+    const isRouteExist = allRoutesList.some((route) => route.id === routeId);
+    if (!isRouteExist) {
+      const routeObj = {
+        id: routeId++,
+        stationA: stationA,
+        stationB: stationB,
+        routePointsList: routePointsList,
+        directionsList: directionsList,
+      };
+      allRoutesList.push(routeObj);
+    }
+
+    animateRoute(0);
+    function animateRoute(index) {
+      if (stationA.classList.contains("pointRoute")) {
+        if (index < directionsList.length) {
+          setTimeout(() => {
+            routePointsList[index].classList.add("routeColorChange");
+          }, 40);
+          setTimeout(() => {
+            routePointsList[index].classList.remove("routeColorChange");
+            animateRoute(index + 1);
+          }, 80);
+        } else {
+          animateRoute(0);
+        }
+      }
+    }
   }
 }
-class PointB extends Building {
+class TradingTerminal extends Building {
   constructor(id, type) {
     super(id, type);
     this.direction = buildingDirection;
-    this.name = "pointB";
+    this.name = "tradingTerminal";
     Object.assign(this, findTarget);
   }
 }

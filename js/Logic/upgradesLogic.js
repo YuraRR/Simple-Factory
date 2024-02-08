@@ -49,7 +49,7 @@ class Foundry extends Upgrade {
   chooseRecipe() {
     let mainTile = findMainTile(this.tile);
     if (!mainTile.dataset.selectedProduct) {
-      this.tile.dataset.selectedProduct = this.type;
+      mainTile.dataset.selectedProduct = this.type;
     }
   }
 }

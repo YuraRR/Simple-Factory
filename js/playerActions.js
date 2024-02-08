@@ -94,10 +94,10 @@ function activeTool() {
           xSize = 1;
           zSize = 1;
           break;
-        case "pointB":
-          createEventListener(pointBCreating);
-          xSize = 1;
-          zSize = 1;
+        case "tradingTerminal":
+          createEventListener(tradingTerminalCreating);
+          xSize = 3;
+          zSize = 3;
           break;
       }
     });
@@ -130,7 +130,7 @@ function resetTool() {
   gridContainer.removeEventListener("click", pipeCreating);
   gridContainer.removeEventListener("click", roadCreating);
   gridContainer.removeEventListener("click", cargoStationCreating);
-  gridContainer.removeEventListener("click", pointBCreating);
+  gridContainer.removeEventListener("click", tradingTerminalCreating);
   gridContainer.removeEventListener("click", fluidSplitterCreating);
 }
 activeTool();

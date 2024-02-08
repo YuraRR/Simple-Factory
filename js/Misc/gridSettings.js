@@ -1,4 +1,5 @@
 const gridContainer = document.querySelector(".grid-container");
+const limitContainer = document.querySelector("#limit-container");
 // Создание сетки игры
 function createGrid(container) {
   const fragment = document.createDocumentFragment();
@@ -17,7 +18,6 @@ function createGrid(container) {
   container.appendChild(fragment);
 }
 createGrid(gridContainer);
-// createGrid(undergroundGridContainer);
 let scale = 1;
 let offsetX = 0;
 let offsetY = 0;
@@ -35,7 +35,7 @@ function handleWheel(event) {
   zoom(delta);
 }
 
-gridContainer.addEventListener("wheel", handleWheel, { passive: false });
+limitContainer.addEventListener("wheel", handleWheel, { passive: false });
 
 function zoom(delta) {
   const scaleFactor = 1.3; // Множитель масштаба
@@ -81,7 +81,7 @@ document.addEventListener("mouseup", () => {
 
 document.addEventListener("mousemove", (event) => {
   // Процесс перемещения
-  if (isDragging) {
+  if (isDragging && !blockCameraMove) {
     const deltaX = (event.clientX - startX) * sensitivity;
     const deltaY = (event.clientY - startY) * sensitivity;
 

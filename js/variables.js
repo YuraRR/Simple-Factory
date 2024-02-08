@@ -20,6 +20,7 @@ let buildingDirection = 0;
 let currentTool;
 //MISC
 let menuOpened = false;
+let blockCameraMove = false;
 let undergroundOpened = false;
 let foundryType;
 let conveyorIntervalId;
@@ -166,7 +167,7 @@ const allProcessingOreRecipes = [
     productAmount: 1,
   },
   {
-    productName: "Refined copper ore",
+    productName: "Refined Copper Ore",
     materialName: "Raw Copper Ore",
     materialImage: "img/resourcesIcons/copperOre-icon.svg",
     materialAmount: 2,

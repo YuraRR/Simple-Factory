@@ -32,7 +32,6 @@ class OreProcessingPlant extends Building {
         let recipeObj = allProcessingOreRecipes.find(
           (recipe) => recipe.materialName === this.tileData.itemType
         );
-        console.log(recipeObj);
         this.itemProcessingOneMaterial(this.findTargetTile(), menu, recipeObj);
         processingStarted = true;
       }
@@ -65,8 +64,6 @@ class Smelter extends Building {
     setInterval(() => {
       let selectedProduct = this.tileData.selectedProduct;
       if (this.tileData.itemAmount != 0 && !processingStarted && selectedProduct) {
-        console.log(this.tileData.itemType);
-        console.log(this.tileData.selectedProduct);
         let recipeObj = allSmeltingRecipes.find(
           (recipe) =>
             recipe.productSubtype === this.tileData.selectedProduct &&

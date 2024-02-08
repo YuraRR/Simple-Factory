@@ -48,90 +48,34 @@ class Building {
     } else {
       img.dataset.imageType = this.tileData.buildingType;
     }
-
-    switch (this.name) {
-      case "mineshaft":
-        img.src = "/img/buildings/mineshaft.png";
-        break;
-      case "smelter":
-        img.src = "/img/buildings/smelter.png";
-        break;
-      case "oreProcessing":
-        img.src = "/img/buildings/oreProcessing.png";
-        break;
-      case "assembler":
-        img.src = "/img/buildings/assembler.png";
-        break;
-      case "storage":
-        img.src = "/img/buildings/storage.png";
-        break;
-      case "waterPump":
-        img.src = "/img/buildings/waterPump.png";
-        break;
-      case "fluidConnector":
-        img.src = "/img/buildings/fluidConnectorModel.png";
-        break;
-      // case "conveyor":
-      //   img.dataset.imageType = "conveyor";
-      //   switch (buildingDirection) {
-      //     case 0:
-      //       img.src = "/img/conveyors/conveyorTop.png";
-      //       break;
-      //     case 1:
-      //       img.src = "/img/conveyors/conveyorRight.png";
-      //       break;
-      //     case 2:
-      //       img.src = "/img/conveyors/conveyorBottom.png";
-      //       break;
-      //     case 3:
-      //       img.src = "/img/conveyors/conveyorLeft.png";
-      //       break;
-      //   }
-      //   break;
-      case "pipe":
-        img.dataset.imageType = "pipe";
-        switch (buildingDirection) {
-          case 0:
-            img.src = "/img/conveyors/pipeModelTop.png";
-            break;
-          case 1:
-            img.src = "/img/conveyors/pipeModelRight.png";
-            break;
-          case 2:
-            img.src = "/img/conveyors/pipeModelBottom.png";
-            break;
-          case 3:
-            img.src = "/img/conveyors/pipeModelLeft.png";
-            break;
-        }
-        break;
-      case "fluidSplitter":
-        img.dataset.imageType = "pipe";
-        switch (buildingDirection) {
-          case 0:
-            img.src = "/img/buildings/fluidSplitterModel.png";
-            break;
-          case 1:
-            img.src = "/img/buildings/fluidSplitterModel.png";
-            break;
-          case 2:
-            img.src = "/img/buildings/fluidSplitterModel.png";
-            break;
-          case 3:
-            img.src = "/img/buildings/fluidSplitterModel.png";
-            break;
-        }
-        break;
-      default:
-        img.src = "/img/buildings/noModel.png";
-        break;
+    if (this.name == "pipe") {
+      switch (this.name) {
+        case "pipe":
+          img.dataset.imageType = "pipe";
+          switch (buildingDirection) {
+            case 0:
+              img.src = "/img/conveyors/pipeModelTop.png";
+              break;
+            case 1:
+              img.src = "/img/conveyors/pipeModelRight.png";
+              break;
+            case 2:
+              img.src = "/img/conveyors/pipeModelBottom.png";
+              break;
+            case 3:
+              img.src = "/img/conveyors/pipeModelLeft.png";
+              break;
+          }
+          break;
+      }
+    } else {
+      img.src = `/img/buildings/${this.name}.png`;
     }
     this.tile.appendChild(img);
   }
 
-  addPipeDirection() {
+  addPipeDirection(targetTile) {
     const img = this.tile.querySelector(`[data-image-type="pipe"]`);
-
     this.tileData.undergroundType = "pipe";
     this.tileData.fluidAmount = 0;
     switch (this.direction) {
@@ -159,90 +103,86 @@ class Building {
   }
   moveItem(exporter, importer, wayOfMoving) {
     let currentItem;
+    const importData = importer.dataset;
+    const exportData = exporter.dataset;
     switch (wayOfMoving) {
       case "conveyor":
         const conveyorIntervalId = setInterval(() => {
-          switch (exporter.dataset.buildingType) {
+          switch (exportData.buildingType) {
             case "conveyor":
             case "connector":
             case "storage":
             case "splitter":
-              currentItem = exporter.dataset.itemType;
+              currentItem = exportData.itemType;
               break;
             case "mineshaft":
             case "smelter":
             case "oreProcessing":
-              currentItem = exporter.dataset.itemTypeOutput;
+              currentItem = exportData.itemTypeOutput;
               break;
           }
           //CONVEYOR TO CONVEYOR
           if (
-            importer.dataset.buildingType == "conveyor" &&
-            exporter.dataset.buildingType != "splitter" &&
-            exporter.dataset.buildingCategory != "inOut" &&
-            exporter.dataset.itemAmount > 0 &&
-            importer.dataset.itemAmount == 0
+            importData.buildingType == "conveyor" &&
+            exportData.buildingType != "splitter" &&
+            exportData.buildingCategory != "inOut" &&
+            exportData.itemAmount > 0 &&
+            importData.itemAmount == 0
           ) {
             this.move(importer, exporter, currentItem);
-            if (exporter.dataset.itemAmount == 0) {
-              exporter.dataset.itemType = "none";
+            if (exportData.itemAmount == 0) {
+              exportData.itemType = "none";
             }
 
             //CONVEYOR TO CONNECTOR
           } else if (
-            (importer.dataset.buildingType == "connector" ||
-              importer.dataset.buildingType == "splitter") &&
-            exporter.dataset.buildingType == "conveyor" &&
-            exporter.dataset.itemAmount > 0
+            (importData.buildingType == "connector" || importData.buildingType == "splitter") &&
+            exportData.buildingType == "conveyor" &&
+            exportData.itemAmount > 0
           ) {
-            importer.dataset.itemAmount++;
-            importer.dataset.itemType = currentItem;
-            if (
-              exporter.dataset.buildingCategory == "inOut" &&
-              exporter.dataset.itemAmountOutput > 0
-            ) {
-              exporter.dataset.itemAmountOutput--;
-            } else if (exporter.dataset.buildingCategory != "inOut") {
-              exporter.dataset.itemAmount--;
+            importData.itemAmount++;
+            importData.itemType = currentItem;
+            if (exportData.buildingCategory == "inOut" && exportData.itemAmountOutput > 0) {
+              exportData.itemAmountOutput--;
+            } else if (exportData.buildingCategory != "inOut") {
+              exportData.itemAmount--;
             }
-            if (exporter.dataset.itemAmount == 0) {
-              exporter.dataset.itemType = "none";
+            if (exportData.itemAmount == 0) {
+              exportData.itemType = "none";
             }
             //BUILDING TO CONNECTOR
           } else if (
-            importer.dataset.buildingType == "connector" &&
-            (exporter.dataset.buildingCategory == "Out" ||
-              exporter.dataset.buildingCategory == "inOut")
+            importData.buildingType == "connector" &&
+            (exportData.buildingCategory == "Out" || exportData.buildingCategory == "inOut")
           ) {
             let newExporter = findMainTile(exporter);
             if (newExporter.dataset.itemAmountOutput > 0) {
-              importer.dataset.itemAmount++;
-              importer.dataset.itemType = newExporter.dataset.itemTypeOutput;
+              importData.itemAmount++;
+              importData.itemType = newExporter.dataset.itemTypeOutput;
               newExporter.dataset.itemAmountOutput--;
             }
 
             //CONNECTOR TO BUILDING
           } else if (
-            exporter.dataset.buildingType == "connector" &&
-            exporter.dataset.itemAmount > 0 &&
-            (importer.dataset.buildingCategory == "inOut" ||
-              importer.dataset.buildingType == "storage")
+            exportData.buildingType == "connector" &&
+            exportData.itemAmount > 0 &&
+            (importData.buildingCategory == "inOut" || importData.buildingType == "storage")
           ) {
             let newImporter = findMainTile(importer);
             this.move(newImporter, exporter, currentItem);
             //CONNECTOR TO STORAGE
           } else if (
-            importer.dataset.buildingType == "connector" &&
-            exporter.dataset.buildingType == "storage" &&
-            exporter.dataset.itemAmount > 0
+            importData.buildingType == "connector" &&
+            exportData.buildingType == "storage" &&
+            exportData.itemAmount > 0
           ) {
             this.move(importer, exporter, currentItem);
 
             //CONNECTOR TO ASSEMBLER
           } else if (
-            importer.dataset.buildingType == "assembler" &&
-            exporter.dataset.buildingType == "connector" &&
-            exporter.dataset.itemAmount > 0
+            importData.buildingType == "assembler" &&
+            exportData.buildingType == "connector" &&
+            exportData.itemAmount > 0
           ) {
             let newImporter = findMainTile(importer);
             if (
@@ -251,39 +191,39 @@ class Building {
             ) {
               newImporter.dataset.firstMatAmount++;
               newImporter.dataset.firstMatName = currentItem;
-              exporter.dataset.itemAmount--;
+              exportData.itemAmount--;
             } else if (
               !newImporter.dataset.secondMatName ||
               newImporter.dataset.secondMatName == currentItem
             ) {
               newImporter.dataset.secondMatAmount++;
               newImporter.dataset.secondMatName = currentItem;
-              exporter.dataset.itemAmount--;
+              exportData.itemAmount--;
             }
           }
         }, 1000);
-        exporter.dataset.intervalId = conveyorIntervalId;
+        exportData.intervalId = conveyorIntervalId;
         break;
       //PIPE
       case "pipe":
         setInterval(() => {
           if (
-            exporter.dataset.fluidAmount > 0 &&
-            importer.dataset.fluidAmount < 10 &&
-            importer.dataset.undergroundType == "pipe"
+            exportData.fluidAmount > 0 &&
+            importData.fluidAmount < 10 &&
+            importData.undergroundType == "pipe"
           ) {
-            importer.dataset.fluidType = exporter.dataset.fluidType;
-            importer.dataset.fluidAmount++;
-            exporter.dataset.fluidAmount--;
+            importData.fluidType = exportData.fluidType;
+            importData.fluidAmount++;
+            exportData.fluidAmount--;
           } else if (
-            exporter.dataset.fluidAmount > 0 &&
-            importer.dataset.fluidAmount < 10 &&
-            importer.dataset.upgradeType == "Washer"
+            exportData.fluidAmount > 0 &&
+            importData.fluidAmount < 10 &&
+            importData.upgradeType == "Washer"
           ) {
             let newImporter = findMainTile(importer);
-            newImporter.dataset.fluidType = exporter.dataset.fluidType;
+            newImporter.dataset.fluidType = exportData.fluidType;
             newImporter.dataset.fluidAmount++;
-            exporter.dataset.fluidAmount--;
+            exportData.fluidAmount--;
             console.log(newImporter);
             console.log(importer);
           }
@@ -305,7 +245,10 @@ class Building {
         currentTile.dataset.type = this.tileData.type;
         currentTile.dataset.buildingType = this.tileData.buildingType;
         currentTile.dataset.buildingId = this.tileData.buildingId;
-        currentTile.dataset.buildingCategory = this.tileData.buildingCategory;
+        if (this.tileData.buildingCategory) {
+          currentTile.dataset.buildingCategory = this.tileData.buildingCategory;
+        }
+
         occupiedTiles.push(currentTile);
       }
     }
@@ -318,6 +261,7 @@ class Building {
   }
 
   itemProcessingOneMaterial(tile, menu, { materialAmount, productName, productAmount }) {
+    console.log(tile);
     const tileData = tile.dataset;
     let progressBarAnimation;
     let processItemStarted = false;
@@ -325,11 +269,13 @@ class Building {
     function processItem() {
       updatedProductTime = tileData.productionTime;
       if (!processItemStarted && tileData.itemAmount >= materialAmount) {
+        createSmoke(tile);
         processItemStarted = true;
         progressBarAnimation = moveProgressBar(menu, updatedProductTime, processItem);
         if (progressBarAnimation.width == 0) {
           tileData.itemAmount -= materialAmount;
           setTimeout(() => {
+            if (tileData.itemAmount <= materialAmount) deleteSmoke(tile);
             tileData.itemAmountOutput = String(
               parseFloat(tileData.itemAmountOutput) + productAmount
             );
@@ -439,6 +385,9 @@ function findMainTile(building) {
   let currentId = building.dataset.buildingId;
   let allBuildingTiles = document.querySelectorAll(`[data-building-id="${currentId}"]`);
   return Array.from(allBuildingTiles).find(
-    (tile) => tile.dataset.itemAmount || tile.dataset.itemAmountOutput
+    (tile) =>
+      tile.dataset.itemAmount ||
+      tile.dataset.itemAmountOutput ||
+      tile.dataset.buildingType == "tradingTerminal"
   );
 }

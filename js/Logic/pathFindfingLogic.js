@@ -16,3 +16,12 @@ function findNeighbors(currentX, currentZ) {
 function findXZpos(currentTile) {
   return currentTile.id.split(".").map(Number);
 }
+function isTileBorder(newBuilding) {
+  const hoveredCells = document.querySelectorAll(`[data-hover="true"]`);
+  return Array.from(hoveredCells).some((cell) => {
+    let [currentX, currentZ] = findXZpos(cell);
+    let neighborsTilesFunc = findNeighbors.bind(newBuilding, currentX, currentZ);
+    const neighborsTiles = neighborsTilesFunc();
+    return neighborsTiles.some((tile) => !tile.dataset.type);
+  });
+}

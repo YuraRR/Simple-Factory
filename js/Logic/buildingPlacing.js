@@ -85,7 +85,7 @@ function fluidSplitterCreating(event) {
       let newBuilding = new FluidSplitter(cell);
       newBuilding.getId(cell.id);
       newBuilding.createBuildingImage();
-      newBuilding.addPipeDirection();
+      newBuilding.addPipeDirection(cell);
       newBuilding.splitItems("fluid");
     }
   }
@@ -131,6 +131,7 @@ function smelterCreating(event) {
       newBuilding.createBuildingImage();
       let clickArea = newBuilding.tilesOccupation(3, 3);
       newBuilding.processing(clickArea);
+      console.log("da1");
     }
   }
 }
@@ -208,13 +209,18 @@ function cargoStationCreating(event) {
     }
   }
 }
-function pointBCreating(event) {
+//TRADING TERMINAL
+function tradingTerminalCreating(event) {
   if (event.target.classList.contains("grid-cell")) {
     const cell = event.target;
     if (cell.dataset.type == "empty") {
-      let newBuilding = new PointB();
-      newBuilding.getId(cell.id);
-      newBuilding.createBuilding();
+      let newBuilding = new TradingTerminal(cell);
+      if (isTileBorder(newBuilding)) {
+        newBuilding.getId(cell.id);
+        newBuilding.createBuilding();
+        newBuilding.createBuildingImage();
+        let clickArea = newBuilding.tilesOccupation(3, 3);
+      }
     }
   }
 }
