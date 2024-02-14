@@ -16,6 +16,13 @@ function activeTool() {
           xSize = 1;
           zSize = 1;
           break;
+        case "quarry":
+          createEventListener(quarryCreating);
+          transperentBuildingsRemove();
+          if (undergroundOpened) showUnderground();
+          xSize = 2;
+          zSize = 2;
+          break;
         case "oreProcessing":
           createEventListener(oreProcessingCreating);
           transperentBuildingsRemove();
@@ -175,6 +182,9 @@ function handleMouseEnter(event) {
               case "waterPump":
                 applyPlacementClass(currentTile, "sand");
                 break;
+              case "quarry":
+                applyPlacementClass(currentTile, "sand");
+                break;
               default:
                 applyPlacementClass(currentTile, "empty");
                 break;
@@ -241,11 +251,7 @@ function updateCellStyle() {
         const isDemolition = currentTool === "demolition";
         const isCellMatched = cell === currentHoveredCell && dir === DIRECTIONS[buildingDirection];
 
-        if (
-          !isDemolition &&
-          cell.dataset.type === "empty" &&
-          cell.dataset.featuresType !== "tree"
-        ) {
+        if (!isDemolition && cell.dataset.type === "empty" && cell.dataset.featuresType !== "tree") {
           cell.classList.toggle(dir, isCellMatched);
         } else if (isDemolition) {
           cell.classList.toggle(dir, isCellMatched);
@@ -382,9 +388,7 @@ function multiplyBuilding(tilesList, event) {
   else ghostSecondPoint = event.target;
   if (currentTool == "road" && tilesList.length > 0) {
     let [firstX, firstZ] = findXZpos(tilesList[0]);
-    let [secondX, secondZ] = ghostSecondPoint
-      ? findXZpos(ghostSecondPoint)
-      : findXZpos(tilesList[1]);
+    let [secondX, secondZ] = ghostSecondPoint ? findXZpos(ghostSecondPoint) : findXZpos(tilesList[1]);
     if (firstX > secondX) [firstX, secondX] = [secondX, firstX];
     if (firstZ > secondZ) [firstZ, secondZ] = [secondZ, firstZ];
 

@@ -58,5 +58,9 @@ document.addEventListener("keydown", (event) => {
     hideRoutes();
     if (undergroundOpened) showUnderground();
     if (!undergroundOpened) transperentBuildingsRemove();
+    if (allOpenedMenu.length > 0) {
+      const lastMenu = allOpenedMenu.pop();
+      lastMenu.classList.add("hidden");
+    }
   }
 });

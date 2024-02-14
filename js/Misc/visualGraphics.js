@@ -1,6 +1,5 @@
 function createSmoke(tile) {
   const existingSmoke = tile.querySelector(`[data-visual-type="smoke"]`);
-  console.log(!existingSmoke);
   if (existingSmoke == null) {
     const smokeImg = document.createElement("img");
     smokeImg.src = "/img/animations/smoke.gif";

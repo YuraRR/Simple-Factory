@@ -1,22 +1,74 @@
+@mixin natureFeature {
+  transform: rotateZ(323deg) rotateY(68deg) rotate3d(8, -11, -5, 11deg);
+  border: none !important;
+  position: absolute;
+  user-select: none;
+  pointer-events: none;
+  z-index: 100;
+}
 [data-type="water"] {
-  background-image: url(/img/textures/water.jpg) !important;
+  background-image: url(/img/animations/water.gif) !important;
   outline: none !important;
 }
+
 [data-type="sand"] {
   background-image: url(/img/textures/sand.jpg) !important;
   outline: none !important;
 }
+[data-type="forest"] {
+  background-image: url(/img/textures/darkGrass.png) !important;
+  outline: none !important;
+}
+[data-type="flowers"] {
+  background-image: url(/img/textures/mediumGrass.png) !important;
+  outline: none !important;
+}
 [data-features-type="tree"] {
   position: relative;
+  img {
+    @include natureFeature();
+    width: 60px;
+    top: -30px;
+    left: -25px;
+  }
+
   .tree {
-    transform: rotate(313.5deg);
-    border: none !important;
-    max-width: 40px;
-    position: absolute;
-    top: -26px;
+    @include natureFeature();
+    width: 50px;
+    top: -40px;
     left: -20px;
-    user-select: none;
-    pointer-events: none;
-    z-index: 100;
+  }
+  .pines {
+    @include natureFeature();
+    width: 70px;
+    top: -45px;
+    left: -30px;
+  }
+}
+[data-features-type="rock"] {
+  position: relative;
+  img {
+    @include natureFeature();
+    width: 60px;
+    top: -20px;
+    left: -17px;
+  }
+}
+[data-features-type="bush"] {
+  position: relative;
+  img {
+    @include natureFeature();
+    width: 60px;
+    top: -5px;
+    left: -10px;
+  }
+}
+[data-features-type="reed"] {
+  position: relative;
+  img {
+    @include natureFeature();
+    width: 60px;
+    top: -20px;
+    left: -17px;
   }
 }

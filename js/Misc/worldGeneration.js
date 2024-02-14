@@ -1,21 +1,26 @@
-class Water {
-  constructor(x, y, type) {
+class Generator {
+  constructor(x, y) {
     this.x = x;
     this.z = y;
-    this.type = type;
     Object.assign(this, findTarget);
   }
-
-  spawn() {
-    let waterCell = document.getElementById(`${this.x}.${this.z}`);
-    if (waterCell.dataset.type == "empty") {
-      waterCell.dataset.type = "water";
-      this.expandWater();
+  generateOne(featureType, featureVariants, tile, origNeighbourType) {
+    if (!tile) tile = document.getElementById(`${this.x}.${this.z}`);
+    const featureVariant = randomArrayElem(featureVariants);
+    if (
+      (tile.dataset.type == "empty" || tile.dataset.type == origNeighbourType) &&
+      !tile.dataset.featuresType
+    ) {
+      const img = document.createElement("img");
+      img.src = `/img/features/${featureVariant}.webp`;
+      img.draggable = false;
+      img.classList.add(featureVariant);
+      tile.appendChild(img);
+      tile.dataset.featuresType = featureType;
     }
   }
-
-  expandWater() {
-    const probability = 0.45;
+  generateMultiply(min, probability, tileType, featureType, featureVariants) {
+    let counter = 0;
     const queue = [{ x: this.x, y: this.z }];
 
     while (queue.length > 0) {
@@ -27,13 +32,19 @@ class Water {
         const tile = document.getElementById(`${newX}.${newY}`);
 
         if (tile) {
-          if (tile.dataset.type === "empty" && Math.random() < probability) {
-            tile.dataset.type = "water";
+          if (
+            (tile.dataset.type === "empty" && Math.random() < probability) ||
+            (tile.dataset.type === "empty" && min > counter)
+          ) {
+            if (featureType) {
+              this.generateOne(featureType, featureVariants, tile);
+            }
+            tile.dataset.type = tileType;
             queue.push({ x: newX, y: newY });
           } else if (tile.dataset.type === "empty") {
-            // Replace land with water
-            tile.dataset.type = "water";
+            tile.dataset.type = tileType;
           }
+          counter++;
         }
       };
 
@@ -43,66 +54,114 @@ class Water {
       expandTile(-1, 0); // Left
     }
   }
-}
-class Tree {
-  constructor(x, y, type) {
-    this.x = x;
-    this.z = y;
-    this.type = type;
-    Object.assign(this, findTarget);
-  }
-  spawn() {
-    let treeCell = document.getElementById(`${this.x}.${this.z}`);
-    if (treeCell.dataset.type == "empty" && treeCell.dataset.featuresType != "tree") {
-      treeCell.dataset.featuresType = "tree";
-      let targetTile = this.findTargetTile();
-      const img = document.createElement("img");
-      img.src = "/img/features/tree.png";
-      img.draggable = false;
-      img.classList.add("tree");
-      targetTile.appendChild(img);
-
-      // TREE CHOPING
-
-      img.addEventListener("dblclick", () => {
-        const sound = new Audio("/sounds/test.m4a");
-        sound.play();
-        img.remove();
-        delete treeCell.dataset.featuresType;
-        woodAmount += 3;
-      });
-    }
-  }
-}
-class Sand {
-  constructor(x, y, type) {
-    this.x = x;
-    this.z = y;
-    this.type = type;
-    Object.assign(this, findTarget);
-  }
-
-  spawn() {
-    for (let i = 0; i < gridSize; i++) {
-      for (let j = 0; j < gridSize; j++) {
-        let targetTile = document.getElementById(`${i}.${j}`);
-        let topTile = document.getElementById(`${i - 1}.${j}`);
-        let rightTile = document.getElementById(`${i}.${j + 1}`);
-        let bottomTile = document.getElementById(`${i + 1}.${j}`);
-        let leftTile = document.getElementById(`${i}.${j - 1}`);
-
-        if (targetTile.dataset.type == "empty") {
-          if (
-            (topTile && topTile.dataset.type == "water") ||
-            (rightTile && rightTile.dataset.type == "water") ||
-            (bottomTile && bottomTile.dataset.type == "water") ||
-            (leftTile && leftTile.dataset.type == "water")
-          ) {
-            targetTile.dataset.type = "sand";
+  generateAround(neighbourType, typeToPlace, layersAmount, featureType, featureVariants) {
+    let counter = 0;
+    const origTypeToPlace = typeToPlace;
+    const origNeighbourType = neighbourType;
+    const tempType = `${typeToPlace}Temp`;
+    const createLayer = (neighbourType, typeToPlace) => {
+      if (counter < layersAmount) {
+        for (let i = 0; i < gridSize; i++) {
+          for (let j = 0; j < gridSize; j++) {
+            const targetTile = this.findTargetTile(i, j);
+            const topTile = this.findTopTile(i, j);
+            const rightTile = this.findRightTile(i, j);
+            const bottomTile = this.findBottomTile(i, j);
+            const leftTile = this.findLeftTile(i, j);
+            if (
+              targetTile.dataset.type == "empty" &&
+              ((topTile && topTile.dataset.type == neighbourType) ||
+                (rightTile && rightTile.dataset.type == neighbourType) ||
+                (bottomTile && bottomTile.dataset.type == neighbourType) ||
+                (leftTile && leftTile.dataset.type == neighbourType))
+            ) {
+              if (Math.random() < 0.8) {
+                targetTile.dataset.type = typeToPlace;
+              } else {
+                targetTile.dataset.type = neighbourType;
+                this.generateOne(featureType, featureVariants, targetTile, origNeighbourType);
+              }
+            }
           }
         }
+        counter++;
+        neighbourType = origTypeToPlace;
+        const tempTiles = document.querySelectorAll(`[data-type="${tempType}"]`);
+        tempTiles.forEach((tile) => (tile.dataset.type = origTypeToPlace));
+        createLayer(neighbourType, tempType);
+      } else {
       }
+    };
+    createLayer(neighbourType, typeToPlace);
+  }
+}
+
+class Water extends Generator {
+  constructor(x, y) {
+    super();
+    this.x = x;
+    this.z = y;
+  }
+  spawn() {
+    let waterCell = document.getElementById(`${this.x}.${this.z}`);
+    if (waterCell.dataset.type == "empty") {
+      waterCell.dataset.type = "water";
+      this.generateMultiply(10, 0.3, "water");
     }
+  }
+}
+class Tree extends Generator {
+  constructor(x, y) {
+    super();
+    this.x = x;
+    this.z = y;
+  }
+  spawn() {
+    const treesList = ["pine", "oak1", "oak2", "oak3", "oak4"];
+    this.generateOne("tree", treesList);
+  }
+  // TREE CHOPING
+
+  // img.addEventListener("dblclick", () => {
+  //   const sound = new Audio("/sounds/test.m4a");
+  //   sound.play();
+  //   img.remove();
+  //   delete treeCell.dataset.featuresType;
+  //   woodAmount += 3;
+  // });
+}
+class WaterDecor extends Generator {
+  constructor(x, y) {
+    super();
+    this.x = x;
+    this.z = y;
+  }
+  spawn() {}
+}
+class Forest extends Generator {
+  constructor(x, y) {
+    super();
+    this.x = x;
+    this.z = y;
+  }
+  spawn() {
+    const treesList = ["pine", "pines", "oak1", "oak2", "oak3", "oak4"];
+    const bushesList = ["bush1", "bush2", "bush3", "bush4"];
+    this.generateMultiply(15, 0.45, "forest", "tree", treesList);
+    this.generateAround("forest", "flowers", 2, "bush", bushesList);
+  }
+}
+class Sand extends Generator {
+  constructor(x, y) {
+    super();
+    this.x = x;
+    this.z = y;
+  }
+  spawn() {
+    const decorList = ["reed"];
+    this.generateAround("water", "sand", 2, "reed", decorList);
+    const sandTiles = gridContainer.querySelectorAll(`[data-type="sand"]`);
+    sandTiles.forEach((tile) => (tile.dataset.resType = "Sand"));
   }
 }
 
@@ -133,50 +192,39 @@ class Copper extends Ore {
     super(x, y, "copper");
   }
 }
-
-function spawnWater(amount) {
-  for (let i = 0; i < amount; i++) {
-    let waterNode = new Water(randomId(), randomId());
-    waterNode.spawn();
+class StoneRock extends Generator {
+  constructor(x, y) {
+    super();
+    this.x = x;
+    this.z = y;
   }
-}
-function spawnSand(amount) {
-  for (let i = 0; i < amount; i++) {
-    let sandNode = new Sand();
-    sandNode.spawn();
-  }
-}
-function spawnTrees(amount) {
-  for (let i = 0; i < amount; i++) {
-    let treeNode = new Tree(randomId(), randomId());
-    treeNode.spawn();
-  }
-}
-function spawnIron(amount) {
-  for (let i = 0; i < amount; i++) {
-    let ironNode = new Iron(randomId(), randomId());
-    ironNode.spawn();
-  }
-}
-
-function spawnCopper(amount) {
-  for (let i = 0; i < amount; i++) {
-    let copperNode = new Copper(randomId(), randomId());
-    copperNode.spawn();
+  spawn() {
+    const rocksList = ["stone1", "stone2", "stone3", "stone4"];
+    this.generateOne("rock", rocksList);
   }
 }
 
 function randomId() {
   return Math.floor(Math.random() * gridSize);
 }
-
+function randomArrayElem(array) {
+  const randomIndex = Math.floor(Math.random() * array.length);
+  return array[randomIndex];
+}
+function spawnObj(objClass, amount) {
+  for (let i = 0; i < amount; i++) {
+    new objClass(randomId(), randomId()).spawn();
+  }
+}
 let state = localStorage.getItem("toGenerate");
 if (state == "true") {
-  spawnWater(1);
-  spawnSand(1);
-  spawnTrees(10);
-  spawnIron(5);
-  spawnCopper(10);
+  spawnObj(Water, 1);
+  spawnObj(Sand, 1);
+  spawnObj(Forest, 2);
+  spawnObj(Tree, 20);
+  spawnObj(Iron, 4);
+  spawnObj(Copper, 4);
+  spawnObj(StoneRock, 10);
 } else {
   loadGame();
 }

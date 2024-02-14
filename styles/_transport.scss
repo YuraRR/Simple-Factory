@@ -6,12 +6,16 @@
 .truck {
   transform: rotateZ(323deg) rotateY(68deg) rotate3d(8, -11, -5, 11deg);
   position: absolute;
-  pointer-events: none;
+  pointer-events: all;
   z-index: 100;
 
   top: -16px;
   left: -22px;
   transition: all 0.7s linear;
+
+  &:hover {
+    filter: grayscale(100%) sepia(50%) hue-rotate(13deg) saturate(600%);
+  }
   img {
     background-color: rgba(0, 0, 0, 0);
     background-size: cover;
@@ -40,7 +44,9 @@
 @mixin route {
   content: "";
   display: block;
-  background-color: red;
+  position: absolute;
+  margin: auto;
+  z-index: 99;
 }
 .topRoute,
 .rightRoute,
@@ -50,54 +56,43 @@
 }
 .topRoute:after {
   @include route();
-  position: absolute;
-  height: 100%;
-  width: 2.5px;
-  margin: auto;
+  height: 104%;
+  width: 5px;
   margin-left: 19px;
   bottom: 20px;
-  left: 0;
-  z-index: 99;
+  left: -1.5px;
 }
 
 .downRoute:after {
   @include route();
-  position: absolute;
-  height: 100%;
-  width: 2.5px;
-  margin: auto;
+  height: 106%;
+  width: 5px;
   margin-left: 19px;
   top: 20px;
-  left: 0;
-  z-index: 99;
+  left: -2.5px;
 }
 
 .leftRoute:after {
   @include route();
-  position: absolute;
-  width: 100%;
-  height: 2.5px;
+  width: 104%;
+  height: 5px;
   margin-top: 20px;
   left: -20px;
-  top: 0px;
-  z-index: 99;
+  top: -2.5px;
 }
 .rightRoute:after {
   @include route();
-  position: absolute;
-  width: 100%;
-  height: 2.5px;
+  width: 115%;
+  height: 5px;
   margin-top: 20px;
-  right: -21.5px;
-  top: 0px;
-  z-index: 99;
+  right: -22.5px;
+  top: -2.5px;
 }
 .pointRoute:before {
   content: "";
   width: 13px;
   height: 13px;
   border-radius: 50%;
-  background-color: red;
   z-index: 2;
   position: absolute;
   top: 50%;
@@ -106,5 +101,67 @@
 }
 
 .routeColorChange:after {
-  background-color: rgb(229, 185, 185) !important;
+  background-color: whitesmoke !important;
+}
+
+.truckMenu {
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  background-color: var(--darkGray);
+  margin: auto;
+  width: 260px;
+  pointer-events: all;
+  left: 50px;
+  top: 50px;
+  &__truckName {
+    background-color: var(--black);
+    color: var(--white);
+    padding: 4px;
+    text-align: center;
+  }
+
+  &__resBlock {
+    display: flex;
+    padding: 5px;
+    max-width: 70%;
+    justify-content: space-between;
+  }
+
+  &__resImg {
+    width: 60px;
+    height: 60px;
+  }
+
+  &__resName {
+  }
+
+  &__resAmount {
+  }
+
+  &__routeName {
+    padding: 5px;
+    background-color: var(--midLightGray);
+  }
+
+  &__sell-button {
+    display: flex;
+    gap: 5px;
+    padding: 5px;
+    margin-left: auto;
+    margin-top: 5px;
+    align-items: center;
+    img {
+      width: 20px;
+    }
+  }
+  .close-button {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}
+
+.class::after {
+  background-color: "color";
 }

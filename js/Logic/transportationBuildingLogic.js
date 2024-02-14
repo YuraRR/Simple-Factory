@@ -253,9 +253,12 @@ class CargoStation extends Building {
     if (mainFactoryTile) {
       const data = mainFactoryTile.dataset;
       let itemName, itemAmount, multiplyMaterials;
-      if (type == "export") {
-        itemName = selectedExportItem ?? data.itemTypeOutput;
-        itemAmount = 99 ?? data.itemAmountOutput;
+      if (type == "export" && data.buildingType != "tradingTerminal") {
+        itemName = data.itemTypeOutput;
+        itemAmount = data.itemAmountOutput;
+      } else if (type == "export" && data.buildingType == "tradingTerminal") {
+        itemName = selectedExportItem;
+        itemAmount = 99;
       } else if (type == "import" && data.buildingType == "assembler") {
         multiplyMaterials = {
           firstMatName: data.firstMatName,
@@ -263,7 +266,6 @@ class CargoStation extends Building {
           secondMatName: data.secondMatName,
           secondMatAmount: data.secondMatAmount,
         };
-      } else if (type == "export" && data.buildingType == "tradingTerminal") {
       } else {
         itemName = data.itemType;
         itemAmount = mainFactoryTile.dataset.itemAmount;
@@ -291,7 +293,7 @@ class CargoStation extends Building {
     }
   }
 
-  startMoving([currentTile, closedTilesList, alternativeWaysList, forkTile]) {
+  calculateRoute([currentTile, closedTilesList, alternativeWaysList, forkTile]) {
     let pointA = this.findTargetTile();
     let pointB = document.querySelector(`[data-station-id="${pointA.dataset.routeTo}"]`);
     if (alternativeWaysList && !currentTile) {
@@ -341,7 +343,7 @@ class CargoStation extends Building {
       }
 
       closedTilesList.push(currentTile);
-      return this.startMoving([closestTile, closedTilesList, alternativeWaysList, forkTile]);
+      return this.calculateRoute([closestTile, closedTilesList, alternativeWaysList, forkTile]);
     } else {
       closedTilesList.push(pointB);
       return closedTilesList;
@@ -368,29 +370,52 @@ class CargoStation extends Building {
 
       previousTile = currentTile;
     });
-
     if (routePointsList[0].dataset.cargoStationType == "Import") {
       this.startBackwardsRoute(routePointsList, directionsList);
-      this.drawRoute(routePointsList, this.reverseRouteDirections(directionsList).reverse());
+      this.createRoute(routePointsList, this.reverseRouteDirections(directionsList).reverse());
     } else {
       this.moveTransportImage(routePointsList, directionsList);
-      this.drawRoute(routePointsList, directionsList);
+      this.createRoute(routePointsList, directionsList);
     }
   }
-  moveTransportImage(routePointsList, directionsList) {
+  moveTransportImage(routePointsList, directionsList, truckId) {
+    //Stations
     const exportStation = routePointsList[0];
     const exportBuilding = findTargetTileByDirection(exportStation);
-    let transportHasStarted;
+    const exportBldData = exportBuilding.dataset;
+    const exportStData = exportStation.dataset;
+    const importStation = routePointsList[routePointsList.length - 1];
+    const importBuilding = findTargetTileByDirection(importStation);
+    const importBldData = importBuilding.dataset;
 
+    //Truck creation
     const truckBlock = document.createElement("div");
     const truckImg = document.createElement("img");
 
+    //Truck menu creation
+    const existMenu = document.querySelector(`#Truck${truckId}`);
+    let truckMenuObj, menu;
+    if (!truckId) truckId = truckIdCounter++;
+    truckBlock.dataset.truckId = truckId;
+    if (existMenu) {
+      menu = existMenu;
+    } else {
+      truckMenuObj = new TruckMenu(truckId, "itemName", exportStation, importStation);
+      menu = truckMenuObj.menuCreation();
+      truckMenuObj.removeTruck(truckBlock);
+      truckBlock.onclick = () => {
+        menu.classList.remove("hidden");
+        if (!allOpenedMenu.includes(menu)) allOpenedMenu.push(menu);
+      };
+    }
+
+    const menuTruckState = menu.querySelector(".truckMenu__truckState");
+    //Resource marker
     const resourceMarkerBlock = document.createElement("div");
     const resourceMarkerImg = document.createElement("img");
     const resourceMarkerQuantify = document.createElement("span");
 
     resourceMarkerBlock.classList.add("resource-marker", "hidden");
-
     resourceMarkerBlock.appendChild(resourceMarkerImg);
     resourceMarkerBlock.appendChild(resourceMarkerQuantify);
 
@@ -398,6 +423,21 @@ class CargoStation extends Building {
     truckBlock.appendChild(resourceMarkerBlock);
     truckBlock.appendChild(truckImg);
     exportStation.appendChild(truckBlock);
+
+    let transportHasStarted;
+    // const routeIndex = allRoutesList.findIndex((route) => route.id == exportStData.routeId);
+    // if (routeIndex != -1) {
+    //   const trucksList = allRoutesList[routeIndex].trucks;
+    //   const truckObj = {
+    //     id: 1,
+    //     img: truckBlock,
+    //   };
+    //   if (!trucksList.some((truck) => truck.id == truckObj.id)) {
+    //     trucksList.push(truckObj);
+    //   }
+    //   console.log(allRoutesList);
+    // }
+
     //Starting position
     switch (directionsList[1]) {
       case "top":
@@ -411,7 +451,7 @@ class CargoStation extends Building {
         truckImg.src = "/img/transport/truckRight.png";
         break;
       case "down":
-        truckBlock.style.top = "-5px";
+        truckBlock.style.top = "-10px";
         truckBlock.style.left = "-30px";
         truckImg.src = "/img/transport/truckDown.png";
         break;
@@ -421,38 +461,43 @@ class CargoStation extends Building {
         truckImg.src = "/img/transport/truckLeft.png";
         break;
     }
-
+    menuTruckState.textContent = "Loading";
     const waitingInterval = setInterval(() => {
+      const itemName = exportStData.cargoStationItem;
       if (
-        (exportBuilding.dataset.itemAmountOutput >= 8 ||
-          exportStation.dataset.cargoStationType == "Import") &&
+        (exportBldData.itemAmountOutput >= 8 ||
+          exportStData.cargoStationType == "Import" ||
+          exportBldData.buildingType == "tradingTerminal") &&
         !transportHasStarted
       ) {
-        if (exportStation.dataset.cargoStationType == "Export") {
-          exportBuilding.dataset.itemAmountOutput -= 8;
+        if (exportStData.cargoStationType == "Export") {
           //Resource marker
           resourceMarkerBlock.classList.remove("hidden");
           resourceMarkerQuantify.textContent = "8/8";
-          const itemName = exportStation.dataset.cargoStationItem;
+          if (exportBldData.buildingType != "tradingTerminal") {
+            exportBldData.itemAmountOutput -= 8;
+          }
           allItems.find((item) => {
-            if (item.name == itemName) {
-              resourceMarkerImg.src = item.src;
-            }
+            if (item.name == itemName) resourceMarkerImg.src = item.src;
+            if (truckMenuObj) truckMenuObj.updateMenu(itemName);
           });
-        } else {
-          resourceMarkerBlock.classList.add("hidden");
-        }
+        } else resourceMarkerBlock.classList.add("hidden");
 
+        const itemPrice = (allItems.find((item) => item.name === itemName) || {}).price;
+        if (
+          exportBldData.buildingType == "tradingTerminal" &&
+          exportStation.dataset.cargoStationType == "Export"
+        ) {
+          money -= itemPrice * 8;
+          console.log(money);
+        }
+        menuTruckState.textContent = "Moving";
         let index = 0;
         const moveStep = () => {
           if (index < directionsList.length) {
             let dir = directionsList[index];
             let currentStyle, property, offset;
             let nextDir = directionsList[index + 1];
-            // let next2Dir = directionsList[index + 2];
-            // let previousDir = directionsList[index - 1];
-            if (index == 0 && exportStation.dataset.CargoStationType == "Export") {
-            }
 
             switch (dir) {
               case "top":
@@ -462,12 +507,12 @@ class CargoStation extends Building {
                 break;
               case "right":
                 property = "left";
-                offset = nextDir === "top" ? 50 : nextDir === "down" ? 30 : 40;
+                offset = nextDir === "top" ? 50 : nextDir === "down" ? 35 : 40;
                 truckImg.src = "/img/transport/truckRight.png";
                 break;
               case "down":
                 property = "top";
-                offset = nextDir === "right" ? 50 : nextDir === "left" ? 30 : 40;
+                offset = nextDir === "right" ? 50 : nextDir === "left" ? 35 : 40;
                 truckImg.src = "/img/transport/truckDown.png";
                 break;
               case "left":
@@ -486,32 +531,51 @@ class CargoStation extends Building {
           } else if (
             routePointsList[routePointsList.length - 1].dataset.cargoStationType == "Import"
           ) {
+            menuTruckState.textContent = "Unloading";
             setTimeout(() => {
-              const importStation = routePointsList[routePointsList.length - 1];
-              const importBuilding = findTargetTileByDirection(importStation);
-              const importData = importBuilding.dataset;
-              importData.itemAmount = parseInt(importData.itemAmount) + 8;
-              importData.itemType = exportStation.dataset.cargoStationItem;
-              this.startBackwardsRoute(routePointsList, directionsList);
+              if (
+                importBldData.buildingType == "tradingTerminal" &&
+                importStation.dataset.cargoStationType == "Import"
+              ) {
+                money += 0.75 * (itemPrice * 8);
+              }
+
+              importBldData.itemAmount = parseInt(importBldData.itemAmount) + 8;
+              importBldData.itemType = exportStData.cargoStationItem;
+              this.startBackwardsRoute(routePointsList, directionsList, truckBlock);
               truckBlock.remove();
               clearInterval(waitingInterval);
-            }, 3000);
+            }, 4000);
           } else {
+            menuTruckState.textContent = "Unloading";
             setTimeout(() => {
-              this.startBackwardsRoute(routePointsList, directionsList);
+              this.startBackwardsRoute(routePointsList, directionsList, truckBlock);
               truckBlock.remove();
               clearInterval(waitingInterval);
-            }, 3000);
+            }, 4000);
           }
         };
 
         moveStep();
       }
-    }, 1000);
+    }, 700);
   }
-  startBackwardsRoute(routePointsList, directionsList) {
-    const reversedDirectionsList = this.reverseRouteDirections(directionsList);
-    this.moveTransportImage(routePointsList.reverse(), reversedDirectionsList.reverse());
+  startBackwardsRoute(routePointsList, directionsList, truckBlock) {
+    if (!truckBlock) {
+      const reversedDirectionsList = this.reverseRouteDirections(directionsList);
+      this.moveTransportImage(routePointsList.reverse(), reversedDirectionsList.reverse());
+    } else {
+      if (truckBlock.dataset.toRemove != "true") {
+        const reversedDirectionsList = this.reverseRouteDirections(directionsList);
+        this.moveTransportImage(
+          routePointsList.reverse(),
+          reversedDirectionsList.reverse(),
+          truckBlock.dataset.truckId
+        );
+      } else {
+        truckBlock.remove();
+      }
+    }
   }
   reverseRouteDirections(directionsList) {
     return directionsList.map((direction) => {
@@ -527,40 +591,83 @@ class CargoStation extends Building {
       }
     });
   }
-  drawRoute(routePointsList, directionsList) {
+  createRoute(routePointsList, directionsList) {
     const stationA = routePointsList[0];
     const stationB = routePointsList[routePointsList.length - 1];
-    stationA.classList.add("pointRoute");
-    stationB.classList.add("pointRoute");
-    for (let i = 0; i < directionsList.length; i++) {
-      let dir = directionsList[i];
-      routePointsList[i].classList.add(`${dir}Route`);
-    }
-
-    const isRouteExist = allRoutesList.some((route) => route.id === routeId);
+    const isRouteExist = allRoutesList.some((route) => route.id == stationA.dataset.routeId);
+    console.log(routePointsList);
+    let routeObj;
     if (!isRouteExist) {
-      const routeObj = {
+      routeObj = {
         id: routeId++,
+        trucks: [],
         stationA: stationA,
         stationB: stationB,
-        routePointsList: routePointsList,
-        directionsList: directionsList,
+        drawRoutePointsList: routePointsList,
+        drawDirectionsList: directionsList,
+        color: getRandomColor(),
       };
+      console.log(routePointsList);
       allRoutesList.push(routeObj);
+      stationA.dataset.routeId = routeObj.id;
+      stationB.dataset.routeId = routeObj.id;
+      addStyleToRoute(routePointsList, stationA, stationB, routeObj.color);
+    }
+    function getRandomColor() {
+      const randomIndex = Math.floor(Math.random() * colors.length);
+      return colors[randomIndex];
+    }
+    function addStyleToRoute(points, stationA, stationB, color) {
+      const newColor = `routeColor-${Date.now() % 10000}`;
+      const styleElement = document.createElement("style");
+      const lineColor = `.${newColor}::after { background-color: ${color}; }`;
+      const pointColor = `.${newColor}::before { background-color: ${color}; }`;
+      const combinedStyles = lineColor + " " + pointColor;
+
+      styleElement.appendChild(document.createTextNode(combinedStyles));
+      document.head.appendChild(styleElement);
+
+      points.forEach((point) => {
+        point.classList.add(newColor);
+      });
+
+      stationA.classList.add(newColor);
+      stationB.classList.add(newColor);
+    }
+    this.drawRoute(routeObj);
+  }
+  drawRoute(routeObj) {
+    console.log(routeObj);
+    routeObj.stationA.classList.add("pointRoute");
+    routeObj.stationB.classList.add("pointRoute");
+    if (routeObj.drawRoutePointsList[0] != routeObj.stationA) {
+      console.log(routeObj.drawRoutePointsList);
+      const reversedDrawRoutePointsList = routeObj.drawRoutePointsList.slice().reverse();
+      for (let i = 0; i < routeObj.drawDirectionsList.length; i++) {
+        let dir = routeObj.drawDirectionsList[i];
+        reversedDrawRoutePointsList[i].classList.add(`${dir}Route`);
+      }
+    } else {
+      for (let i = 0; i < routeObj.drawDirectionsList.length; i++) {
+        let dir = routeObj.drawDirectionsList[i];
+        routeObj.drawRoutePointsList[i].classList.add(`${dir}Route`);
+      }
     }
 
     animateRoute(0);
+
     function animateRoute(index) {
-      if (stationA.classList.contains("pointRoute")) {
-        if (index < directionsList.length) {
+      if (routeObj.stationA.classList.contains("pointRoute")) {
+        if (index < routeObj.drawDirectionsList.length) {
           setTimeout(() => {
-            routePointsList[index].classList.add("routeColorChange");
-          }, 40);
+            routeObj.drawRoutePointsList[index].classList.add("routeColorChange");
+          }, 60);
           setTimeout(() => {
-            routePointsList[index].classList.remove("routeColorChange");
+            routeObj.drawRoutePointsList[index].classList.remove("routeColorChange");
             animateRoute(index + 1);
-          }, 80);
+          }, 120);
         } else {
+          // Добавлено условие завершения
           animateRoute(0);
         }
       }

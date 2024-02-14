@@ -1,5 +1,4 @@
 //GRID VALUES
-const gridSize = 40;
 const TOOLBUTTONS = document.querySelectorAll(".tool-menu__btn");
 //MENU ID
 let mineshaftMenuId = 1;
@@ -8,6 +7,7 @@ let storageMenuId = 1;
 let oreProcessingMenuId = 1;
 let assemblerMenuId = 1;
 let cargoStationMenuId = 1;
+let truckIdCounter = 1;
 //BUILDING ID
 let buildingId = 1;
 //GLOBAL AMOUNT
@@ -19,11 +19,15 @@ let DIRECTIONS;
 let buildingDirection = 0;
 let currentTool;
 //MISC
+let allOpenedMenu = [];
 let menuOpened = false;
 let blockCameraMove = false;
 let undergroundOpened = false;
 let foundryType;
 let conveyorIntervalId;
+//MONEY
+let money = 500;
+
 //SIZE OF GHOST
 let xSize = 1;
 let zSize = 1;
@@ -104,56 +108,7 @@ const allDirections = conveyorDirections.concat(
   fluidSplitterDirections
 );
 //ITEMS LIST
-const allItems = [
-  {
-    name: "Raw Iron Ore",
-    processingIn: "oreProcessing",
-    src: "img/resourcesIcons/ironOre-icon.svg",
-    price: 10,
-  },
-  {
-    name: "Raw Copper Ore",
-    processingIn: "oreProcessing",
-    src: "img/resourcesIcons/noItem.svg",
-    price: 10,
-  },
-  {
-    name: "Refined Iron Ore",
-    processingIn: "smelter",
-    src: "img/resourcesIcons/RefinedIronOre.svg",
-    price: 20,
-  },
-  {
-    name: "Refined Copper Ore",
-    processingIn: "smelter",
-    src: "img/resourcesIcons/copperOre-icon.svg",
-    price: 20,
-  },
-  {
-    name: "Iron Ingot",
-    processingIn: "assembler",
-    src: "img/resourcesIcons/ironIngot.svg",
-    price: 40,
-  },
-  {
-    name: "Iron Plate",
-    processingIn: "assembler",
-    src: "img/resourcesIcons/ironIngot.svg",
-    price: 40,
-  },
-  {
-    name: "Iron Rod",
-    processingIn: "assembler",
-    src: "img/resourcesIcons/ironIngot.svg",
-    price: 40,
-  },
-  {
-    name: "Copper Ingot",
-    processingIn: "assembler",
-    src: "img/resourcesIcons/copperIngot.svg",
-    price: 40,
-  },
-];
+
 //BUIDINGS LIST
 const allBuilding = ["mineshaft", "oreProcessing", "smelter", "assembler", "conveyor"];
 //RECEPIES LIST
@@ -276,4 +231,38 @@ const smelterUpgrades = [
     name: "Slag Recycler",
     img: "",
   },
+];
+
+//COLORS
+const colors = [
+  "#ff0000", // Красный
+  "#00ff00", // Зеленый
+  "#0000ff", // Синий
+  "#ffff00", // Желтый
+  "#ff00ff", // Розовый
+  "#00ffff", // Бирюзовый
+  "#800080", // Фиолетовый
+  "#ffA500", // Оранжевый
+  "#008000", // Темно-зеленый
+  "#000080", // Темно-синий
+  "#8B0000", // Темно-красный
+  "#228B22", // Темно-зеленый лес
+  "#8B008B", // Темно-фиолетовый
+  "#4169E1", // Стальной синий
+  "#FA8072", // Лососевый
+  "#40E0D0", // Бирюзовый
+  "#FFD700", // Золотой
+  "#B8860B", // Темно-золотой
+  "#008B8B", // Темно-бирюзовый
+  "#A52A2A", // Коричневый
+  "#2E8B57", // Морская зелень
+  "#FF6347", // Томатный
+  "#556B2F", // Темно-оливковый
+  "#CD853F", // Перуанский коричневый
+  "#483D8B", // Темно-сиреневый
+  "#8B4513", // Коричнево-красный
+  "#9932CC", // Темно-фиолетовый
+  "#8B4513", // Коричнево-красный
+  "#FFFAFA", // Ледяной
+  "#008080", // Темно-циан
 ];

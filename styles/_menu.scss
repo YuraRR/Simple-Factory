@@ -10,12 +10,12 @@
 
 .tool-menu {
   display: flex;
-  position: relative;
+  position: absolute;
   background-color: var(--darkGray);
   padding: 0 20px 10px;
   width: 100%;
   gap: 15px;
-  margin-top: auto;
+  bottom: 0;
   flex-direction: column;
   z-index: 1000;
   border: 4px solid var(--black);
@@ -87,7 +87,7 @@
 
 #menu-container {
   display: flex;
-  position: fixed;
+  position: relative;
   z-index: 999;
   height: 100vh;
   width: 100%;
@@ -98,7 +98,7 @@
 .storageMenu,
 .mineshaftMenu,
 .assemblerMenu {
-  display: none;
+  display: flex;
   width: 100%;
   height: 100vh;
   // background-color: rgb(61, 59, 59);
@@ -323,7 +323,7 @@
 }
 
 .cargoStationMenu {
-  display: none;
+  display: flex;
   position: relative;
   right: -130px;
   top: 20px;
@@ -358,7 +358,8 @@
       border: none;
       background-color: var(--white);
       text-transform: uppercase;
-      padding: 3px;
+      padding: 3px 0;
+      width: 100%;
     }
 
     div {
@@ -373,7 +374,12 @@
         height: 40px;
         padding: 0 5px;
       }
-
+      &__amount {
+      }
+      &__buttons {
+        display: flex;
+        flex-direction: row;
+      }
       &__current {
         background-color: var(--lightYellow);
         height: 40px;
@@ -521,9 +527,6 @@
       width: 85px;
       height: 85px;
       margin: auto;
-    }
-    h3 {
-      padding: 3px;
     }
   }
 }

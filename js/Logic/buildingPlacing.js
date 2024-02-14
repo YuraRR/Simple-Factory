@@ -20,6 +20,22 @@ function mineshaftCreating(event) {
     }
   }
 }
+//QUARRY
+function quarryCreating(event) {
+  if (event.target.classList.contains("grid-cell") && !toBlockConstruction()) {
+    const cell = event.target;
+    if (cell.dataset.type == "sand") {
+      let newBuilding;
+      cell.classList.add("quarry");
+      newBuilding = new Quarry(cell);
+      newBuilding.getId(cell.id);
+      newBuilding.createBuilding();
+      let clickArea = newBuilding.tilesOccupation(2, 2);
+      newBuilding.extraction(clickArea);
+      newBuilding.createBuildingImage();
+    }
+  }
+}
 //CONVEYOR
 function conveyorCreating(event) {
   if (event.target.classList.contains("grid-cell")) {
@@ -94,7 +110,7 @@ function fluidSplitterCreating(event) {
 function waterPumpCreating(event) {
   if (event.target.classList.contains("grid-cell")) {
     const cell = event.target;
-    if (cell.dataset.type == "sand") {
+    if (cell.dataset.type == "Sand") {
       cell.classList.add("waterPump");
       let newBuilding = new WaterPump(cell);
       newBuilding.getId(cell.id);

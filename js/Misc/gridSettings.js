@@ -1,23 +1,24 @@
 const gridContainer = document.querySelector(".grid-container");
 const limitContainer = document.querySelector("#limit-container");
+const gridSize = 40;
 // Создание сетки игры
-function createGrid(container) {
-  const fragment = document.createDocumentFragment();
+const fragment = document.createDocumentFragment();
 
-  for (let i = 0; i < gridSize; i++) {
-    for (let j = 0; j < gridSize; j++) {
-      const cell = document.createElement("div");
+for (let i = 0; i < gridSize; i++) {
+  for (let j = 0; j < gridSize; j++) {
+    const cell = document.createElement("div");
 
-      cell.classList.add("grid-cell");
-      cell.id = i + "." + j;
+    cell.classList.add("grid-cell");
+    cell.id = i + "." + j;
 
-      cell.dataset.type = "empty";
-      fragment.appendChild(cell);
-    }
+    cell.dataset.type = "empty";
+    // cell.style.zIndex = i + j;
+    fragment.appendChild(cell);
   }
-  container.appendChild(fragment);
 }
-createGrid(gridContainer);
+gridContainer.appendChild(fragment);
+gridContainer.style.gridTemplateColumns = `repeat(${gridSize}, 40px)`;
+gridContainer.style.gridTemplateRows = `repeat(${gridSize}, 40px)`;
 let scale = 1;
 let offsetX = 0;
 let offsetY = 0;
@@ -48,7 +49,7 @@ function zoom(delta) {
     scale /= scaleFactor;
   }
 
-  scale = Math.min(Math.max(0.75, scale), 4); // Ограничиваем масштаб от 0.5 до 4
+  scale = Math.min(Math.max(0.3, scale), 4); // Ограничиваем масштаб от 0.5 до 4
 
   cancelAnimationFrame(animationFrameId);
 

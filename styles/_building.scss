@@ -5,7 +5,7 @@
   transform: rotateZ(323deg) rotateY(68deg) rotate3d(8, -11, -5, 11deg);
   position: absolute;
   pointer-events: none;
-  z-index: 100;
+  z-index: 999;
   &:hover {
     width: 100%;
     height: auto;
@@ -20,6 +20,12 @@
   width: 113px;
   top: -95px;
   left: -71px;
+}
+[data-image-type="quarry"] {
+  @include buildingBase;
+  width: 228px;
+  top: -25px;
+  left: -68px;
 }
 [data-image-type="oreProcessing"] {
   @include buildingBase;
