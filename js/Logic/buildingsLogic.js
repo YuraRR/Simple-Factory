@@ -52,15 +52,18 @@ class Quarry extends Building {
     // this.maxItemStorage = 10;
     this.tile = tile;
     this.tileData = tile.dataset;
+    this.tileData.itemAmountOutput = 0;
     Object.assign(this, findTarget);
   }
   extraction(clickArea) {
     const targetTile = this.findTargetTile();
+    console.log(targetTile);
     const resType = targetTile.dataset.resType;
-    this.tileData.itemTypeOutput = resType;
-    this.name = `${resType}Quarry`;
-    if (!this.tileData.itemAmountOutput) this.tileData.itemAmountOutput = 0;
 
+    targetTile.dataset.itemTypeOutput = resType;
+
+    this.name = `${resType}Quarry`;
+    this.createBuildingImage();
     // let menu = this.createMenu(QuarryMenu, "quarry", quarryMenuId, clickArea);
 
     let interval = setInterval(() => {
@@ -111,9 +114,10 @@ class Storage extends Building {
     super(tile, id);
     this.name = "storage";
     this.tile = tile;
-    this.tileData = tile.dataset;
   }
-  addItemToStorage() {
+  addItemToStorage(clickArea) {
+    this.createMenu(StorageMenu, "storage", storageMenuId, clickArea);
+    this.tileData = this.tile.dataset;
     this.tileData.itemAmount = 0;
   }
 }

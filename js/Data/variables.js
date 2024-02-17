@@ -3,6 +3,7 @@ const TOOLBUTTONS = document.querySelectorAll(".tool-menu__btn");
 //MENU ID
 let mineshaftMenuId = 1;
 let smelterMenuId = 1;
+let cementFactoryId = 1;
 let storageMenuId = 1;
 let oreProcessingMenuId = 1;
 let assemblerMenuId = 1;
@@ -20,17 +21,12 @@ let buildingDirection = 0;
 let currentTool;
 //MISC
 let allOpenedMenu = [];
-let menuOpened = false;
 let blockCameraMove = false;
 let undergroundOpened = false;
 let foundryType;
 let conveyorIntervalId;
 //MONEY
 let money = 500;
-
-//SIZE OF GHOST
-let xSize = 1;
-let zSize = 1;
 //TRUCKS
 let trucksTotal = 0;
 let trucksAvailable = 0;
@@ -70,25 +66,10 @@ const pipeDirections = [
   "pipeLeft-hover",
 ];
 
-const waterPumpDirections = [
-  "mineshaft-hover",
-  "mineshaft-hover",
-  "mineshaft-hover",
-  "mineshaft-hover",
-];
-const mineshaftDirections = [
-  "mineshaft-hover",
-  "mineshaft-hover",
-  "mineshaft-hover",
-  "mineshaft-hover",
-];
+const waterPumpDirections = ["mineshaft-hover", "mineshaft-hover", "mineshaft-hover", "mineshaft-hover"];
+const mineshaftDirections = ["mineshaft-hover", "mineshaft-hover", "mineshaft-hover", "mineshaft-hover"];
 
-const demolitionHover = [
-  "demolition-hover",
-  "demolition-hover",
-  "demolition-hover",
-  "demolition-hover",
-];
+const demolitionHover = ["demolition-hover", "demolition-hover", "demolition-hover", "demolition-hover"];
 const directionsList = {
   conveyor: conveyorDirections,
   connector: connectorDirections,
@@ -110,7 +91,99 @@ const allDirections = conveyorDirections.concat(
 //ITEMS LIST
 
 //BUIDINGS LIST
-const allBuilding = ["mineshaft", "oreProcessing", "smelter", "assembler", "conveyor"];
+const allBuilding = [
+  //SOURCE
+  {
+    name: "mineshaft",
+    xSize: 1,
+    zSize: 1,
+  },
+  {
+    name: "quarry",
+    xSize: 2,
+    zSize: 2,
+  },
+  {
+    name: "waterPump",
+    xSize: 1,
+    zSize: 1,
+  },
+  //PROCESSING
+  {
+    name: "oreProcessing",
+    xSize: 2,
+    zSize: 2,
+  },
+  {
+    name: "smelter",
+    xSize: 3,
+    zSize: 3,
+  },
+  {
+    name: "assembler",
+    xSize: 6,
+    zSize: 4,
+  },
+  {
+    name: "cementPlant",
+    xSize: 2,
+    zSize: 2,
+  },
+
+  //STORAGE
+  {
+    name: "storage",
+    xSize: 2,
+    zSize: 2,
+  },
+  //TRANSPORTATION
+  {
+    name: "conveyor",
+    xSize: 1,
+    zSize: 1,
+  },
+  {
+    name: "connector",
+    xSize: 1,
+    zSize: 1,
+  },
+  {
+    name: "splitter",
+    xSize: 1,
+    zSize: 1,
+  },
+  {
+    name: "pipe",
+    xSize: 1,
+    zSize: 1,
+  },
+  {
+    name: "fluidSplitter",
+    xSize: 1,
+    zSize: 1,
+  },
+  {
+    name: "road",
+    xSize: 1,
+    zSize: 1,
+  },
+  {
+    name: "cargoStation",
+    xSize: 1,
+    zSize: 1,
+  },
+  {
+    name: "tradingTerminal",
+    xSize: 3,
+    zSize: 3,
+  },
+  //MISC
+  {
+    name: "demolition",
+    xSize: 1,
+    zSize: 1,
+  },
+];
 //RECEPIES LIST
 const allProcessingOreRecipes = [
   {
@@ -199,6 +272,18 @@ const allAssemblyRecipes = [
   },
 ];
 
+const allRecepies = [
+  {
+    firstMatName: "Limestone",
+    firstMatAmount: 4,
+    firstMatImage: "",
+    secondMatName: "Clay",
+    secondMatAmount: 4,
+    productName: "Cement",
+    productImage: "",
+    productAmount: 2,
+  },
+];
 //UPGRADES LIST
 const oreProcessingUpgrades = [
   {

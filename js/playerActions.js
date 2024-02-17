@@ -1,6 +1,6 @@
 let CELLS = document.querySelectorAll(".grid-cell");
 //ALL TREES
-const allTrees = document.querySelectorAll(".tree");
+const allTrees = document.querySelectorAll(`[data-image-type="tree"]`);
 
 //TOOLBAR
 function activeTool() {
@@ -8,113 +8,15 @@ function activeTool() {
     btn.addEventListener("click", () => {
       currentTool = btn.id;
       removeButtonActive(TOOLBUTTONS, btn);
-      switch (btn.id) {
-        case "mineshaft":
-          createEventListener(mineshaftCreating);
-          transperentBuildingsRemove();
-          if (undergroundOpened) showUnderground();
-          xSize = 1;
-          zSize = 1;
-          break;
-        case "quarry":
-          createEventListener(quarryCreating);
-          transperentBuildingsRemove();
-          if (undergroundOpened) showUnderground();
-          xSize = 2;
-          zSize = 2;
-          break;
-        case "oreProcessing":
-          createEventListener(oreProcessingCreating);
-          transperentBuildingsRemove();
-          if (undergroundOpened) showUnderground();
-          xSize = 2;
-          zSize = 2;
-          break;
-        case "smelter":
-          createEventListener(smelterCreating);
-          transperentBuildingsRemove();
-          if (undergroundOpened) showUnderground();
-          xSize = 3;
-          zSize = 3;
-          break;
-        case "assembler":
-          createEventListener(assemblerCreating);
-          transperentBuildingsRemove();
-          if (undergroundOpened) showUnderground();
-          xSize = 6;
-          zSize = 4;
-          break;
-        case "storage":
-          createEventListener(storageCreating);
-          transperentBuildingsRemove();
-          if (undergroundOpened) showUnderground();
-          xSize = 2;
-          zSize = 2;
-          break;
-        case "waterPump":
-          createEventListener(waterPumpCreating);
-          transperentBuildingsRemove();
-          if (undergroundOpened) showUnderground();
-          xSize = 1;
-          zSize = 1;
-          break;
-        case "conveyor":
-          createEventListener(conveyorCreating);
-          transperentBuildingsShow();
-          if (undergroundOpened) showUnderground();
-          xSize = 1;
-          zSize = 1;
-          break;
-        case "connector":
-          createEventListener(connectorCreating);
-          transperentBuildingsShow();
-          if (undergroundOpened) showUnderground();
-          xSize = 1;
-          zSize = 1;
-          break;
-        case "splitter":
-          createEventListener(splitterCreating);
-          transperentBuildingsShow();
-          if (undergroundOpened) showUnderground();
-          xSize = 1;
-          zSize = 1;
-          break;
-        case "pipe":
-          if (!undergroundOpened) showUnderground();
-          createEventListener(pipeCreating);
-          xSize = 1;
-          zSize = 1;
-          break;
-        case "fluidSplitter":
-          if (!undergroundOpened) showUnderground();
-          createEventListener(fluidSplitterCreating);
-          xSize = 1;
-          zSize = 1;
-          break;
-        case "road":
-          createEventListener(roadCreating);
-          xSize = 1;
-          zSize = 1;
-          break;
-        case "cargoStation":
-          createEventListener(cargoStationCreating);
-          xSize = 1;
-          zSize = 1;
-          break;
-        case "tradingTerminal":
-          createEventListener(tradingTerminalCreating);
-          xSize = 3;
-          zSize = 3;
-          break;
-      }
+      createEventListener(currentTool);
     });
   });
 }
 
-function createEventListener(buildingType) {
+function createEventListener(currentTool) {
   resetTool();
   gridContainer.removeEventListener("click", demolitionFunc);
-  gridContainer.addEventListener("click", buildingType);
+  gridContainer.addEventListener("click", buildingCreating[currentTool]);
   ghostRotating();
 }
 
@@ -123,22 +25,10 @@ function removeButtonActive(buttons, btn) {
   btn.classList.add("buttonActive");
 }
 function resetTool() {
-  gridContainer.removeEventListener("click", conveyorCreating);
-  gridContainer.removeEventListener("click", connectorCreating);
-  gridContainer.removeEventListener("click", splitterCreating);
-  gridContainer.removeEventListener("click", mineshaftCreating);
-  gridContainer.removeEventListener("click", smelterCreating);
-  gridContainer.removeEventListener("click", oreProcessingCreating);
-  gridContainer.removeEventListener("click", assemblerCreating);
-  gridContainer.removeEventListener("click", storageCreating);
-  gridContainer.removeEventListener("click", crusherCreating);
-  gridContainer.removeEventListener("click", washerCreating);
-  gridContainer.removeEventListener("click", foundryCreating);
-  gridContainer.removeEventListener("click", pipeCreating);
-  gridContainer.removeEventListener("click", roadCreating);
-  gridContainer.removeEventListener("click", cargoStationCreating);
-  gridContainer.removeEventListener("click", tradingTerminalCreating);
-  gridContainer.removeEventListener("click", fluidSplitterCreating);
+  const creatingMethods = Object.values(buildingCreating);
+  creatingMethods.forEach((method) => {
+    gridContainer.removeEventListener("click", method);
+  });
 }
 activeTool();
 
@@ -152,6 +42,8 @@ function handleMouseEnter(event) {
     const x = parseInt(id[0]);
     const z = parseInt(id[1]);
     const img = document.createElement("img");
+    const xSize = allBuilding.find((bld) => bld.name === currentTool).xSize;
+    const zSize = allBuilding.find((bld) => bld.name === currentTool).zSize;
 
     if (
       currentTool != "demolition" &&
@@ -183,15 +75,18 @@ function handleMouseEnter(event) {
                 applyPlacementClass(currentTile, "sand");
                 break;
               case "quarry":
-                applyPlacementClass(currentTile, "sand");
+                applyPlacementClass(currentTile, ["sand", "clay", "limestone", "stone"]);
                 break;
               default:
-                applyPlacementClass(currentTile, "empty");
+                applyPlacementClass(currentTile, "grass");
                 break;
             }
 
             function applyPlacementClass(tile, targetType) {
-              if (tile.dataset.type === targetType && !tile.dataset.featuresType) {
+              if (
+                (tile.dataset.groundType == targetType && !tile.dataset.featuresType) ||
+                targetType.includes(tile.dataset.groundType)
+              ) {
                 tile.classList.add("canBePlaced");
               } else {
                 tile.classList.add("cantBePlaced");
@@ -245,7 +140,7 @@ function updateCellStyle() {
   if (currentTool) {
     DIRECTIONS = directionsList[currentTool];
   }
-  if (xSize == 1 && zSize == 1 && DIRECTIONS) {
+  if (DIRECTIONS) {
     CELLS.forEach((cell) => {
       DIRECTIONS.forEach((dir) => {
         const isDemolition = currentTool === "demolition";
@@ -333,6 +228,7 @@ function deleteAllInTile(currentTile) {
     }
   });
 }
+
 //TRANSPERENT BUILDINGS
 function transperentBuildingsShow() {
   const buildingElements = document.querySelectorAll("[data-building-type]");
@@ -360,7 +256,7 @@ function showUnderground() {
   gridContainer.classList.toggle("containerOpacity");
   const allPipes = gridContainer.querySelectorAll(`[data-image-type="pipe"]`);
   const allElemenstExeptEmpty = document.querySelectorAll(
-    '[data-type]:not([data-type="empty"]):not([data-type="ore"])'
+    '[data-ground-type]:not([data-ground-type="grass"]):not([data-type="ore"])'
   );
   allElemenstExeptEmpty.forEach((el) => {
     const img = el.querySelector("img");

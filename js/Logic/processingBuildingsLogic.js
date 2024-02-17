@@ -4,21 +4,20 @@ class OreProcessingPlant extends Building {
     this.name = "oreProcessing";
     this.productionTime = 8000;
     this.tile = tile;
-    this.tileData = tile.dataset;
     Object.assign(this, findTarget);
   }
   processing(clickArea) {
+    this.tileData = this.tile.dataset;
     if (!this.tileData.itemAmount) {
       this.tileData.itemAmount = 0;
       this.tileData.itemAmountOutput = 0;
       this.tileData.fluidAmount = 0;
     }
-
     let processingStarted = false;
     this.tileData.productionTime = this.productionTime;
 
     let menu = this.createMenu(OreProccesingMenu, "ore-processing", oreProcessingMenuId, clickArea);
-
+    console.log(this.tile.dataset.itemAmount);
     setInterval(() => {
       if (
         this.tileData.itemAmount >= 2 &&
@@ -45,15 +44,15 @@ class Smelter extends Building {
     this.name = "smelter";
     this.productionTime = 4000;
     this.tile = tile;
-    this.tileData = tile.dataset;
     Object.assign(this, findTarget);
   }
 
   processing(clickArea) {
-    console.log(clickArea);
+    this.tileData = this.tile.dataset;
     if (!this.tileData.itemAmount) {
       this.tileData.itemAmount = 0;
       this.tileData.itemAmountOutput = 0;
+      this.tileData.fluidAmount = 0;
     }
     let processingStarted = false;
     this.tileData.productionTime = this.productionTime;
@@ -83,10 +82,10 @@ class Assembler extends Building {
     this.name = "assembler";
     this.productionTime = 16000;
     this.tile = tile;
-    this.tileData = tile.dataset;
     Object.assign(this, findTarget);
   }
   processing(clickArea) {
+    this.tileData = this.tile.dataset;
     let processingStarted = false;
     this.tileData.productionTime = this.productionTime;
     if (!this.tileData.firstMatAmount) {
@@ -106,6 +105,38 @@ class Assembler extends Building {
         );
         this.itemProcessingTwoMaterial(this.tile, menu, recipeObj);
         processingStarted = true;
+      }
+    }, 1000);
+  }
+}
+class CementPlant extends Building {
+  constructor(tile, id) {
+    super(tile, id);
+    this.name = "cementPlant";
+    this.productionTime = 16000;
+    this.tile = tile;
+    Object.assign(this, findTarget);
+  }
+  processing(clickArea) {
+    this.tileData = this.tile.dataset;
+    let processingStarted = false;
+    this.tileData.productionTime = this.productionTime;
+    if (!this.tileData.firstMatAmount) {
+      this.tileData.firstMatAmount = 0;
+      this.tileData.secondMatAmount = 0;
+      this.tileData.itemAmountOutput = 0;
+    }
+
+    this.tileData.selectedProduct = "Cement";
+    let menu = this.createMenu(TwoMaterialsProcessingMenu, "cementFactory", cementFactoryId, clickArea);
+
+    setInterval(() => {
+      let selectedProduct = this.tileData.selectedProduct;
+      if (this.tileData.itemAmount != 0 && !processingStarted && selectedProduct) {
+        let recipeObj = allRecepies.find((recipe) => recipe.productName == this.tileData.selectedProduct);
+        this.itemProcessingTwoMaterial(this.tile, menu, recipeObj);
+        processingStarted = true;
+        console.log(recipeObj);
       }
     }, 1000);
   }

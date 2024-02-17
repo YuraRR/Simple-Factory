@@ -1,6 +1,7 @@
 class Building {
   constructor(targetTile, type) {
     Object.assign(this, findTarget);
+    Object.assign(this, ocupieTiles);
     this.type = type;
     this.tile = targetTile;
     this.tileData = targetTile.dataset;
@@ -30,9 +31,14 @@ class Building {
     switch (this.name) {
       case "smelter":
       case "oreProcessing":
-        building.dataset.buildingCategory = "inOut";
+        building.dataset.buildingCategory = "inOut1";
+        break;
+      case "assembler":
+      case "cementPlant":
+        building.dataset.buildingCategory = "inOut2";
         break;
       case "mineshaft":
+      case "quarry":
         building.dataset.buildingCategory = "Out";
         break;
     }
@@ -69,10 +75,10 @@ class Building {
           }
           break;
       }
-    } else {
-      img.src = `/img/buildings/${this.name}.webp`;
-    }
+    } else img.src = `/img/buildings/${this.name}.webp`;
+
     this.tile.appendChild(img);
+    img.style.zIndex = this.x + this.z;
   }
 
   addPipeDirection(targetTile) {
@@ -106,9 +112,16 @@ class Building {
     let currentItem;
     const importData = importer.dataset;
     const exportData = exporter.dataset;
+    console.log(importData);
+    console.log(exportData);
     switch (wayOfMoving) {
       case "conveyor":
         const conveyorIntervalId = setInterval(() => {
+          console.log(
+            importData.buildingType == "cementPlant",
+            exportData.buildingType == "connector",
+            exportData.itemAmount > 0
+          );
           switch (exportData.buildingType) {
             case "conveyor":
             case "connector":
@@ -119,6 +132,7 @@ class Building {
             case "mineshaft":
             case "smelter":
             case "oreProcessing":
+            case "cementPlant":
               currentItem = exportData.itemTypeOutput;
               break;
           }
@@ -126,7 +140,7 @@ class Building {
           if (
             importData.buildingType == "conveyor" &&
             exportData.buildingType != "splitter" &&
-            exportData.buildingCategory != "inOut" &&
+            (exportData.buildingCategory != "inOut1" || exportData.buildingCategory != "inOut2") &&
             exportData.itemAmount > 0 &&
             importData.itemAmount == 0
           ) {
@@ -143,9 +157,12 @@ class Building {
           ) {
             importData.itemAmount++;
             importData.itemType = currentItem;
-            if (exportData.buildingCategory == "inOut" && exportData.itemAmountOutput > 0) {
+            if (
+              (exportData.buildingCategory == "inOut1" || exportData.buildingCategory == "inOut2") &&
+              exportData.itemAmountOutput > 0
+            ) {
               exportData.itemAmountOutput--;
-            } else if (exportData.buildingCategory != "inOut") {
+            } else if (exportData.buildingCategory == "inOut1" || exportData.buildingCategory == "inOut2") {
               exportData.itemAmount--;
             }
             if (exportData.itemAmount == 0) {
@@ -154,7 +171,9 @@ class Building {
             //BUILDING TO CONNECTOR
           } else if (
             importData.buildingType == "connector" &&
-            (exportData.buildingCategory == "Out" || exportData.buildingCategory == "inOut")
+            (exportData.buildingCategory == "Out" ||
+              exportData.buildingCategory == "inOut1" ||
+              exportData.buildingCategory == "inOut2")
           ) {
             let newExporter = findMainTile(exporter);
             if (newExporter.dataset.itemAmountOutput > 0) {
@@ -167,7 +186,7 @@ class Building {
           } else if (
             exportData.buildingType == "connector" &&
             exportData.itemAmount > 0 &&
-            (importData.buildingCategory == "inOut" || importData.buildingType == "storage")
+            (importData.buildingCategory == "inOut1" || importData.buildingType == "storage")
           ) {
             let newImporter = findMainTile(importer);
             this.move(newImporter, exporter, currentItem);
@@ -181,11 +200,14 @@ class Building {
 
             //CONNECTOR TO ASSEMBLER
           } else if (
-            importData.buildingType == "assembler" &&
+            importData.buildingCategory == "inOut2" &&
+            importData.buildingType == "cementPlant" &&
             exportData.buildingType == "connector" &&
             exportData.itemAmount > 0
           ) {
+            console.log("suka");
             let newImporter = findMainTile(importer);
+            console.log(newImporter);
             if (!newImporter.dataset.firstMatName || newImporter.dataset.firstMatName == currentItem) {
               newImporter.dataset.firstMatAmount++;
               newImporter.dataset.firstMatName = currentItem;
@@ -235,21 +257,7 @@ class Building {
     exporter.dataset.itemAmount--;
   }
 
-  tilesOccupation(xSize, zSize) {
-    let occupiedTiles = [];
-    for (let i = 0; i < xSize; i++) {
-      for (let j = 0; j < zSize; j++) {
-        const currentTile = document.getElementById(`${this.x + i}.${this.z + j}`);
-        currentTile.dataset.type = this.tileData.type;
-        currentTile.dataset.buildingType = this.tileData.buildingType;
-        currentTile.dataset.buildingId = this.tileData.buildingId;
-        if (this.tileData.buildingCategory) {
-          currentTile.dataset.buildingCategory = this.tileData.buildingCategory;
-        }
-
-        occupiedTiles.push(currentTile);
-      }
-    }
+  createClickArea(xSize, zSize) {
     const clickArea = document.createElement("div");
     clickArea.style.height = `${xSize * 40}px`;
     clickArea.style.width = `${zSize * 40}px`;
@@ -257,7 +265,6 @@ class Building {
     this.tile.appendChild(clickArea);
     return clickArea;
   }
-
   itemProcessingOneMaterial(tile, menu, { materialName, materialAmount, productName, productAmount }) {
     const tileData = tile.dataset;
     let progressBarAnimation;
@@ -304,6 +311,7 @@ class Building {
 
     function processItem() {
       updatedProductTime = tileData.productionTime;
+
       if (
         !processItemStarted &&
         tileData.firstMatName == firstMatName &&
@@ -326,6 +334,7 @@ class Building {
     tileData.intervalId = productionInterval;
 
     function assemblying() {
+      console.log("penis");
       processItemStarted = true;
       progressBarAnimation = moveProgressBar(menu, updatedProductTime, processItem);
       if (progressBarAnimation.width == 0) {
@@ -369,13 +378,13 @@ class Building {
     classMenu.menuCreation(buildingData);
     let menu = document.querySelector(`[data-${menuData}-id="${targetMenuId}"]`);
     clickArea.addEventListener("click", () => {
-      if (currentTool != "demolition" && !menuOpened && !undergroundOpened) {
+      if (currentTool != "demolition" && !undergroundOpened) {
         menu.classList.remove("hidden");
-        targetTile.children[0].classList.add("hidden");
+        const buildingImage = targetTile.querySelector(`[data-main-building-img="true"]`);
+        buildingImage.classList.add("hidden");
         resetGhost();
         document.addEventListener("click", cameraMoveCenter);
         targetTile.querySelector(".clickArea").style.pointerEvents = "none";
-        menuOpened = true;
         classMenu.menuOpened = true;
         switchUpgrades();
         if (!allOpenedMenu.includes(menu)) allOpenedMenu.push(menu);

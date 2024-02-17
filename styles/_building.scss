@@ -23,9 +23,9 @@
 }
 [data-image-type="quarry"] {
   @include buildingBase;
-  width: 228px;
-  top: -25px;
-  left: -68px;
+  width: 229px;
+  top: -23px;
+  left: -75px;
 }
 [data-image-type="oreProcessing"] {
   @include buildingBase;
@@ -74,10 +74,10 @@
   position: relative;
 }
 .clickArea {
-  border: 3px solid black;
+  border: 2px solid black;
   box-sizing: border-box;
   position: relative;
-  z-index: 98;
+  z-index: 1;
 }
 .noEvents {
   pointer-events: none;

@@ -88,10 +88,7 @@ class CargoStationMenu extends BuildingMenu {
 
     setInterval(() => {
       let selectedExportItem = this.tileData.cargoStationItem;
-      if (
-        this.tileData.cargoStationType == "Export" &&
-        this.tileData.connectedTo != "tradingTerminal"
-      ) {
+      if (this.tileData.cargoStationType == "Export" && this.tileData.connectedTo != "tradingTerminal") {
         item = stationObj.updateData(defaultItem.mainFactoryTile, "export");
       } else if (
         this.tileData.cargoStationType == "Export" &&
@@ -154,9 +151,7 @@ class CargoStationMenu extends BuildingMenu {
       if (trucksOnRoute) {
         trucksAvailable++, trucksOnRoute--;
         this.updateTrucksAmountInfo(trucksAvailableText);
-        const route = allRoutesList.find(
-          (route) => route.id == defaultItem.stationTile.dataset.routeId
-        );
+        const route = allRoutesList.find((route) => route.id == defaultItem.stationTile.dataset.routeId);
         const truckToRemove = route.find((truck) => truck.id == 1);
         console.log(allRoutesList);
         trucksCurrentText.textContent = `Trucks on current route —  ${trucksOnRoute}/${maxTrucksOnRoute}`;
@@ -185,9 +180,7 @@ class CargoStationMenu extends BuildingMenu {
   createRouteBlock(menu) {
     const allStations = document.querySelectorAll(`[data-building-type="cargoStation"]`);
     const routeContainer = menu.querySelector(".cargoStationMenu__routes");
-    const targetStation = document.querySelector(
-      `[data-station-id="${menu.dataset.cargoStationId}"]`
-    );
+    const targetStation = document.querySelector(`[data-station-id="${menu.dataset.cargoStationId}"]`);
     const noStationsText = menu.querySelector(".cargoStationMenu__noStations");
     if (!noStationsText) routeContainer.innerHTML = "";
     allStations.forEach((cargoStation) => {
@@ -312,7 +305,6 @@ class TruckMenu {
     closeBtn.addEventListener("click", () => {
       menu.classList.add("hidden");
       resetGhost();
-      menuOpened = false;
       switchUpgrades();
     });
 
@@ -320,15 +312,12 @@ class TruckMenu {
       if (event.code == "Escape") {
         switchUpgrades();
         resetGhost();
-        menuOpened = false;
       }
     });
   }
   menuCreation() {
     setTimeout(() => {
-      this.route = allRoutesList.find(
-        (routeObj) => routeObj.id == this.exportStation.dataset.routeId
-      );
+      this.route = allRoutesList.find((routeObj) => routeObj.id == this.exportStation.dataset.routeId);
       const routeSpan = menu.querySelector(".truckMenu__routeName");
       routeSpan.style.backgroundColor = this.route.color;
     }, 200);

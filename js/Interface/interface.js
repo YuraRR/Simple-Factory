@@ -50,8 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Добавляем слушатели событий только один раз
   demolitionButton.addEventListener("click", () => {
     currentTool = "demolition";
-    xSize = 1;
-    zSize = 1;
+
     gridContainer.addEventListener("click", demolitionFunc);
     TOOLBUTTONS.forEach((btn) => btn.classList.remove("buttonActive"));
     ghostRotating();

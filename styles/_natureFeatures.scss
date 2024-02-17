@@ -6,22 +6,44 @@
   pointer-events: none;
   z-index: 100;
 }
-[data-type="water"] {
+[data-ground-type="water"] {
   background-image: url(/img/animations/water.gif) !important;
   outline: none !important;
 }
 
-[data-type="sand"] {
+[data-ground-type="sand"] {
   background-image: url(/img/textures/sand.jpg) !important;
   outline: none !important;
 }
-[data-type="forest"] {
+[data-ground-type="clay"] {
+  background-image: url(/img/textures/clay.png) !important;
+  outline: none !important;
+}
+[data-ground-type="limestone"] {
+  background-image: url(/img/textures/limestone.png) !important;
+  outline: none !important;
+}
+[data-ground-type="stone"] {
+  background-image: url(/img/textures/stone.png) !important;
+  outline: none !important;
+}
+
+[data-ground-type="forest"] {
   background-image: url(/img/textures/darkGrass.png) !important;
   outline: none !important;
 }
-[data-type="flowers"] {
+[data-ground-type="flowers"] {
   background-image: url(/img/textures/mediumGrass.png) !important;
   outline: none !important;
+}
+[data-features-type="limeStoneRock"] {
+  position: relative;
+  img {
+    @include natureFeature();
+    width: 320px;
+    top: -70px;
+    left: -120px;
+  }
 }
 [data-features-type="tree"] {
   position: relative;

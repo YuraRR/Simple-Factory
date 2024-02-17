@@ -90,7 +90,7 @@ const allItems = [
   },
   {
     name: "Gravel",
-    producedIn: "grinder",
+    producedIn: "crusher",
     processingIn: "concreteMixer",
     consumptionFor: ["Concrete"],
     src: "img/resourcesIcons/noItem.svg",

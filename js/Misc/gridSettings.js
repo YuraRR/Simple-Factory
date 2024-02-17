@@ -12,6 +12,7 @@ for (let i = 0; i < gridSize; i++) {
     cell.id = i + "." + j;
 
     cell.dataset.type = "empty";
+    cell.dataset.groundType = "grass";
     // cell.style.zIndex = i + j;
     fragment.appendChild(cell);
   }

@@ -2,17 +2,17 @@ class BuildingMenu {
   constructor(tile, id) {
     this.tile = tile;
     this.id = id;
-    this.buildingImage = tile.querySelector(`[data-main-building-img="true"]`);
     this.clickArea = tile.querySelector(".clickArea");
   }
   closeButton(menu) {
+    this.buildingImage = this.tile.querySelector(`[data-main-building-img="true"]`);
     let closeBtn = menu.querySelector(".close-button");
     closeBtn.addEventListener("click", () => this.closeMenu());
 
     document.addEventListener("keydown", (event) => {
       if (event.code === "Escape") this.closeMenu();
     });
-
+    console.log(this.buildingImage);
     this.closeMenu = () => {
       if (this.buildingImage) {
         this.buildingImage.classList.remove("hidden");
@@ -24,7 +24,6 @@ class BuildingMenu {
       switchUpgrades();
       // menu.classList.add("hidden");
       resetGhost();
-      menuOpened = false;
       hideRoutes();
     };
   }
@@ -278,6 +277,113 @@ class SmelterMenu extends BuildingMenu {
   }
 }
 class AssemblerMenu extends BuildingMenu {
+  constructor(tile, id) {
+    super(tile, id);
+    this.tile = tile;
+    this.id = id;
+    this.name = "Assembly Line";
+  }
+  menuCreation() {
+    const container = document.querySelector("#menu-container");
+    let menu = document.createElement("div");
+    menu.classList.add("assemblerMenu", "hidden");
+    if (!menu.dataset.assemblerId) {
+      menu.dataset.assemblerId = this.id;
+      menu.dataset.parentTileId = this.tile.id;
+    } else {
+      this.id = menu.dataset.assemblerId;
+    }
+
+    let menuContent = `
+     
+    <div class="recipesBlock">
+    <h2>${this.name} ${this.id} </h2>
+      </div>
+      <div class="proccessingBlock">
+        <div class="itemsBlock">
+          <div class="materialBlock">
+            <img src="img/resourcesIcons/noItem.svg" class = "materialImage"/>
+            <span class = "materialAmount">${this.tile.dataset.itemAmount}</span>
+          </div>
+          <div class="arrowBlock">
+            <img src="img/buttonIcons/arrow.png" />
+          </div>
+          <div class="productBlock">
+            <img src="img/resourcesIcons/noItem.svg" class = "productImage"/>
+            <span class = "productAmount">0</span>
+          </div>
+        </div>
+  
+        <div class="progressBarBlock">
+          <div class="progressBar"></div>
+          <span></span>
+        </div>
+        <div class="fuelBlock">
+          <div class="fuel">
+            <img src="img/resourcesIcons/coalOre.png" alt="" />
+            <span></span>
+          </div>
+          <div class="fuelProgressBar"></div>
+        </div>
+      </div>
+      <button class="close-button"></button>
+      <div class="upgradesBlock"></div>
+      `;
+    menu.innerHTML = menuContent;
+    container.appendChild(menu);
+    this.menuUpdate();
+    this.closeButton(menu);
+    // this.upgradeMenu(menu, oreProcessingUpgrades);
+  }
+  menuUpdate() {
+    let menu = document.querySelector(`[data-assembler-id="${this.id}"]`);
+    let materialAmount = menu.children[1].querySelector(".materialAmount");
+    let materialImage = menu.children[1].querySelector(".materialImage");
+
+    let productAmount = menu.children[1].querySelector(".productAmount");
+    let productImage = menu.children[1].querySelector(".productImage");
+    setInterval(() => {
+      switch (this.tile.dataset.itemType) {
+        case "ironOre":
+          materialImage.src = "/img/resourcesIcons/ironOre-icon.svg";
+          productImage.src = "/img/resourcesIcons/ironIngot.svg";
+          break;
+        case "copperOre":
+          materialImage.src = "/img/resourcesIcons/copperOre-icon.svg";
+          productImage.src = "/img/resourcesIcons/copperIngot.svg";
+          break;
+      }
+      materialAmount.textContent = this.tile.dataset.itemAmount;
+      productAmount.textContent = this.tile.dataset.itemAmountOutput;
+    }, 100);
+    this.allAssemblyItems(menu);
+  }
+  allAssemblyItems(menu) {
+    const recipesBlock = menu.querySelector(".recipesBlock");
+    allAssemblyRecipes.forEach((recipe) => {
+      let recipeBlock = document.createElement("div");
+      recipeBlock.classList.add("assemblyRecipe");
+
+      let materialItem = `
+        <div class="materialBlock">
+        <span class="recipeName">${recipe.materialName}</span>
+          <img src=${recipe.materialImage} />
+          <span>${recipe.materialAmount}</span>
+        </div>
+        <div class="arrowBlock">
+          <img src="img/buttonIcons/arrow.png" />
+        </div>
+        <div class="productBlock">
+        <span class="recipeName">${recipe.productName}</span>
+        <img src=${recipe.productImage} />
+        <span>${recipe.productAmount}</span>
+      </div>`;
+      recipeBlock.innerHTML = materialItem;
+      recipesBlock.appendChild(recipeBlock);
+    });
+  }
+}
+class TwoMaterialsProcessingMenu extends BuildingMenu {
   constructor(tile, id) {
     super(tile, id);
     this.tile = tile;
