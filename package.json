@@ -1,5 +1,8 @@
 {
   "dependencies": {
     "@neodrag/vanilla": "^2.0.3"
+  },
+  "devDependencies": {
+    "prettier-html": "^0.0.2"
   }
 }

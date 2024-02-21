@@ -4,16 +4,22 @@ class CargoStationMenu extends BuildingMenu {
     this.tile = tile;
     this.tileData = tile.dataset;
     this.id = id;
-    this.name = "Cargo Station";
+    this.name = "cargoStation";
     this.menuOpened = false;
   }
   menuCreation(item) {
     const container = document.querySelector("#menu-container");
-    let menu = document.createElement("div");
+    const menu = document.createElement("div");
+    const menuData = menu.dataset;
+
+    menuData.menuId = this.id;
+    menuData.menuType = this.name;
+    menuData.parentTileId = this.tile.id;
     menu.classList.add("cargoStationMenu", "hidden");
     menu.id = `CargoStation${this.id}`;
-    let menuContent = `
-      <h2>${this.name} ${this.id} (${this.tileData.connectedTo})</h2>
+    this.title = this.name.replace(/([A-Z])/g, " $1");
+    menu.innerHTML = `
+      <h2>${this.title} ${this.id} (${this.tileData.connectedTo})</h2>
       <h3>Choose mode</h3>
       <div class="cargoStationMenu__mode">
         <div class ="cargoStationMenu__button">
@@ -58,7 +64,6 @@ class CargoStationMenu extends BuildingMenu {
           <h3 class="itemName">Empty</h3>
      </div>`;
 
-    menu.innerHTML = menuContent;
     menu.dataset.cargoStationId = this.id;
     this.tileData.stationId = this.id;
     menu.dataset.parentTileId = this.tile.id;
@@ -90,10 +95,7 @@ class CargoStationMenu extends BuildingMenu {
       let selectedExportItem = this.tileData.cargoStationItem;
       if (this.tileData.cargoStationType == "Export" && this.tileData.connectedTo != "tradingTerminal") {
         item = stationObj.updateData(defaultItem.mainFactoryTile, "export");
-      } else if (
-        this.tileData.cargoStationType == "Export" &&
-        this.tileData.connectedTo == "tradingTerminal"
-      ) {
+      } else if (this.tileData.cargoStationType == "Export" && this.tileData.connectedTo == "tradingTerminal") {
         item = stationObj.updateData(defaultItem.mainFactoryTile, "export", selectedExportItem);
       } else {
         item = stationObj.updateData(defaultItem.mainFactoryTile, "import");

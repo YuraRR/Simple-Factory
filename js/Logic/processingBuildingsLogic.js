@@ -16,8 +16,7 @@ class OreProcessingPlant extends Building {
     let processingStarted = false;
     this.tileData.productionTime = this.productionTime;
 
-    let menu = this.createMenu(OreProccesingMenu, "ore-processing", oreProcessingMenuId, clickArea);
-    console.log(this.tile.dataset.itemAmount);
+    const menu = this.createMenu(OneMaterialsProcessingMenu, "oreProcessing", oreProcessingMenuId, clickArea);
     setInterval(() => {
       if (
         this.tileData.itemAmount >= 2 &&
@@ -27,9 +26,8 @@ class OreProcessingPlant extends Building {
         // this.tileData.fluidType == "water"
       ) {
         this.tileData.fluidAmount -= 4;
-
-        let recipeObj = allProcessingOreRecipes.find(
-          (recipe) => recipe.materialName === this.tileData.itemType
+        const recipeObj = allItems.find(
+          (recipe) => recipe.producedIn === "oreProcessing" && recipe.materials.res1Name == this.tileData.itemType
         );
         this.itemProcessingOneMaterial(this.findTargetTile(), menu, recipeObj);
         processingStarted = true;
@@ -95,14 +93,12 @@ class Assembler extends Building {
     }
 
     this.tileData.selectedProduct = "Iron frame";
-    let menu = this.createMenu(AssemblerMenu, "assembler", assemblerMenuId, clickArea);
+    let menu = this.createMenu(TwoMaterialsProcessingMenu, "assembler", assemblerMenuId, clickArea);
 
     setInterval(() => {
       let selectedProduct = this.tileData.selectedProduct;
       if (this.tileData.itemAmount != 0 && !processingStarted && selectedProduct) {
-        let recipeObj = allAssemblyRecipes.find(
-          (recipe) => recipe.productName == this.tileData.selectedProduct
-        );
+        let recipeObj = allAssemblyRecipes.find((recipe) => recipe.productName == this.tileData.selectedProduct);
         this.itemProcessingTwoMaterial(this.tile, menu, recipeObj);
         processingStarted = true;
       }
@@ -127,13 +123,11 @@ class CementPlant extends Building {
       this.tileData.itemAmountOutput = 0;
     }
 
-    this.tileData.selectedProduct = "Cement";
-    let menu = this.createMenu(TwoMaterialsProcessingMenu, "cementFactory", cementFactoryId, clickArea);
+    const menu = this.createMenu(TwoMaterialsProcessingMenu, "cementPlant", cementPlantMenuId, clickArea);
 
     setInterval(() => {
-      let selectedProduct = this.tileData.selectedProduct;
-      if (this.tileData.itemAmount != 0 && !processingStarted && selectedProduct) {
-        let recipeObj = allRecepies.find((recipe) => recipe.productName == this.tileData.selectedProduct);
+      if (this.tileData.itemAmount != 0 && !processingStarted) {
+        const recipeObj = allItems.find((recipe) => recipe.producedIn === "cementPlant");
         this.itemProcessingTwoMaterial(this.tile, menu, recipeObj);
         processingStarted = true;
         console.log(recipeObj);
@@ -150,7 +144,7 @@ function crusherCreating(event) {
   if (event.target.classList.contains("grid-cell")) {
     const cell = event.target;
     console.log(cell.dataset.buildingType);
-    if (cell.dataset.buildingType == "oreProcessing") {
+    if (cell.dataset.buildingType == "oreProcessing" || cell.classList.contains("activeTileOutline")) {
       console.log(cell);
       cell.classList.add("upgrade");
       let newBuilding = new Crusher(cell);

@@ -146,7 +146,7 @@ class Forest extends Generator {
     const treesList = ["pine", "pines", "oak1", "oak2", "oak3", "oak4"];
     const bushesList = ["bush1", "bush2", "bush3", "bush4"];
     this.generateMultiply(15, 0.3, "forest", "tree", treesList);
-    this.generateAround("forest", "flowers", 2, "bush", bushesList, 0.4);
+    this.generateAround("forest", "flowers", 2, "bush", bushesList, 0.2);
   }
 }
 class Sand extends Generator {
@@ -181,7 +181,7 @@ class Limestone extends Generator {
     this.z = z;
   }
   spawn() {
-    this.generateMultiply(5, 0.3, "limestone");
+    this.generateMultiply(6, 0.3, "limestone");
     const tiles = gridContainer.querySelectorAll(`[data-ground-type="limestone"]`);
     tiles.forEach((tile) => (tile.dataset.resType = "Limestone"));
     const limestoneRocks = ["limeStoneRock2"];

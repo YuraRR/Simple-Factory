@@ -158,6 +158,7 @@ function startIntervals(tile, foundTile) {
       fluidSplitter: FluidSplitter,
       road: Road,
       cargoStation: CargoStation,
+      cementPlant: CementPlant,
     };
 
     let newBuilding = new buildingClasses[className](tile);
@@ -167,6 +168,7 @@ function startIntervals(tile, foundTile) {
       case "oreProcessing":
       case "smelter":
       case "assembler":
+      case "cementPlant":
         newBuilding.processing(clickArea);
         break;
       case "mineshaft":

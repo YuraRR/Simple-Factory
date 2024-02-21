@@ -62,5 +62,10 @@ document.addEventListener("keydown", (event) => {
       const lastMenu = allOpenedMenu.pop();
       lastMenu.classList.add("hidden");
     }
+    const menuModal = document.querySelector(".tool-menu__modal");
+    menuModal.classList.add("hidden");
+
+    const activeTiles = document.querySelectorAll(".activeTileOutline");
+    activeTiles.forEach((tile) => tile.classList.remove("activeTileOutline"));
   }
 });

@@ -10,12 +10,13 @@ class Mineshaft extends Building {
   }
 
   extraction(clickArea) {
+    console.log(this.tileData.oreType);
     switch (this.tileData.oreType) {
       case "iron":
-        this.tileData.itemTypeOutput = "Raw Iron Ore";
+        this.tileData.itemTypeOutput = "Iron Ore";
         break;
       case "copper":
-        this.tileData.itemTypeOutput = "Raw Copper Ore";
+        this.tileData.itemTypeOutput = "Copper Ore";
         break;
     }
 
@@ -23,14 +24,17 @@ class Mineshaft extends Building {
       this.tileData.itemAmountOutput = 0;
     }
 
-    let menu = this.createMenu(MineshaftMenu, "mineshaft", mineshaftMenuId, clickArea);
-    const targetTile = this.findTargetTile();
-    let interval = setInterval(() => {
-      targetTile.dataset.itemAmountOutput++;
-      if (this.itemStorage == this.maxItemStorage) {
-        clearInterval(interval);
-      }
-    }, 1000);
+    const menu = this.createMenu(SourceBuildingsMenu, "mineshaft", mineshaftMenuId, clickArea);
+    const recipeObj = allItems.find((recipe) => recipe.name === this.tileData.itemTypeOutput);
+    this.tileData.productionTime = recipeObj.processTime;
+    this.itemSpawningInSources(this.findTargetTile(), menu, recipeObj);
+
+    // let interval = setInterval(() => {
+    //   targetTile.dataset.itemAmountOutput++;
+    //   if (this.itemStorage == this.maxItemStorage) {
+    //     clearInterval(interval);
+    //   }
+    // }, 1000);
   }
 }
 
@@ -50,6 +54,7 @@ class Quarry extends Building {
     this.name = "quarry";
     // this.itemStorage = 0;
     // this.maxItemStorage = 10;
+    this.id = id;
     this.tile = tile;
     this.tileData = tile.dataset;
     this.tileData.itemAmountOutput = 0;
@@ -57,21 +62,26 @@ class Quarry extends Building {
   }
   extraction(clickArea) {
     const targetTile = this.findTargetTile();
-    console.log(targetTile);
     const resType = targetTile.dataset.resType;
-
     targetTile.dataset.itemTypeOutput = resType;
-
     this.name = `${resType}Quarry`;
     this.createBuildingImage();
-    // let menu = this.createMenu(QuarryMenu, "quarry", quarryMenuId, clickArea);
 
-    let interval = setInterval(() => {
-      targetTile.dataset.itemAmountOutput++;
-      // if (this.itemStorage == this.maxItemStorage) {
-      //   clearInterval(interval);
-      // }
-    }, 1000);
+    const menu = this.createMenu(SourceBuildingsMenu, "quarry", quarryMenuId, clickArea);
+
+    const recipeObj = allItems.find((recipe) => recipe.name === this.tileData.resType);
+    this.itemSpawningInSources(this.findTargetTile(), menu, recipeObj);
+
+    const quarryTiles = document.querySelectorAll(`[data-building-id="${targetTile.dataset.buildingId}"]`);
+    quarryTiles.forEach((tile) => {
+      let [currentX, currentZ] = findXZpos(tile);
+      let neighborsTilesFunc = findNeighbors.bind(this, currentX, currentZ);
+      const neighborsTiles = neighborsTilesFunc();
+
+      neighborsTiles.forEach((tile) => {
+        if (tile.dataset.type == "empty") tile.dataset.equipmentPossibleFor = targetTile.dataset.buildingId;
+      });
+    });
   }
 }
 class WaterPump extends Building {
@@ -93,12 +103,7 @@ class WaterPump extends Building {
     }, 4000);
   }
   giveFluid() {
-    const neighborsTiles = [
-      this.findTopTile(),
-      this.findRightTile(),
-      this.findBottomTile(),
-      this.findLeftTile(),
-    ];
+    const neighborsTiles = [this.findTopTile(), this.findRightTile(), this.findBottomTile(), this.findLeftTile()];
     setInterval(() => {
       neighborsTiles.forEach((tile) => {
         if (tile.dataset.undergroundType == "pipe") {

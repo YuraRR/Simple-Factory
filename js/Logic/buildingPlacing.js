@@ -36,8 +36,8 @@ const buildingCreating = {
         cell.dataset.groundType == "limestone" ||
         cell.dataset.groundType == "stone"
       ) {
-        let newBuilding = new Quarry(cell);
-        let startMethods = startBuildingMethods.bind(newBuilding, cell);
+        const newBuilding = new Quarry(cell);
+        const startMethods = startBuildingMethods.bind(newBuilding, cell);
         startMethods();
       }
     }
@@ -66,8 +66,8 @@ const buildingCreating = {
     if (event.target.classList.contains("grid-cell")) {
       const cell = event.target;
       if (cell.dataset.type == "empty" && !toBlockConstruction()) {
-        let newBuilding = new OreProcessingPlant(cell);
-        let startMethods = startBuildingMethods.bind(newBuilding, cell);
+        const newBuilding = new OreProcessingPlant(cell);
+        const startMethods = startBuildingMethods.bind(newBuilding, cell);
         startMethods();
       }
     }
@@ -80,7 +80,7 @@ const buildingCreating = {
       const cell = event.target;
       if (cell.dataset.type == "empty" && !toBlockConstruction()) {
         const newBuilding = new Smelter(cell);
-        let startMethods = startBuildingMethods.bind(newBuilding, cell);
+        const startMethods = startBuildingMethods.bind(newBuilding, cell);
         startMethods();
       }
     }
@@ -93,8 +93,8 @@ const buildingCreating = {
       const cell = event.target;
       if (cell.dataset.type == "empty" && !toBlockConstruction()) {
         cell.classList.add("assembler");
-        let newBuilding = new Assembler(cell);
-        let startMethods = startBuildingMethods.bind(newBuilding, cell);
+        const newBuilding = new Assembler(cell);
+        const startMethods = startBuildingMethods.bind(newBuilding, cell);
         startMethods();
       }
     }
@@ -106,8 +106,8 @@ const buildingCreating = {
       const cell = event.target;
       if (cell.dataset.type == "empty" && !toBlockConstruction()) {
         cell.classList.add("cementPlant");
-        let newBuilding = new CementPlant(cell);
-        let startMethods = startBuildingMethods.bind(newBuilding, cell);
+        const newBuilding = new CementPlant(cell);
+        const startMethods = startBuildingMethods.bind(newBuilding, cell);
         startMethods();
       }
     }
@@ -121,8 +121,8 @@ const buildingCreating = {
     if (event.target.classList.contains("grid-cell")) {
       const cell = event.target;
       if (cell.dataset.type == "empty" && !toBlockConstruction()) {
-        let newBuilding = new Storage(cell);
-        let startMethods = startBuildingMethods.bind(newBuilding, cell);
+        const newBuilding = new Storage(cell);
+        const startMethods = startBuildingMethods.bind(newBuilding, cell);
         startMethods();
       }
     }
@@ -226,22 +226,20 @@ const buildingCreating = {
       const factoryTile = findTargetTileByDirection(cell);
       if (cellData.type == "empty" && factoryTile) {
         //Object creation
-        let newBuilding = new CargoStation(cell);
-        newBuilding.getId(cell.id);
-        newBuilding.createBuilding();
-
+        const newBuilding = new CargoStation(cell);
+        const startMethods = startBuildingMethods.bind(newBuilding, cell);
+        const clickArea = startMethods();
         //Datasets
         cellData.direction = { 0: "up", 1: "right", 2: "down", 3: "left" }[buildingDirection];
         cellData.cargoStationType = "Export";
         cellData.cargoStationItem = "Empty";
 
-        let stationData = newBuilding.updateData(factoryTile);
+        const stationData = newBuilding.updateData(factoryTile);
         cellData.connectedTo = factoryTile.dataset.buildingType;
         //Menu creation
-        let clickArea = newBuilding.createClickArea(1, 1);
-        let menu = newBuilding.createMenu(
+        const menu = newBuilding.createMenu(
           CargoStationMenu,
-          "cargo-station",
+          "cargoStation",
           cargoStationMenuId,
           clickArea,
           stationData
@@ -265,13 +263,31 @@ const buildingCreating = {
       }
     }
   },
-};
 
+  powerPlant: (event) => {},
+};
+const equipmentCreating = {
+  Crusher: (event) => {
+    console.log("da");
+    if (event.target.classList.contains("grid-cell")) {
+      const tile = event.target;
+      if (tile.dataset.buildingType == "oreProcessing" || tile.classList.contains("activeTileOutline")) {
+        tile.classList.add("equipment");
+        let newEquipment = new Crusher(tile);
+        newEquipment.getId(tile.id);
+        newEquipment.createBuildingImage(true);
+        newEquipment.createEquipment();
+        newEquipment.addEfficiency();
+        tile.classList.remove("activeTileOutline");
+      }
+    }
+  },
+  ExtraExcavator: (event) => {},
+};
 function startBuildingMethods(tile) {
   const buildingInfo = allBuilding.find((bld) => bld.name === currentTool);
   if (buildingInfo) {
     const { xSize, zSize } = buildingInfo;
-    console.log(tile);
     this.getId(tile.id);
     this.createBuilding();
     if (currentTool != "quarry") this.createBuildingImage();
@@ -280,6 +296,7 @@ function startBuildingMethods(tile) {
     if (this.processing) this.processing(clickArea);
     if (this.addItemToStorage) this.addItemToStorage(clickArea);
     if (this.extraction) this.extraction(clickArea);
+    return clickArea;
   } else {
     console.error(`Building information not found for ${currentTool}`);
   }

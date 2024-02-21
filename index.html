@@ -15,140 +15,47 @@
       <div class="interface-container">
         <div id="menu-container"></div>
         <div class="tool-menu">
-          <div class="tool-menu__groupNames">
+          <div class="tool-menu__modal hidden">
+            <!-- SOURCE BUIDINGS -->
+            <div class="tool-menu__group hidden" data-group-type="source"></div>
+            <!-- PROCESSING BUIDINGS -->
+            <div class="tool-menu__group hidden" data-group-type="processing"></div>
+            <!-- STORAGE BUIDINGS -->
+            <div class="tool-menu__group hidden" data-group-type="storage"></div>
+            <!-- ENERGY BUIDINGS -->
+            <div class="tool-menu__group hidden" data-group-type="energy"></div>
+            <!-- TRANSPORTATION BUIDINGS -->
+            <div class="tool-menu__group hidden" data-group-type="conveyors"></div>
+            <div class="tool-menu__group hidden" data-group-type="transport"></div>
+
+            <button class="close-button"></button>
+          </div>
+          <!-- <div class="tool-menu__groupNames">
             <span>Source </span>
             <span>Processing </span>
             <span>Storage </span>
             <span>Transportation </span>
-          </div>
+          </div> -->
           <div class="tool-menu__buttons">
-            <!-- SOURCE BUIDINGS -->
-            <div class="tool-menu__group">
-              <div class="tool-menu__block">
-                <button class="tool-menu__btn" id="mineshaft">
-                  <img src="/img/toolButtons/mineshaft.png" draggable="false" />
-                </button>
-                <span>Mineshaft</span>
-              </div>
-
-              <div class="tool-menu__block">
-                <button class="tool-menu__btn" id="waterPump">
-                  <img src="/img/toolButtons/pumpIcon.png" draggable="false" />
-                </button>
-                <span>Water Pump</span>
-              </div>
-            </div>
-
-            <div class="tool-menu__block">
-              <button class="tool-menu__btn" id="quarry">
-                <img src="/img/toolButtons/mineshaft.png" draggable="false" />
-              </button>
-              <span>Quarry</span>
-            </div>
-
-            <!-- PROCESSING BUIDINGS -->
-
-            <div class="tool-menu__group">
-              <div class="tool-menu__block">
-                <button class="tool-menu__btn" id="oreProcessing">
-                  <img src="/img/toolButtons/oreProccesing.jpg" draggable="false" />
-                </button>
-                <span>Ore Processing</span>
-              </div>
-
-              <div class="tool-menu__block">
-                <button class="tool-menu__btn" id="smelter">
-                  <img src="/img/toolButtons/smelter.png" draggable="false" />
-                </button>
-                <span>Smelter</span>
-              </div>
-
-              <div class="tool-menu__block">
-                <button class="tool-menu__btn" id="cementPlant">
-                  <img src="/img/toolButtons/smelter.png" draggable="false" />
-                </button>
-                <span>Cement Plant</span>
-              </div>
-              <div class="tool-menu__block">
-                <button class="tool-menu__btn" id="assembler">
-                  <img src="/img/toolButtons/assemblerFactory.png" draggable="false" />
-                </button>
-                <span>Assembler</span>
-              </div>
-            </div>
-
-            <!-- STORAGE BUIDINGS -->
-            <div class="tool-menu__group">
-              <div class="tool-menu__block">
-                <button class="tool-menu__btn" id="storage">
-                  <img src="/img/toolButtons/storage.png" draggable="false" />
-                </button>
-                <span>Storage</span>
-              </div>
-            </div>
-            <!-- TRANSPORTATION BUIDINGS -->
-            <div class="tool-menu__group">
-              <div class="tool-menu__block">
-                <button class="tool-menu__btn" id="conveyor">
-                  <img src="/img/toolButtons/conveyor.png" draggable="false" />
-                </button>
-                <span>Conveyor</span>
-              </div>
-
-              <div class="tool-menu__block">
-                <button class="tool-menu__btn" id="connector">
-                  <img src="/img/toolButtons/connector.png" alt="" draggable="false" />
-                </button>
-                <span>Connector</span>
-              </div>
-
-              <div class="tool-menu__block">
-                <button class="tool-menu__btn" id="splitter">
-                  <img src="/img/toolButtons/spliterIcon.png" alt="" draggable="false" />
-                </button>
-                <span>Splitter</span>
-              </div>
-
-              <div class="tool-menu__block">
-                <button class="tool-menu__btn" id="pipe">
-                  <img src="/img/toolButtons/pipeIcon.png" alt="" draggable="false" />
-                </button>
-                <span>Pipe</span>
-              </div>
-
-              <div class="tool-menu__block">
-                <button class="tool-menu__btn" id="fluidSplitter">
-                  <img src="/img/toolButtons/pipeIcon.png" alt="" draggable="false" />
-                </button>
-                <span>Fluid Splitter</span>
-              </div>
-
-              <div class="tool-menu__block">
-                <button class="tool-menu__btn" id="road">
-                  <img src="/img/toolButtons/road.jpg" alt="" draggable="false" />
-                </button>
-                <span>Road</span>
-              </div>
-              <div class="tool-menu__block">
-                <button class="tool-menu__btn" id="cargoStation">
-                  <img src="/img/toolButtons/road.jpg" alt="" draggable="false" />
-                </button>
-                <span>Cargo Station</span>
-              </div>
-              <div class="tool-menu__block">
-                <button class="tool-menu__btn" id="tradingTerminal">
-                  <img src="/img/toolButtons/road.jpg" alt="" draggable="false" />
-                </button>
-                <span>Trading Terminal</span>
-              </div>
-            </div>
+            <button class="tool-menu__category" id="source">
+              <img src="/img/toolButtons/mineshaft.png" draggable="false" />
+            </button>
+            <button class="tool-menu__category" id="processing">
+              <img src="/img/toolButtons/smelter.png" draggable="false" />
+            </button>
+            <button class="tool-menu__category" id="storage">
+              <img src="/img/toolButtons/storage.png" draggable="false" />
+            </button>
+            <button class="tool-menu__category" id="energy">
+              <img src="/img/toolButtons/energy.png" draggable="false" />
+            </button>
+            <button class="tool-menu__category" id="conveyors">
+              <img src="/img/toolButtons/conveyor.png" draggable="false" />
+            </button>
+            <button class="tool-menu__category" id="transport">
+              <img src="/img/toolButtons/road.jpg" draggable="false" />
+            </button>
           </div>
-        </div>
-
-        <div class="information-menu">
-          <h2>Information</h2>
-          <p id="ironOreCounter">Iron ore Amount:</p>
-          <p id="copperOreCounter">Copper ore Amount:</p>
         </div>
         <div id="customContextMenu" class="context-menu">
           <button class="contextMenu-button" id="demolitionButton">Demolition Mode</button>
@@ -162,9 +69,6 @@
     <script src="/js/Data/variables.js"></script>
     <script src="js/Misc/gridSettings.js"></script>
     <script src="/js/Misc/visualGraphics.js"></script>
-    <script src="/js/Interface/interface.js"></script>
-    <script src="/js/Interface/buildingsMenu.js"></script>
-    <script src="/js/Interface/transportMenu.js"></script>
     <script src="/js/Logic/buildingPlacing.js"></script>
     <script src="/js/Logic/mainBuildingLogic.js"></script>
     <script src="/js/Logic/transportationBuildingLogic.js"></script>
@@ -172,6 +76,9 @@
     <script src="/js/Logic/processingBuildingsLogic.js"></script>
     <script src="/js/Logic/upgradesLogic.js"></script>
     <script src="/js/Logic/pathFindfingLogic.js"></script>
+    <script src="/js/Interface/interface.js"></script>
+    <script src="/js/Interface/buildingsMenu.js"></script>
+    <script src="/js/Interface/transportMenu.js"></script>
     <script src="/js/Misc/savingGame.js"></script>
     <script src="/js/Misc/worldGeneration.js"></script>
     <script src="/js/playerActions.js"></script>

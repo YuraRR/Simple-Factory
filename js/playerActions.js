@@ -2,36 +2,6 @@ let CELLS = document.querySelectorAll(".grid-cell");
 //ALL TREES
 const allTrees = document.querySelectorAll(`[data-image-type="tree"]`);
 
-//TOOLBAR
-function activeTool() {
-  TOOLBUTTONS.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      currentTool = btn.id;
-      removeButtonActive(TOOLBUTTONS, btn);
-      createEventListener(currentTool);
-    });
-  });
-}
-
-function createEventListener(currentTool) {
-  resetTool();
-  gridContainer.removeEventListener("click", demolitionFunc);
-  gridContainer.addEventListener("click", buildingCreating[currentTool]);
-  ghostRotating();
-}
-
-function removeButtonActive(buttons, btn) {
-  buttons.forEach((btn) => btn.classList.remove("buttonActive"));
-  btn.classList.add("buttonActive");
-}
-function resetTool() {
-  const creatingMethods = Object.values(buildingCreating);
-  creatingMethods.forEach((method) => {
-    gridContainer.removeEventListener("click", method);
-  });
-}
-activeTool();
-
 let currentHoveredCell = null;
 
 // GHOSTS
@@ -78,14 +48,15 @@ function handleMouseEnter(event) {
                 applyPlacementClass(currentTile, ["sand", "clay", "limestone", "stone"]);
                 break;
               default:
-                applyPlacementClass(currentTile, "grass");
+                applyPlacementClass(currentTile, "empty");
                 break;
             }
 
             function applyPlacementClass(tile, targetType) {
               if (
                 (tile.dataset.groundType == targetType && !tile.dataset.featuresType) ||
-                targetType.includes(tile.dataset.groundType)
+                targetType.includes(tile.dataset.groundType) ||
+                (targetType == "empty" && tile.dataset.type == "empty" && !tile.dataset.featuresType)
               ) {
                 tile.classList.add("canBePlaced");
               } else {
@@ -106,9 +77,10 @@ function factoryConnectionCheck(tile) {
   if (currentTool == "cargoStation" && tile.classList.contains("canBePlaced")) {
     const mainFactoryTile = findTargetTileByDirection(tile);
     if (mainFactoryTile) {
-      mainFactoryTile.children[0].classList.add("connection-hover");
+      const buidlingImg = mainFactoryTile.querySelector(`[data-main-building-img="true"]`);
+      buidlingImg.classList.add("connection-hover");
     } else {
-      let connectedBuilding = document.querySelector(".connection-hover");
+      const connectedBuilding = document.querySelector(".connection-hover");
       connectedBuilding && connectedBuilding.classList.remove("connection-hover");
     }
   }
@@ -382,8 +354,8 @@ function findTargetTileByDirection(tile) {
 
 //SWITCH UPGRADES VISIBILITY
 function switchUpgrades() {
-  let upgradesImageList = document.querySelectorAll("[data-image-type='upgrade']");
-  [...upgradesImageList].map((img) => img.classList.toggle("hidden"));
+  // let upgradesImageList = document.querySelectorAll("[data-image-type='upgrade']");
+  // [...upgradesImageList].map((img) => img.classList.toggle("hidden"));
 }
 
 //PAUSE

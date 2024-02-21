@@ -1,5 +1,3 @@
-//GRID VALUES
-const TOOLBUTTONS = document.querySelectorAll(".tool-menu__btn");
 //MENU ID
 let mineshaftMenuId = 1;
 let smelterMenuId = 1;
@@ -8,6 +6,8 @@ let storageMenuId = 1;
 let oreProcessingMenuId = 1;
 let assemblerMenuId = 1;
 let cargoStationMenuId = 1;
+let cementPlantMenuId = 1;
+let quarryMenuId = 1;
 let truckIdCounter = 1;
 //BUILDING ID
 let buildingId = 1;
@@ -40,18 +40,8 @@ const connectorDirections = [
   "connectorDown-hover",
   "connectorLeft-hover",
 ];
-const conveyorDirections = [
-  "conveyorUp-hover",
-  "conveyorRight-hover",
-  "conveyorDown-hover",
-  "conveyorLeft-hover",
-];
-const splitterDirections = [
-  "splitterUp-hover",
-  "splitterRight-hover",
-  "splitterDown-hover",
-  "splitterLeft-hover",
-];
+const conveyorDirections = ["conveyorUp-hover", "conveyorRight-hover", "conveyorDown-hover", "conveyorLeft-hover"];
+const splitterDirections = ["splitterUp-hover", "splitterRight-hover", "splitterDown-hover", "splitterLeft-hover"];
 const fluidSplitterDirections = [
   "fluidSplitterUp-hover",
   "fluidSplitterRight-hover",
@@ -95,37 +85,44 @@ const allBuilding = [
   //SOURCE
   {
     name: "mineshaft",
+    type: "source",
     xSize: 1,
     zSize: 1,
   },
   {
     name: "quarry",
+    type: "source",
     xSize: 2,
     zSize: 2,
   },
   {
     name: "waterPump",
+    type: "source",
     xSize: 1,
     zSize: 1,
   },
   //PROCESSING
   {
     name: "oreProcessing",
+    type: "processing",
     xSize: 2,
     zSize: 2,
   },
   {
     name: "smelter",
+    type: "processing",
     xSize: 3,
     zSize: 3,
   },
   {
     name: "assembler",
+    type: "processing",
     xSize: 6,
     zSize: 4,
   },
   {
     name: "cementPlant",
+    type: "processing",
     xSize: 2,
     zSize: 2,
   },
@@ -133,47 +130,62 @@ const allBuilding = [
   //STORAGE
   {
     name: "storage",
+    type: "storage",
     xSize: 2,
     zSize: 2,
   },
   //TRANSPORTATION
   {
     name: "conveyor",
+    type: "conveyors",
     xSize: 1,
     zSize: 1,
   },
   {
     name: "connector",
+    type: "conveyors",
     xSize: 1,
     zSize: 1,
   },
   {
     name: "splitter",
+    type: "conveyors",
     xSize: 1,
     zSize: 1,
   },
   {
     name: "pipe",
+    type: "conveyors",
     xSize: 1,
     zSize: 1,
   },
   {
     name: "fluidSplitter",
+    type: "conveyors",
     xSize: 1,
     zSize: 1,
   },
   {
     name: "road",
+    type: "transport",
     xSize: 1,
     zSize: 1,
   },
   {
     name: "cargoStation",
+    type: "transport",
     xSize: 1,
     zSize: 1,
   },
   {
     name: "tradingTerminal",
+    type: "transport",
+    xSize: 3,
+    zSize: 3,
+  },
+  {
+    name: "powerPlant",
+    type: "energy",
     xSize: 3,
     zSize: 3,
   },
@@ -187,7 +199,7 @@ const allBuilding = [
 //RECEPIES LIST
 const allProcessingOreRecipes = [
   {
-    productName: "Refined Iron Ore",
+    productName: "Refined Iron",
     materialName: "Raw Iron Ore",
     materialImage: "img/resourcesIcons/ironOre-icon.svg",
     materialAmount: 2,
@@ -195,7 +207,7 @@ const allProcessingOreRecipes = [
     productAmount: 1,
   },
   {
-    productName: "Refined Copper Ore",
+    productName: "Refined Copper",
     materialName: "Raw Copper Ore",
     materialImage: "img/resourcesIcons/copperOre-icon.svg",
     materialAmount: 2,
@@ -207,7 +219,7 @@ const allSmeltingRecipes = [
   {
     productName: "Iron Plate",
     productSubtype: "Plates",
-    materialName: "Refined Iron Ore",
+    materialName: "Refined Iron ",
     materialImage: "img/resourcesIcons/refinedIronOre.svg",
     materialAmount: 2,
     productImage: "img/resourcesIcons/ironIngot.svg",
@@ -216,7 +228,7 @@ const allSmeltingRecipes = [
   {
     productName: "Iron Ingot",
     productSubtype: "Ingots",
-    materialName: "Refined Iron Ore",
+    materialName: "Refined Iron",
     materialImage: "img/resourcesIcons/refinedIronOre.svg",
     materialAmount: 3,
     productImage: "img/resourcesIcons/ironIngot.svg",
@@ -225,7 +237,7 @@ const allSmeltingRecipes = [
   {
     productName: "Iron Rod",
     productSubtype: "Rods",
-    materialName: "Refined Iron Ore",
+    materialName: "Refined Iron",
     materialImage: "img/resourcesIcons/refinedIronOre.svg",
     materialAmount: 4,
     productImage: "img/resourcesIcons/ironIngot.svg",
@@ -234,7 +246,7 @@ const allSmeltingRecipes = [
   {
     productName: "Copper Plate",
     productSubtype: "Plates",
-    materialName: "Refined Iron Ore",
+    materialName: "Refined Iron",
     materialImage: "img/resourcesIcons/refinedCopperOre.svg",
     materialAmount: 2,
     productImage: "img/resourcesIcons/copperIngot.svg",
@@ -243,7 +255,7 @@ const allSmeltingRecipes = [
   {
     productName: "Copper Ingot",
     productSubtype: "Ingots",
-    materialName: "Refined Copper Ore",
+    materialName: "Refined Copper",
     materialImage: "img/resourcesIcons/refinedCopperOre.svg",
     materialAmount: 3,
     productImage: "img/resourcesIcons/copperIngot.svg",
@@ -252,7 +264,7 @@ const allSmeltingRecipes = [
   {
     productName: "Copper Pipe",
     productSubtype: "Rods",
-    materialName: "Refined Copper Ore",
+    materialName: "Refined Copper",
     materialImage: "img/resourcesIcons/refinedCopperOre.svg",
     materialAmount: 4,
     productImage: "img/resourcesIcons/copperIngot.svg",
@@ -261,10 +273,10 @@ const allSmeltingRecipes = [
 ];
 const allAssemblyRecipes = [
   {
-    firstMatName: "Raw Iron Ore",
+    firstMatName: "Iron Ore",
     firstMatAmount: 4,
     firstMatImage: "",
-    secondMatName: "Raw Copper Ore",
+    secondMatName: "Copper Ore",
     secondMatAmount: 4,
     productName: "Iron frame",
     productImage: "",
@@ -282,10 +294,11 @@ const allRecepies = [
     productName: "Cement",
     productImage: "",
     productAmount: 2,
+    processTime: 4000,
   },
 ];
-//UPGRADES LIST
-const oreProcessingUpgrades = [
+//EQUIPMENT LIST
+const oreProcessingEquipment = [
   {
     name: "Crusher Machine",
     img: "",
@@ -295,7 +308,7 @@ const oreProcessingUpgrades = [
     img: "",
   },
 ];
-const smelterUpgrades = [
+const smelterEquipment = [
   {
     name: "Blast Furnace",
     img: "",
@@ -317,7 +330,16 @@ const smelterUpgrades = [
     img: "",
   },
 ];
-
+const equipmentsList = [
+  {
+    factoryName: "mineshaft",
+    equipments: ["TNT"],
+  },
+  {
+    factoryName: "quarry",
+    equipments: ["Crusher", "Extra Excavator"],
+  },
+];
 //COLORS
 const colors = [
   "#ff0000", // Красный

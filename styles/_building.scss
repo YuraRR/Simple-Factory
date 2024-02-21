@@ -24,14 +24,14 @@
 [data-image-type="quarry"] {
   @include buildingBase;
   width: 229px;
-  top: -23px;
-  left: -75px;
+  top: -21px;
+  left: -74px;
 }
 [data-image-type="oreProcessing"] {
   @include buildingBase;
-  width: 220px;
-  top: -153px;
-  left: -126px;
+  width: 227px;
+  top: -114px;
+  left: -114px;
 }
 [data-image-type="smelter"] {
   @include buildingBase;
@@ -51,6 +51,7 @@
   top: -74px;
   left: -125px;
 }
+
 .ghostImg {
   position: relative;
   img {
@@ -92,12 +93,23 @@
   background-image: url(/img/textures/concrete.jpg) !important;
   position: relative;
 }
+.equipment {
+  position: relative;
+}
 
 [data-image-type="upgrade"] {
   @include buildingBase;
-  width: 102px !important;
-  top: -35px !important;
-  left: -43px !important;
+  width: 110px !important;
+  top: -22px !important;
+  left: -40px !important;
+  z-index: 99 !important;
+  background-image: none !important;
+}
+[data-image-type="cargoStation"] {
+  @include buildingBase;
+  width: 110px !important;
+  top: -22px !important;
+  left: -40px !important;
   z-index: 99 !important;
   background-image: none !important;
 }
