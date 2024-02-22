@@ -75,6 +75,7 @@ class SourceBuildingsMenu extends BuildingMenu {
   constructor(tile, id) {
     super(tile, id);
     this.tile = tile;
+    this.tileData = tile.dataset;
     this.id = id;
     this.name = tile.dataset.buildingType;
   }
@@ -102,8 +103,6 @@ class SourceBuildingsMenu extends BuildingMenu {
       </div>
     </div>
 
-    
-
     <div class="progressBarBlock">
       <div class="progressBar"></div>
       <span></span>
@@ -111,8 +110,7 @@ class SourceBuildingsMenu extends BuildingMenu {
 
     <div class="sourceBldMenu__factoryEquipment"></div>
 
-    <button class="close-button"></button>
-      `;
+    <button class="close-button"></button>`;
 
     container.appendChild(menu);
 
@@ -124,19 +122,12 @@ class SourceBuildingsMenu extends BuildingMenu {
     // this.upgradeMenu(menu, oreProcessingUpgrades);
   }
   menuUpdate(menu) {
-    // let itemAmount = menu.querySelector(".productAmount");
-    // let itemImage = menu.querySelector(".productImage");
-    // setInterval(() => {
-    //   switch (this.tile.dataset.itemTypeOutput) {
-    //     case "Raw Iron Ore":
-    //       itemImage.src = "/img/resourcesIcons/Raw Iron Ore.png";
-    //       break;
-    //     case "Raw Copper Ore":
-    //       itemImage.src = "/img/resourcesIcons/Raw Copper Ore.svg";
-    //       break;
-    //   }
-    //   itemAmount.textContent = this.tile.dataset.itemAmountOutput;
-    // }, 1000);
+    let itemAmount = menu.querySelector(".productAmount");
+    let itemImage = menu.querySelector(".productImage");
+    setInterval(() => {
+      itemImage.src = allItems.find((item) => item.name == this.tile.dataset.itemTypeOutput).imageSrc;
+      itemAmount.textContent = this.tile.dataset.itemAmountOutput;
+    }, 1000);
   }
 
   factoryEquipmentBlock(menu) {
@@ -149,7 +140,7 @@ class SourceBuildingsMenu extends BuildingMenu {
       equipmentsButton.onclick = () => {
         gridContainer.addEventListener("click", equipmentCreating[elem]);
         const equipmentPossibleTiles = document.querySelectorAll(
-          `[data-equipment-possible-for="${menu.dataset.menuId}"]`
+          `[data-equipment-possible-for="${this.tileData.buildingId}"]`
         );
         equipmentPossibleTiles.forEach((tile) => {
           console.log(tile);
@@ -160,108 +151,7 @@ class SourceBuildingsMenu extends BuildingMenu {
     });
   }
 }
-class OreProccesingMenu extends BuildingMenu {
-  constructor(tile, id) {
-    super(tile, id);
-    this.tile = tile;
-    this.id = id;
-    this.name = "OreProcessing";
-  }
-  menuCreation() {
-    const container = document.querySelector("#menu-container");
-    let menu = document.createElement("div");
-    menu.classList.add("oreProcessingMenu", "hidden");
-    let menuContent = `
-     
-    <div class="recipesBlock">
-    <h2>${this.name} ${this.id} </h2>
-      </div>
-      <div class="proccessingBlock">
-        <div class="itemsBlock">
-          <div class="materialBlock">
-            <img src="img/resourcesIcons/noItem.svg" class = "materialImage"/>
-            <span class = "materialAmount">${this.tile.dataset.itemAmount}</span>
-          </div>
-          <div class="arrowBlock">
-            <img src="img/buttonIcons/arrow.png" />
-          </div>
-          <div class="productBlock">
-            <img src="img/resourcesIcons/noItem.svg" class = "productImage"/>
-            <span class = "productAmount">0</span>
-          </div>
-        </div>
-  
-        <div class="progressBarBlock">
-          <div class="progressBar"></div>
-          <span></span>
-        </div>
-        <div class="fuelBlock">
-          <div class="fuel">
-            <img src="img/resourcesIcons/coalOre.png" alt="" />
-            <span></span>
-          </div>
-          <div class="fuelProgressBar"></div>
-        </div>
-      </div>
-      <button class="close-button"></button>
-      <div class="upgradesBlock"></div>
-      `;
-    menu.innerHTML = menuContent;
-    menu.dataset.oreProcessingId = this.id;
-    menu.dataset.parentTileId = this.tile.id;
-    container.appendChild(menu);
-    this.menuUpdate();
-    this.closeButton(menu);
-    this.upgradeMenu(menu, oreProcessingUpgrades);
-  }
-  menuUpdate() {
-    let menu = document.querySelector(`[data-ore-processing-id="${this.id}"]`);
-    let materialAmount = menu.children[1].querySelector(".materialAmount");
-    let materialImage = menu.children[1].querySelector(".materialImage");
 
-    let productAmount = menu.children[1].querySelector(".productAmount");
-    let productImage = menu.children[1].querySelector(".productImage");
-    setInterval(() => {
-      switch (this.tile.dataset.itemType) {
-        case "ironOre":
-          materialImage.src = "/img/resourcesIcons/ironOre-icon.svg";
-          productImage.src = "/img/resourcesIcons/ironIngot.svg";
-          break;
-        case "copperOre":
-          materialImage.src = "/img/resourcesIcons/copperOre-icon.svg";
-          productImage.src = "/img/resourcesIcons/copperIngot.svg";
-          break;
-      }
-      materialAmount.textContent = this.tile.dataset.itemAmount;
-      productAmount.textContent = this.tile.dataset.itemAmountOutput;
-    }, 100);
-    this.allProcessibleOreItems(menu);
-  }
-  allProcessibleOreItems(menu) {
-    const recipesBlock = menu.querySelector(".recipesBlock");
-    allProcessingOreRecipes.forEach((recipe) => {
-      let recipeBlock = document.createElement("div");
-      recipeBlock.classList.add("oreProcessingRecipe");
-
-      let materialItem = `
-        <div class="materialBlock">
-        <span class="recipeName">${recipe.materialName}</span>
-          <img src=${recipe.materialImage} />
-          <span>${recipe.materialAmount}</span>
-        </div>
-        <div class="arrowBlock">
-          <img src="img/buttonIcons/arrow.png" />
-        </div>
-        <div class="productBlock">
-        <span class="recipeName">${recipe.productName}</span>
-        <img src=${recipe.productImage} />
-        <span>${recipe.productAmount}</span>
-      </div>`;
-      recipeBlock.innerHTML = materialItem;
-      recipesBlock.appendChild(recipeBlock);
-    });
-  }
-}
 class SmelterMenu extends BuildingMenu {
   constructor(tile, id) {
     super(tile, id);
@@ -314,7 +204,7 @@ class SmelterMenu extends BuildingMenu {
 
     this.menuUpdate();
     this.closeButton(menu);
-    this.upgradeMenu(menu, smelterUpgrades);
+    // this.upgradeMenu(menu, smelterUpgrades);
   }
   menuUpdate() {
     let menu = document.querySelector(`[data-smelter-id="${this.id}"]`);
@@ -459,6 +349,7 @@ class OneMaterialsProcessingMenu extends BuildingMenu {
   //   });
   // }
 }
+
 class TwoMaterialsProcessingMenu extends BuildingMenu {
   constructor(tile, id) {
     super(tile, id);
@@ -470,7 +361,6 @@ class TwoMaterialsProcessingMenu extends BuildingMenu {
     const container = document.querySelector("#menu-container");
     const menu = document.createElement("div");
     const menuData = menu.dataset;
-
     menuData.menuId = this.id;
     menuData.menuType = this.name;
     menuData.parentTileId = this.tile.id;
@@ -479,7 +369,7 @@ class TwoMaterialsProcessingMenu extends BuildingMenu {
     menu.classList.add("twoMaterialsMenu", "hidden");
 
     menu.innerHTML = `
-    <h3>${this.title}</h3>
+    <h3>${this.title} ${this.id}</h3>
     <div class="twoMaterialsMenu__items">
       <div class="twoMaterialsMenu__materials">
         <div class="twoMaterialsMenu__item">
@@ -523,14 +413,129 @@ class TwoMaterialsProcessingMenu extends BuildingMenu {
     const productAmount = menu.querySelector(".productAmount");
     setInterval(() => {
       if (this.tile.dataset.firstMatName) {
-        firstMaterialImg.src = allItems.find((item) => item.name == this.tile.dataset.firstMatName).src;
+        firstMaterialImg.src = allItems.find((item) => item.name == this.tile.dataset.firstMatName).imageSrc;
       }
       if (this.tile.dataset.secondMatName) {
-        secondMaterialImg.src = allItems.find((item) => item.name == this.tile.dataset.secondMatName).src;
+        secondMaterialImg.src = allItems.find((item) => item.name == this.tile.dataset.secondMatName).imageSrc;
       }
 
       firstMaterialAmount.textContent = this.tile.dataset.firstMatAmount;
       secondMaterialAmount.textContent = this.tile.dataset.secondMatAmount;
+
+      productAmount.textContent = this.tile.dataset.itemAmountOutput;
+    }, 500);
+    // this.allAssemblyItems(menu);
+    menu.id = `${this.name}${this.id}`;
+    dragElement(menu.id);
+  }
+  // allAssemblyItems(menu) {
+  //   const recipesBlock = menu.querySelector(".recipesBlock");
+  //   allAssemblyRecipes.forEach((recipe) => {
+  //     let recipeBlock = document.createElement("div");
+  //     recipeBlock.classList.add("assemblyRecipe");
+
+  //     let materialItem = `
+  //       <div class="materialBlock">
+  //       <span class="recipeName">${recipe.materialName}</span>
+  //         <img src=${recipe.materialImage} />
+  //         <span>${recipe.materialAmount}</span>
+  //       </div>
+  //       <div class="arrowBlock">
+  //         <img src="img/buttonIcons/arrow.png" />
+  //       </div>
+  //       <div class="productBlock">
+  //       <span class="recipeName">${recipe.productName}</span>
+  //       <img src=${recipe.productImage} />
+  //       <span>${recipe.productAmount}</span>
+  //     </div>`;
+  //     recipeBlock.innerHTML = materialItem;
+  //     recipesBlock.appendChild(recipeBlock);
+  //   });
+  // }
+}
+class ThreeMaterialsProcessingMenu extends BuildingMenu {
+  constructor(tile, id) {
+    super(tile, id);
+    this.tile = tile;
+    this.id = id;
+    this.name = tile.dataset.buildingType;
+  }
+  menuCreation() {
+    const container = document.querySelector("#menu-container");
+    const menu = document.createElement("div");
+    const menuData = menu.dataset;
+
+    menuData.menuId = this.id;
+    menuData.menuType = this.name;
+    menuData.parentTileId = this.tile.id;
+
+    this.title = this.name.replace(/([A-Z])/g, " $1");
+    menu.classList.add("threeMaterialsMenu", "hidden");
+
+    menu.innerHTML = `
+    <h3>${this.title}</h3>
+    <div class="threeMaterialsMenu__items">
+      <div class="threeMaterialsMenu__materials">
+        <div class="threeMaterialsMenu__item">
+          <img src="img/resourcesIcons/noItem.svg" class = "materialImage" data-material-img="first"/>
+          <span class = "materialAmount" data-material="first">0</span>
+        </div>
+        <div class="threeMaterialsMenu__item">
+          <img src="img/resourcesIcons/noItem.svg" class = "materialImage" data-material-img="second"/>
+          <span class = "materialAmount"data-material="second">0</span>
+        </div>
+        <div class="threeMaterialsMenu__item">
+          <img src="img/resourcesIcons/noItem.svg" class = "materialImage" data-material-img="third"/>
+          <span class = "materialAmount"data-material="third">0</span>
+        </div>
+      </div>
+      <div class="threeMaterialsMenu__arrow">
+        <img src="img/buttonIcons/arrow.png" />
+      </div>
+      <div class="threeMaterialsMenu__product">
+        <div class="threeMaterialsMenu__item">
+        <img src="img/resourcesIcons/noItem.svg" class = "productImage"/>
+        <span class = "productAmount">0</span>
+      </div>
+      </div>
+    </div>
+
+    <div class="progressBarBlock">
+      <div class="progressBar"></div>
+      <span></span>
+    </div>
+    <button class="close-button"></button>`;
+    container.appendChild(menu);
+    this.menuUpdate(menu);
+    this.closeButton(menu);
+
+    // this.upgradeMenu(menu, oreProcessingUpgrades);
+  }
+  menuUpdate(menu) {
+    const firstMaterialAmount = menu.querySelector(`[data-material="first"]`);
+    const firstMaterialImg = menu.querySelector(`[data-material-img="first"]`);
+
+    const secondMaterialAmount = menu.querySelector(`[data-material="second"]`);
+    const secondMaterialImg = menu.querySelector(`[data-material-img="second"]`);
+
+    const thirdMaterialAmount = menu.querySelector(`[data-material="third"]`);
+    const thirdMaterialImg = menu.querySelector(`[data-material-img="third"]`);
+
+    const productAmount = menu.querySelector(".productAmount");
+    setInterval(() => {
+      if (this.tile.dataset.firstMatName) {
+        firstMaterialImg.src = allItems.find((item) => item.name == this.tile.dataset.firstMatName).imageSrc;
+      }
+      if (this.tile.dataset.secondMatName) {
+        secondMaterialImg.src = allItems.find((item) => item.name == this.tile.dataset.secondMatName).imageSrc;
+      }
+      if (this.tile.dataset.thirdMatName) {
+        thirdMaterialImg.src = allItems.find((item) => item.name == this.tile.dataset.thirdMatName).imageSrc;
+      }
+
+      firstMaterialAmount.textContent = this.tile.dataset.firstMatAmount;
+      secondMaterialAmount.textContent = this.tile.dataset.secondMatAmount;
+      thirdMaterialAmount.textContent = this.tile.dataset.thirdMatAmount;
 
       productAmount.textContent = this.tile.dataset.itemAmountOutput;
     }, 500);

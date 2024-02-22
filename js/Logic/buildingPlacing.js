@@ -99,14 +99,53 @@ const buildingCreating = {
       }
     }
   },
+  //CEMENT PLANT
   cementPlant: (event) => {
     transperentBuildingsRemove();
     if (undergroundOpened) showUnderground();
     if (event.target.classList.contains("grid-cell")) {
       const cell = event.target;
       if (cell.dataset.type == "empty" && !toBlockConstruction()) {
-        cell.classList.add("cementPlant");
         const newBuilding = new CementPlant(cell);
+        const startMethods = startBuildingMethods.bind(newBuilding, cell);
+        startMethods();
+      }
+    }
+  },
+  //CONCRETE PLANT
+  concretePlant: (event) => {
+    transperentBuildingsRemove();
+    if (undergroundOpened) showUnderground();
+    if (event.target.classList.contains("grid-cell")) {
+      const cell = event.target;
+      if (cell.dataset.type == "empty" && !toBlockConstruction()) {
+        const newBuilding = new ConcretePlant(cell);
+        const startMethods = startBuildingMethods.bind(newBuilding, cell);
+        startMethods();
+      }
+    }
+  },
+  //BRICK FACTORY
+  brickFactory: (event) => {
+    transperentBuildingsRemove();
+    if (undergroundOpened) showUnderground();
+    if (event.target.classList.contains("grid-cell")) {
+      const cell = event.target;
+      if (cell.dataset.type == "empty" && !toBlockConstruction()) {
+        const newBuilding = new BrickFactory(cell);
+        const startMethods = startBuildingMethods.bind(newBuilding, cell);
+        startMethods();
+      }
+    }
+  },
+  //GLASS FACTORY
+  glassFactory: (event) => {
+    transperentBuildingsRemove();
+    if (undergroundOpened) showUnderground();
+    if (event.target.classList.contains("grid-cell")) {
+      const cell = event.target;
+      if (cell.dataset.type == "empty" && !toBlockConstruction()) {
+        const newBuilding = new GlassFactory(cell);
         const startMethods = startBuildingMethods.bind(newBuilding, cell);
         startMethods();
       }

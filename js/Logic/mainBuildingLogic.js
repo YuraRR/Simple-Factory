@@ -39,6 +39,9 @@ class Building {
       case "cementPlant":
         building.dataset.buildingCategory = "inOut2";
         break;
+      case "concretePlant":
+        building.dataset.buildingCategory = "inOut3";
+        break;
       case "mineshaft":
       case "quarry":
         building.dataset.buildingCategory = "Out";
@@ -210,6 +213,25 @@ class Building {
               newImporter.dataset.secondMatName = currentItem;
               exportData.itemAmount--;
             }
+          } else if (
+            importData.buildingCategory == "inOut3" &&
+            exportData.buildingType == "connector" &&
+            currentItem
+          ) {
+            const newImporter = findMainTile(importer);
+            if (!newImporter.dataset.firstMatName || newImporter.dataset.firstMatName == currentItem) {
+              newImporter.dataset.firstMatAmount++;
+              newImporter.dataset.firstMatName = currentItem;
+              exportData.itemAmount--;
+            } else if (!newImporter.dataset.secondMatName || newImporter.dataset.secondMatName == currentItem) {
+              newImporter.dataset.secondMatAmount++;
+              newImporter.dataset.secondMatName = currentItem;
+              exportData.itemAmount--;
+            } else if (!newImporter.dataset.thirdMatName || newImporter.dataset.thirdMatName == currentItem) {
+              newImporter.dataset.thirdMatAmount++;
+              newImporter.dataset.thirdMatName = currentItem;
+              exportData.itemAmount--;
+            }
           }
         }, 1000);
         exportData.intervalId = conveyorIntervalId;
@@ -346,20 +368,19 @@ class Building {
     function processItem() {
       updatedProductTime = tileData.productionTime;
 
+      function isTileDataValid(tileData, matName1, matAmount1, matName2, matAmount2) {
+        return (
+          !processItemStarted &&
+          tileData.firstMatName === matName1 &&
+          tileData.secondMatName === matName2 &&
+          parseInt(tileData.firstMatAmount, 10) >= matAmount1 &&
+          parseInt(tileData.secondMatAmount, 10) >= matAmount2
+        );
+      }
+
       if (
-        !processItemStarted &&
-        tileData.firstMatName == res1Name &&
-        tileData.secondMatName == res2Name &&
-        tileData.firstMatAmount >= res1Amount &&
-        tileData.secondMatAmount >= res2Amount
-      ) {
-        assemblying();
-      } else if (
-        !processItemStarted &&
-        tileData.firstMatName == res2Name &&
-        tileData.secondMatName == res1Name &&
-        tileData.firstMatAmount >= res2Amount &&
-        tileData.secondMatAmount >= res1Amount
+        isTileDataValid(tileData, res1Name, res1Amount, res2Name, res2Amount) ||
+        isTileDataValid(tileData, res2Name, res2Amount, res1Name, res1Amount)
       ) {
         assemblying();
       }
@@ -383,42 +404,77 @@ class Building {
       }
     }
   }
+  //TWO MATERIALS PROCESSING
+  itemProcessingThreeMaterial(tile, menu, { name, imageSrc, materials }) {
+    const { res1Name, res1Amount, res2Name, res2Amount, res3Name, res3Amount, waterAmount, time, prodAmount } =
+      materials;
+    const tileData = tile.dataset;
+    let progressBarAnimation;
+    let processItemStarted = false;
+    let updatedProductTime = time;
+
+    function processItem() {
+      updatedProductTime = tileData.productionTime;
+      createListToCompare(materials);
+      function createListToCompare({ matName1, matAmount1, matName2, matAmount2, matName3, matAmount3 }) {
+        const itemList = [matName1, matAmount1, matName2, matAmount2, matName3, matAmount3];
+        let recipeList = [];
+        for (let i = 0; i < itemList.length; i += 2) {
+          const itemInfo = {
+            name: itemList[i],
+            amount: itemList[i + 1],
+          };
+          recipeList.push(itemInfo);
+        }
+        const items = [
+          {
+            name: tileData.firstMatName,
+            amount: +tileData.firstMatAmount,
+          },
+          {
+            name: tileData.secondMatName,
+            amount: +tileData.secondMatAmount,
+          },
+          {
+            name: tileData.thirdMatName,
+            amount: +tileData.thirdMatAmount,
+          },
+        ];
+
+        const allItemsMatch = recipeList.every((item) =>
+          items.some((i) => i.name === item.name && i.amount >= item.amount)
+        );
+        if (allItemsMatch && processItemStarted == false) assemblying();
+      }
+    }
+    let productionInterval = setInterval(processItem, updatedProductTime / 100);
+    tileData.intervalId = productionInterval;
+
+    function assemblying() {
+      processItemStarted = true;
+      progressBarAnimation = moveProgressBar(menu, updatedProductTime, processItem);
+      if (progressBarAnimation.width == 0) {
+        tileData.firstMatAmount -= res1Amount;
+        tileData.secondMatAmount -= res2Amount;
+        tileData.thirdMatAmount -= res3Amount;
+        setTimeout(() => {
+          tileData.itemAmountOutput = String(parseFloat(tileData.itemAmountOutput) + prodAmount);
+          tileData.itemTypeOutput = name;
+          processItemStarted = false;
+        }, updatedProductTime);
+      } else {
+        progressBarAnimation.stop();
+      }
+    }
+  }
 
   //MENU CREATION
   createMenu(className, menuData, idName, clickArea, buildingData) {
-    let targetMenuId;
     let targetTile = this.findTargetTile();
-    switch (menuData) {
-      case "mineshaft":
-        targetMenuId = mineshaftMenuId++;
-        break;
-      case "oreProcessing":
-        targetMenuId = oreProcessingMenuId++;
-        break;
-      case "smelter":
-        targetMenuId = smelterMenuId++;
-        break;
-      case "assembler":
-        targetMenuId = assemblerMenuId++;
-        break;
-      case "storage":
-        targetMenuId = storageMenuId++;
-        break;
-      case "cargoStation":
-        targetMenuId = cargoStationMenuId++;
-        break;
-      case "cementPlant":
-        targetMenuId = cementPlantMenuId++;
-        break;
-      case "quarry":
-        targetMenuId = quarryMenuId++;
-        break;
-    }
-
+    console.log(idName);
     const classMenu = new className(targetTile, idName);
     classMenu.menuCreation(buildingData);
-    console.log(`[data-menu-type="${menuData}"][data-menu-id="${targetMenuId}]`);
-    let menu = document.querySelector(`[data-menu-type="${menuData}"][data-menu-id="${targetMenuId}"]`);
+    const menu = document.querySelector(`[data-menu-type="${menuData}"][data-menu-id="${idName}"]`);
     console.log(menu);
     clickArea.addEventListener("click", () => {
       if (currentTool != "demolition" && !undergroundOpened) {

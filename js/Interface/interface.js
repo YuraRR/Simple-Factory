@@ -131,7 +131,7 @@ document.addEventListener("DOMContentLoaded", () => {
     currentTool = "demolition";
 
     gridContainer.addEventListener("click", demolitionFunc);
-    TOOLBUTTONS.forEach((btn) => btn.classList.remove("buttonActive"));
+    // TOOLBUTTONS.forEach((btn) => btn.classList.remove("buttonActive"));
     ghostRotating();
   });
 

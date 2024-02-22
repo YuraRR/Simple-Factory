@@ -24,7 +24,7 @@ class Mineshaft extends Building {
       this.tileData.itemAmountOutput = 0;
     }
 
-    const menu = this.createMenu(SourceBuildingsMenu, "mineshaft", mineshaftMenuId, clickArea);
+    const menu = this.createMenu(SourceBuildingsMenu, "mineshaft", mineshaftMenuId++, clickArea);
     const recipeObj = allItems.find((recipe) => recipe.name === this.tileData.itemTypeOutput);
     this.tileData.productionTime = recipeObj.processTime;
     this.itemSpawningInSources(this.findTargetTile(), menu, recipeObj);
@@ -67,7 +67,7 @@ class Quarry extends Building {
     this.name = `${resType}Quarry`;
     this.createBuildingImage();
 
-    const menu = this.createMenu(SourceBuildingsMenu, "quarry", quarryMenuId, clickArea);
+    const menu = this.createMenu(SourceBuildingsMenu, "quarry", quarryMenuId++, clickArea);
 
     const recipeObj = allItems.find((recipe) => recipe.name === this.tileData.resType);
     this.itemSpawningInSources(this.findTargetTile(), menu, recipeObj);
@@ -121,7 +121,7 @@ class Storage extends Building {
     this.tile = tile;
   }
   addItemToStorage(clickArea) {
-    this.createMenu(StorageMenu, "storage", storageMenuId, clickArea);
+    this.createMenu(StorageMenu, "storage", storageMenuId++, clickArea);
     this.tileData = this.tile.dataset;
     this.tileData.itemAmount = 0;
   }

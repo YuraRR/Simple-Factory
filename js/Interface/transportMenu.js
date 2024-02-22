@@ -167,12 +167,14 @@ class CargoStationMenu extends BuildingMenu {
         stationExportBtn.classList.add("buttonActive");
         stationImportBtn.classList.remove("buttonActive");
         menu.querySelector(".exportSelect").classList.remove("hidden");
+        menu.querySelector(".importSelect").classList.add("hidden");
       };
       stationImportBtn.onclick = () => {
         this.tileData.cargoStationType = "Import";
         stationImportBtn.classList.add("buttonActive");
         stationExportBtn.classList.remove("buttonActive");
         menu.querySelector(".importSelect").classList.remove("hidden");
+        menu.querySelector(".exportSelect").classList.add("hidden");
       };
     }
   }
@@ -249,10 +251,15 @@ class CargoStationMenu extends BuildingMenu {
   selectImportMaterial(menu, { mainFactoryTile, stationTile }) {
     const buildingName = mainFactoryTile.dataset.buildingType;
     const importSelect = menu.querySelector(".importSelect");
-    let items = allItems.filter((item) => item.processingIn === buildingName);
-    if (mainFactoryTile.dataset.buildingType == "tradingTerminal") {
-      items = allItems;
-    }
+    console.log(buildingName);
+
+    let items = allItems.filter((item) => {
+      const processingInArray = Array.isArray(item.processingIn) ? item.processingIn : [item.processingIn];
+      return processingInArray.includes(buildingName);
+    });
+
+    if (mainFactoryTile.dataset.buildingType == "tradingTerminal") items = allItems;
+
     items.forEach((item) => {
       const itemBlock = document.createElement("div");
       itemBlock.classList.add("importItem");
@@ -264,16 +271,17 @@ class CargoStationMenu extends BuildingMenu {
          `;
       importSelect.appendChild(itemBlock);
       itemBlock.querySelector(".importItem-button").onclick = () => {
-        mainFactoryTile.dataset.itemType = item.name;
         stationTile.dataset.cargoStationItem = item.name;
         importSelect.classList.add("hidden");
         this.updateRoutesList();
       };
     });
   }
-  selectExportMaterial(menu, { stationTile }) {
+  selectExportMaterial(menu, { mainFactoryTile, stationTile }) {
+    const buildingName = mainFactoryTile.dataset.buildingType;
     const exportSelect = menu.querySelector(".exportSelect");
-    allItems.forEach((item) => {
+    const items = allItems.filter((item) => item.producedIn == buildingName);
+    items.forEach((item) => {
       const itemBlock = document.createElement("div");
       itemBlock.classList.add("exportItem");
       itemBlock.innerHTML = `

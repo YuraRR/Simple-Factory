@@ -6,35 +6,40 @@
   pointer-events: none;
   z-index: 100;
 }
+
+[data-ground-type="grass"] {
+  background-image: url(/img/textures/grass.png);
+  outline: 1px solid #1dbc4d36;
+}
 [data-ground-type="water"] {
-  background-image: url(/img/animations/water.gif) !important;
-  outline: none !important;
+  background-image: url(/img/animations/water.gif);
+  outline: none;
 }
 
 [data-ground-type="sand"] {
-  background-image: url(/img/textures/sand.jpg) !important;
-  outline: none !important;
+  background-image: url(/img/textures/sand.jpg);
+  outline: none;
 }
 [data-ground-type="clay"] {
-  background-image: url(/img/textures/clay.png) !important;
-  outline: none !important;
+  background-image: url(/img/textures/clay.png);
+  outline: none;
 }
 [data-ground-type="limestone"] {
-  background-image: url(/img/textures/limestone.png) !important;
-  outline: none !important;
+  background-image: url(/img/textures/limestone.png);
+  outline: none;
 }
 [data-ground-type="stone"] {
-  background-image: url(/img/textures/stone.png) !important;
-  outline: none !important;
+  background-image: url(/img/textures/stone.png);
+  outline: none;
 }
 
 [data-ground-type="forest"] {
-  background-image: url(/img/textures/darkGrass.png) !important;
-  outline: none !important;
+  background-image: url(/img/textures/darkGrass.png);
+  outline: none;
 }
 [data-ground-type="flowers"] {
-  background-image: url(/img/textures/mediumGrass.png) !important;
-  outline: none !important;
+  background-image: url(/img/textures/mediumGrass.png);
+  outline: none;
 }
 [data-features-type="limeStoneRock"] {
   position: relative;

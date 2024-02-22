@@ -208,10 +208,7 @@ class Pipe extends Conveyor {
   }
 
   placeCurvedPipe(tile, firstTile, secondTile, pipeName, firstDir, secondDir) {
-    if (
-      firstTile.dataset.undergroundType == "pipe" &&
-      secondTile.dataset.undergroundType == "pipe"
-    ) {
+    if (firstTile.dataset.undergroundType == "pipe" && secondTile.dataset.undergroundType == "pipe") {
       this.tile = tile;
       this.tile.children[0].classList.add(pipeName);
       this.tile.children[0].src = `/img/conveyors/${pipeName}.png`;
@@ -528,9 +525,7 @@ class CargoStation extends Building {
             index++;
             setTimeout(moveStep, 700);
             transportHasStarted = true;
-          } else if (
-            routePointsList[routePointsList.length - 1].dataset.cargoStationType == "Import"
-          ) {
+          } else if (routePointsList[routePointsList.length - 1].dataset.cargoStationType == "Import") {
             menuTruckState.textContent = "Unloading";
             setTimeout(() => {
               if (
@@ -540,8 +535,27 @@ class CargoStation extends Building {
                 money += 0.75 * (itemPrice * 8);
               }
 
-              importBldData.itemAmount = parseInt(importBldData.itemAmount) + 8;
-              importBldData.itemType = exportStData.cargoStationItem;
+              const currentItem = exportStData.cargoStationItem;
+              if (importBldData.buildingCategory == "inOut3") {
+                if (!importBldData.firstMatName || importBldData.firstMatName == currentItem) {
+                  importBldData.firstMatAmount = addResAmount(importBldData.firstMatAmount);
+                  importBldData.firstMatName = currentItem;
+                } else if (!importBldData.secondMatName || importBldData.secondMatName == currentItem) {
+                  importBldData.firstMatAmount = addResAmount(importBldData.firstMatAmount);
+                  importBldData.secondMatName = currentItem;
+                } else if (!importBldData.thirdMatName || importBldData.thirdMatName == currentItem) {
+                  importBldData.thirdMatName = currentItem;
+                  importBldData.firstMatAmount = addResAmount(importBldData.firstMatAmount);
+                }
+              } else {
+                addResAmount(importBldData.itemAmount);
+                importBldData.itemType = currentItem;
+              }
+
+              function addResAmount(data) {
+                return (parseInt(data, 10) + 8).toString();
+              }
+
               this.startBackwardsRoute(routePointsList, directionsList, truckBlock);
               truckBlock.remove();
               clearInterval(waitingInterval);
@@ -684,9 +698,7 @@ class TradingTerminal extends Building {
 }
 
 function hideRoutes() {
-  const allRouteTiles = document.querySelectorAll(
-    ".pointRoute, .topRoute, .rightRoute, .downRoute, .leftRoute"
-  );
+  const allRouteTiles = document.querySelectorAll(".pointRoute, .topRoute, .rightRoute, .downRoute, .leftRoute");
   allRouteTiles.forEach((tile) => {
     tile.classList.remove("pointRoute", "topRoute", "rightRoute", "downRoute", "leftRoute");
   });

@@ -7,7 +7,10 @@ let oreProcessingMenuId = 1;
 let assemblerMenuId = 1;
 let cargoStationMenuId = 1;
 let cementPlantMenuId = 1;
+let concretePlantMenuId = 1;
 let quarryMenuId = 1;
+let brickFactoryMenuId = 1;
+let glassFactoryMenuId = 1;
 let truckIdCounter = 1;
 //BUILDING ID
 let buildingId = 1;
@@ -125,6 +128,24 @@ const allBuilding = [
     type: "processing",
     xSize: 2,
     zSize: 2,
+  },
+  {
+    name: "concretePlant",
+    type: "processing",
+    xSize: 3,
+    zSize: 3,
+  },
+  {
+    name: "brickFactory",
+    type: "processing",
+    xSize: 2,
+    zSize: 2,
+  },
+  {
+    name: "glassFactory",
+    type: "processing",
+    xSize: 2,
+    zSize: 3,
   },
 
   //STORAGE

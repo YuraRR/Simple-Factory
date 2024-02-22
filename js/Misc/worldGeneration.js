@@ -30,6 +30,7 @@ class Generator {
   generateMultiply(min, probability, tileType, featureType, featureVariants) {
     let counter = 0;
     const queue = [{ x: this.x, y: this.z }];
+
     while (queue.length > 0) {
       const currentTile = queue.shift();
 
@@ -53,10 +54,21 @@ class Generator {
           counter++;
         }
       };
-      const randomValues = [-1, 0, 1];
-      for (let i = 0; i < 5; i++) expandTile(randomArrayElem(randomValues), randomArrayElem(randomValues));
+
+      // Используйте только горизонтальные и вертикальные смещения
+      const horizontalValues = [-1, 1];
+      const verticalValues = [-1, 1];
+
+      // Генерация случайных горизонтальных и вертикальных смещений
+      const randomDX = randomArrayElem(horizontalValues);
+      const randomDY = randomArrayElem(verticalValues);
+
+      // Применение смещений
+      expandTile(randomDX, 0); // Горизонтальное смещение
+      expandTile(0, randomDY); // Вертикальное смещение
     }
   }
+
   generateAround(neighbourType, typeToPlace, layersAmount, featureType, featureVariants, featureChance) {
     let counter = 0;
     const origTypeToPlace = typeToPlace;
@@ -111,7 +123,7 @@ class Water extends Generator {
     if (tile.dataset.groundType == "grass") {
       tile.dataset.groundType = "water";
       tile.dataset.type = "water";
-      this.generateMultiply(10, 0.3, "water");
+      this.generateMultiply(10, 0.35, "water");
     }
   }
 }
@@ -169,7 +181,7 @@ class Clay extends Generator {
     this.z = z;
   }
   spawn() {
-    this.generateMultiply(3, 0.1, "clay");
+    this.generateMultiply(10, 0.2, "clay");
     const tiles = gridContainer.querySelectorAll(`[data-ground-type="clay"]`);
     tiles.forEach((tile) => (tile.dataset.resType = "Clay"));
   }
@@ -181,19 +193,28 @@ class Limestone extends Generator {
     this.z = z;
   }
   spawn() {
-    this.generateMultiply(6, 0.3, "limestone");
+    this.generateMultiply(15, 0.5, "limestone");
     const tiles = gridContainer.querySelectorAll(`[data-ground-type="limestone"]`);
     tiles.forEach((tile) => (tile.dataset.resType = "Limestone"));
     const limestoneRocks = ["limeStoneRock2"];
-    const rockTile = randomArrayElem(tiles);
 
     const rockTiles = this.tilesOccupation(3, 3);
-    if (rockTiles.length == 9) {
-      this.generateOne("limeStoneRock", limestoneRocks, rockTile, "", "limestone");
+    if (rockTiles.length == 9 && rockTiles.every((tile) => !tile.dataset.featuresType)) {
+      this.generateOne("limeStoneRock", limestoneRocks, rockTiles[0], "", "limestone");
       this.tilesOccupation(3, 3);
     }
+    rockTiles.forEach((tile) => {
+      const [currentX, currentZ] = findXZpos(tile);
+      const neighborsTilesFunc = findNeighbors.bind(this, currentX, currentZ);
+      const neighborsTiles = neighborsTilesFunc();
+      neighborsTiles.forEach((tile) => {
+        tile.dataset.groundType = "limestone";
+        tile.dataset.resType = "Limestone";
+      });
+    });
+
     const rocksList = ["stone1", "stone2", "stone3", "stone4"];
-    this.generateAround("limestone", "stone", 3, "rock", rocksList, 0.15);
+    this.generateAround("limestone", "stone", 3, "rock", rocksList, 0.05);
   }
 }
 class Stone extends Generator {
