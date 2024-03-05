@@ -69,8 +69,8 @@ function resetTool() {
   creatingMethods.forEach((method) => {
     gridContainer.removeEventListener("click", method);
   });
-  const equipmentMethods = Object.values(equipmentCreating);
-  equipmentMethods.forEach((method) => {
+  const structuresMethods = Object.values(structureCreating);
+  structuresMethods.forEach((method) => {
     gridContainer.removeEventListener("click", method);
   });
 }
@@ -88,7 +88,7 @@ function moveProgressBar(menu, time, callback) {
 
     const elapsed = timestamp - startTimestamp;
 
-    if (elapsed < time) {
+    if (elapsed < time && !isPaused) {
       width = (elapsed / time) * 100;
       progressBar.style.width = width + "%";
       animationId = requestAnimationFrame(frame);

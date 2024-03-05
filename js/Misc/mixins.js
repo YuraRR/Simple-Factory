@@ -52,7 +52,8 @@ const ocupieTiles = {
           }
 
           if (this.name == "quarry") {
-            let neighborsTilesFunc = findNeighbors.bind(this, this.x + i, this.z + j);
+            const nearTile = document.getElementById([`${this.x + i}.${this.z + j}`]);
+            const neighborsTilesFunc = findNeighbors.bind(this, nearTile);
             const neighborsTiles = neighborsTilesFunc();
             neighborsTiles.forEach((tile) => {
               if (tile.dataset.type == "water") {

@@ -74,12 +74,11 @@ class Quarry extends Building {
 
     const quarryTiles = document.querySelectorAll(`[data-building-id="${targetTile.dataset.buildingId}"]`);
     quarryTiles.forEach((tile) => {
-      let [currentX, currentZ] = findXZpos(tile);
-      let neighborsTilesFunc = findNeighbors.bind(this, currentX, currentZ);
+      const neighborsTilesFunc = findNeighbors.bind(this, tile);
       const neighborsTiles = neighborsTilesFunc();
 
       neighborsTiles.forEach((tile) => {
-        if (tile.dataset.type == "empty") tile.dataset.equipmentPossibleFor = targetTile.dataset.buildingId;
+        if (tile.dataset.type == "empty") tile.dataset.structurePossibleFor = targetTile.dataset.buildingId;
       });
     });
   }
@@ -95,22 +94,17 @@ class WaterPump extends Building {
 
   startPumping() {
     // let menu = this.createMenu(MineshaftMenu, "mineshaftMenu", "mineshaft", mineshaftMenuId);
-    this.tileData.fluidAmount = 0;
     this.tileData.fluidType = "water";
-    let interval = setInterval(() => {
-      this.tileData.fluidAmount = (parseInt(this.tileData.fluidAmount) || 0) + 4;
-      this.giveFluid();
-    }, 4000);
   }
   giveFluid() {
     const neighborsTiles = [this.findTopTile(), this.findRightTile(), this.findBottomTile(), this.findLeftTile()];
-    setInterval(() => {
-      neighborsTiles.forEach((tile) => {
-        if (tile.dataset.undergroundType == "pipe") {
-          this.moveItem(this.tile, tile, "pipe");
-        }
-      });
-    }, 500);
+    // setInterval(() => {
+    //   neighborsTiles.forEach((tile) => {
+    //     if (tile.dataset.undergroundType == "pipe") {
+    //       this.moveItem(this.tile, tile, "pipe");
+    //     }
+    //   });
+    // }, 500);
   }
 }
 
@@ -119,9 +113,38 @@ class Storage extends Building {
     super(tile, id);
     this.name = "storage";
     this.tile = tile;
+    this.buildingId = tile.dataset.buildingId;
   }
   addItemToStorage(clickArea) {
-    this.createMenu(StorageMenu, "storage", storageMenuId++, clickArea);
+    this.createMenu(StorageBuildingsMenu, "storage", storageMenuId++, clickArea);
+    this.tileData = this.tile.dataset;
+    this.tileData.itemAmount = 0;
+    const storageObj = {
+      id: this.tileData.buildingId,
+      resName: this.tileData.itemType,
+      resAmount: +this.tileData.itemAmount,
+    };
+    storageResources.push(storageObj);
+    this.updateGlobalAmount();
+  }
+  updateGlobalAmount() {
+    console.log(this.id);
+    const storageObj = storageResources.find((storage) => storage.id == this.tile.dataset.buildingId);
+    setInterval(() => {
+      storageObj.resName = this.tile.dataset.itemType;
+      storageObj.resAmount = +this.tile.dataset.itemAmount;
+      console.log(storageResources);
+    }, 4000);
+  }
+}
+class SmallStorage extends Building {
+  constructor(tile, id) {
+    super(tile, id);
+    this.name = "smallStorage";
+    this.tile = tile;
+  }
+  addItemToStorage(clickArea) {
+    this.createMenu(StorageBuildingsMenu, "smallStorage", storageMenuId++, clickArea);
     this.tileData = this.tile.dataset;
     this.tileData.itemAmount = 0;
   }

@@ -135,17 +135,6 @@
   gap: 10px;
   height: 80vh;
   overflow-y: auto;
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: #4a4a4a;
-  }
-
-  &::-webkit-scrollbar-track {
-    background-color: #636262;
-  }
 
   .materialBlock,
   .productBlock {
@@ -219,25 +208,22 @@
     font-family: Verdana, Geneva, Tahoma, sans-serif;
   }
 }
-.arrowBlock {
-}
 
 .progressBarBlock {
   display: flex;
   width: 80%;
-  border: 1px solid #ccc;
   border-radius: 5px;
   overflow: hidden;
-  margin: 15px 0;
   border: 3px solid black;
-  margin: 0 auto;
+  margin: 10px auto;
   align-items: center;
+  background-color: var(--lightGray);
 }
 .progressBar {
   width: 0;
-  height: 30px;
+  height: 20px;
 
-  background-color: darkred;
+  background-color: rgb(202, 73, 26);
   text-align: center;
   line-height: 30px;
   color: white;
@@ -253,8 +239,8 @@
   background-image: url(/img/buttonIcons/close-btn.png);
   background-size: contain;
   background-repeat: no-repeat;
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
   margin-bottom: auto;
   pointer-events: all;
   border: none;
@@ -346,69 +332,33 @@ h3 {
   background-color: var(--black);
   font-size: 17px;
   text-transform: uppercase;
+  padding: 0 10px;
 }
 
+.twoMaterialsMenu,
+.oneMaterialsMenu,
+.threeMaterialsMenu,
+.storageBldMenu,
 .sourceBldMenu {
   display: flex;
   position: relative;
   right: -130px;
   top: 20px;
   flex-direction: column;
-  background-color: var(--darkGray);
-  width: 300px;
-  height: 415px;
+  background-color: var(--gray);
+  min-width: 400px;
+  max-width: 450px;
+  height: 450px;
   pointer-events: all;
+
+  box-shadow: 5px 5px 15px 0px rgba(0, 0, 0, 0.5);
+
   &__items {
     align-items: center;
     justify-content: center;
     display: flex;
     padding: 15px;
-  }
-
-  &__product {
-  }
-
-  &__item {
-  }
-
-  &__productImage {
-  }
-
-  &__productAmount {
-  }
-  .progressBarBlock {
-  }
-  .progressBar {
-  }
-  &__factoryEquipment {
-    display: flex;
-    flex-direction: column;
-    padding: 15px;
-    gap: 10px;
-    margin: 0 auto;
-    .equipmentBtn {
-      padding: 0 10px;
-    }
-  }
-}
-
-.twoMaterialsMenu,
-.oneMaterialsMenu,
-.threeMaterialsMenu {
-  display: flex;
-  position: relative;
-  right: -130px;
-  top: 20px;
-  flex-direction: column;
-  background-color: var(--darkGray);
-  width: 400px;
-  height: 515px;
-  pointer-events: all;
-  &__items {
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    padding: 15px;
+    background-color: var(--darkGray);
   }
 
   &__materials {
@@ -419,22 +369,77 @@ h3 {
   &__item {
     display: flex;
     position: relative;
+    flex-direction: column;
+    text-align: center;
+    color: #ccc;
+    background-color: var(--black);
   }
   .materialImage,
   .productImage {
+    margin: 0 auto;
+    max-width: 80px;
+    border: 3px solid var(--black);
   }
-
+  .productName {
+    padding: 3px 0;
+    max-width: 85px;
+    text-wrap: wrap;
+  }
   .materialAmount,
   .productAmount {
-    position: absolute;
-    bottom: 0;
-    right: 0;
+    text-align: center;
+    font-size: 20px;
+    color: lightblue;
   }
 
   &__arrow {
+    display: flex;
+    align-items: center;
   }
 
-  &__product {
+  .factoryStructures {
+    display: flex;
+    justify-content: center;
+    background-color: var(--midLightGray);
+    width: 100%;
+  }
+  .structureBlock {
+    display: flex;
+    padding: 15px 0 15px;
+    gap: 10px;
+    &__item {
+      display: flex;
+      position: relative;
+      flex-direction: column;
+      text-align: center;
+      color: #ccc;
+      background-color: var(--black);
+    }
+    &__button {
+      display: flex;
+      flex-direction: row-reverse;
+      .structureBtn {
+        position: relative;
+        background-image: url(/img/buttonIcons/plus.png);
+        background-size: contain;
+        width: 50px;
+        height: 50px;
+        border: 5px solid var(--lightGray);
+        background-color: var(--lightGray);
+        margin-left: 10px;
+        align-self: center;
+      }
+      h3 {
+        position: absolute;
+        right: 0;
+        bottom: 73px;
+        writing-mode: vertical-lr;
+        text-orientation: upright;
+        white-space: nowrap;
+        font-size: 14px;
+        padding: 10px 2px;
+      }
+    }
   }
 }
 
@@ -567,6 +572,10 @@ h3 {
     text-transform: uppercase;
     position: relative;
 
+    span {
+      padding: 5px 0;
+    }
+
     .importSelect,
     .exportSelect {
       display: grid;
@@ -578,7 +587,8 @@ h3 {
       top: 100px;
       align-self: center;
       z-index: 999;
-
+      overflow: auto;
+      max-height: 382px;
       div {
         width: 110px;
         padding: 0 5px;
@@ -603,8 +613,8 @@ h3 {
       top: 0;
       right: 0;
       background-image: url(/img/buttonIcons/close-btn.png);
-      width: 23px;
-      height: 23px;
+      width: 20px;
+      height: 20px;
       background-size: contain;
     }
     span {

@@ -3,7 +3,7 @@ class Equipment extends Building {
     super(tile);
     Object.assign(this, findTarget);
   }
-  createEquipment() {
+  createStructure() {
     console.log(`Building a equipment${this.name}`);
     let equipmentTile = document.getElementById(`${this.x}.${this.z}`);
     equipmentTile.dataset.equipmentType = this.name;
@@ -20,26 +20,25 @@ class Crusher extends Equipment {
   }
   addEfficiency() {
     const id = this.tile.dataset.equipmentPossibleFor;
-    let mainTile = document.querySelector(`[data-building-id="${id}"][data-main-tile="true"]`);
+    const mainTile = document.querySelector(`[data-building-id="${id}"][data-main-tile="true"]`);
     if (mainTile.dataset.resType == "Stone") mainTile.dataset.itemTypeOutput = "Gravel";
     if (mainTile.dataset.resType == "Limestone") mainTile.dataset.itemTypeOutput = "Crushed Limestone";
   }
 
   // mainTile.dataset.productionTime /= 2;
 }
-// class Washer extends Equipment {
-//   constructor(tile, id, type) {
-//     super(tile, id, type);
-//     this.name = "Washer";
-//     this.tile = tile;
-//     Object.assign(this, findTarget);
-//   }
-//   addWaterToRecipe() {
-//     let mainTile = findMainTile(this.tile);
-//     mainTile.dataset.productionTime /= 2;
-//     this.tile.dataset.fluidAmount = 0;
-//   }
-// }
+class WaterTower extends Equipment {
+  constructor(tile, id, type) {
+    super(tile, id, type);
+    this.name = "WaterTower";
+    this.tile = tile;
+    Object.assign(this, findTarget);
+  }
+  addWaterToRecipe() {
+    const id = this.tile.dataset.equipmentPossibleFor;
+    const mainTile = document.querySelector(`[data-building-id="${id}"][data-main-tile="true"]`);
+  }
+}
 
 // class Foundry extends Equipment {
 //   constructor(tile, type, id) {

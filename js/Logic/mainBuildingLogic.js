@@ -13,30 +13,29 @@ class Building {
   }
   createBuilding() {
     console.log(`Building a ${this.name}`);
-    let building;
+    const building = document.getElementById(`${this.x}.${this.z}`);
     switch (this.name) {
       case "conveyor":
       case "connector":
       case "splitter":
       case "road":
-        building = document.getElementById(`${this.x}.${this.z}`);
         building.dataset.type = "transportation";
         break;
       default:
-        building = document.getElementById(`${this.x}.${this.z}`);
         building.dataset.type = "building";
         building.dataset.mainTile = "true";
-
         break;
     }
 
     switch (this.name) {
       case "smelter":
       case "oreProcessing":
+      case "brickFactory":
         building.dataset.buildingCategory = "inOut1";
         break;
       case "assembler":
       case "cementPlant":
+      case "glassFactory":
         building.dataset.buildingCategory = "inOut2";
         break;
       case "concretePlant":
@@ -60,28 +59,41 @@ class Building {
       img.dataset.imageType = this.tileData.buildingType;
       img.dataset.mainBuildingImg = true;
     }
-    if (this.name == "pipe") {
-      switch (this.name) {
-        case "pipe":
-          img.dataset.imageType = "pipe";
-          switch (buildingDirection) {
-            case 0:
-              img.src = "/img/conveyors/pipeModelTop.png";
-              break;
-            case 1:
-              img.src = "/img/conveyors/pipeModelRight.png";
-              break;
-            case 2:
-              img.src = "/img/conveyors/pipeModelBottom.png";
-              break;
-            case 3:
-              img.src = "/img/conveyors/pipeModelLeft.png";
-              break;
-          }
+
+    if (this.tileData.type == "transportation") {
+      const buidlingImg = allBuilding.find((bld) => bld.name == this.name);
+      console.log(buidlingImg.imageSrc);
+      img.src = buidlingImg.imageSrc[buildingDirection];
+    } else if (this.name == "pipe") {
+      img.dataset.imageType = "pipe";
+      switch (buildingDirection) {
+        case 0:
+        case 2:
+          img.src = "/img/pipes/vertical.png";
+          break;
+        case 1:
+        case 3:
+          img.src = "/img/pipes/horizontal.png";
+          break;
+      }
+    } else if (this.name == "conveyor") {
+      img.dataset.imageType = "conveyor";
+      switch (buildingDirection) {
+        case 0:
+          img.src = "/img/conveyors/conveyorTop.gif";
+          break;
+        case 1:
+          img.src = "/img/conveyors/conveyorRight.gif";
+          break;
+        case 2:
+          img.src = "/img/conveyors/conveyorDown.gif";
+          break;
+        case 3:
+          img.src = "/img/conveyors/conveyorLeft.gif";
           break;
       }
     } else img.src = `/img/buildings/${this.name}.webp`;
-    console.log(this.name);
+
     this.tile.appendChild(img);
     img.style.zIndex = this.x + this.z;
   }
@@ -89,178 +101,24 @@ class Building {
   addPipeDirection(targetTile) {
     const img = this.tile.querySelector(`[data-image-type="pipe"]`);
     this.tileData.undergroundType = "pipe";
-    this.tileData.fluidAmount = 0;
     switch (this.direction) {
       case 0:
         this.tileData.pipeDirection = "up";
-        this.moveItem(targetTile, this.findTopTile(), "pipe");
         img.classList.add(`${this.name}Up`);
         break;
       case 1:
         this.tileData.pipeDirection = "right";
-        this.moveItem(targetTile, this.findRightTile(), "pipe");
         img.classList.add(`${this.name}Right`);
         break;
       case 2:
         this.tileData.pipeDirection = "down";
-        this.moveItem(targetTile, this.findBottomTile(), "pipe");
         img.classList.add(`${this.name}Down`);
         break;
       case 3:
         this.tileData.pipeDirection = "left";
-        this.moveItem(targetTile, this.findLeftTile(), "pipe");
         img.classList.add(`${this.name}Left`);
         break;
     }
-  }
-  moveItem(exporter, importer, wayOfMoving) {
-    let currentItem;
-    const importData = importer.dataset;
-    const exportData = exporter.dataset;
-    switch (wayOfMoving) {
-      case "conveyor":
-        const conveyorIntervalId = setInterval(() => {
-          switch (exportData.buildingType) {
-            case "conveyor":
-            case "connector":
-            case "storage":
-            case "splitter":
-              currentItem = exportData.itemType;
-              break;
-            case "mineshaft":
-            case "smelter":
-            case "oreProcessing":
-            case "cementPlant":
-              currentItem = exportData.itemTypeOutput;
-              break;
-          }
-          //CONVEYOR TO CONVEYOR
-          if (
-            importData.buildingType == "conveyor" &&
-            exportData.buildingType != "splitter" &&
-            (exportData.buildingCategory != "inOut1" || exportData.buildingCategory != "inOut2") &&
-            exportData.itemAmount > 0 &&
-            importData.itemAmount == 0
-          ) {
-            this.move(importer, exporter, currentItem);
-            if (exportData.itemAmount == 0) {
-              exportData.itemType = "none";
-            }
-
-            //CONVEYOR TO CONNECTOR
-          } else if (
-            (importData.buildingType == "connector" || importData.buildingType == "splitter") &&
-            exportData.buildingType == "conveyor" &&
-            exportData.itemAmount > 0
-          ) {
-            importData.itemAmount++;
-            importData.itemType = currentItem;
-            if (
-              (exportData.buildingCategory == "inOut1" || exportData.buildingCategory == "inOut2") &&
-              exportData.itemAmountOutput > 0
-            ) {
-              exportData.itemAmountOutput--;
-            } else if (exportData.buildingCategory == "inOut1" || exportData.buildingCategory == "inOut2") {
-              exportData.itemAmount--;
-            }
-            if (exportData.itemAmount == 0) {
-              exportData.itemType = "none";
-            }
-            //BUILDING TO CONNECTOR
-          } else if (
-            importData.buildingType == "connector" &&
-            (exportData.buildingCategory == "Out" ||
-              exportData.buildingCategory == "inOut1" ||
-              exportData.buildingCategory == "inOut2")
-          ) {
-            let newExporter = findMainTile(exporter);
-            if (newExporter.dataset.itemAmountOutput > 0) {
-              importData.itemAmount++;
-              importData.itemType = newExporter.dataset.itemTypeOutput;
-              newExporter.dataset.itemAmountOutput--;
-            }
-
-            //CONNECTOR TO BUILDING
-          } else if (
-            exportData.buildingType == "connector" &&
-            exportData.itemAmount > 0 &&
-            (importData.buildingCategory == "inOut1" || importData.buildingType == "storage")
-          ) {
-            let newImporter = findMainTile(importer);
-            this.move(newImporter, exporter, currentItem);
-            //CONNECTOR TO STORAGE
-          } else if (
-            importData.buildingType == "connector" &&
-            exportData.buildingType == "storage" &&
-            exportData.itemAmount > 0
-          ) {
-            this.move(importer, exporter, currentItem);
-
-            //CONNECTOR TO ASSEMBLER
-          } else if (
-            importData.buildingCategory == "inOut2" &&
-            importData.buildingType == "cementPlant" &&
-            exportData.buildingType == "connector" &&
-            exportData.itemAmount > 0
-          ) {
-            let newImporter = findMainTile(importer);
-            if (!newImporter.dataset.firstMatName || newImporter.dataset.firstMatName == currentItem) {
-              newImporter.dataset.firstMatAmount++;
-              newImporter.dataset.firstMatName = currentItem;
-              exportData.itemAmount--;
-            } else if (!newImporter.dataset.secondMatName || newImporter.dataset.secondMatName == currentItem) {
-              newImporter.dataset.secondMatAmount++;
-              newImporter.dataset.secondMatName = currentItem;
-              exportData.itemAmount--;
-            }
-          } else if (
-            importData.buildingCategory == "inOut3" &&
-            exportData.buildingType == "connector" &&
-            currentItem
-          ) {
-            const newImporter = findMainTile(importer);
-            if (!newImporter.dataset.firstMatName || newImporter.dataset.firstMatName == currentItem) {
-              newImporter.dataset.firstMatAmount++;
-              newImporter.dataset.firstMatName = currentItem;
-              exportData.itemAmount--;
-            } else if (!newImporter.dataset.secondMatName || newImporter.dataset.secondMatName == currentItem) {
-              newImporter.dataset.secondMatAmount++;
-              newImporter.dataset.secondMatName = currentItem;
-              exportData.itemAmount--;
-            } else if (!newImporter.dataset.thirdMatName || newImporter.dataset.thirdMatName == currentItem) {
-              newImporter.dataset.thirdMatAmount++;
-              newImporter.dataset.thirdMatName = currentItem;
-              exportData.itemAmount--;
-            }
-          }
-        }, 1000);
-        exportData.intervalId = conveyorIntervalId;
-        break;
-      //PIPE
-      case "pipe":
-        setInterval(() => {
-          if (exportData.fluidAmount > 0 && importData.fluidAmount < 10 && importData.undergroundType == "pipe") {
-            importData.fluidType = exportData.fluidType;
-            importData.fluidAmount++;
-            exportData.fluidAmount--;
-          } else if (
-            exportData.fluidAmount > 0 &&
-            importData.fluidAmount < 10 &&
-            importData.upgradeType == "Washer"
-          ) {
-            let newImporter = findMainTile(importer);
-            newImporter.dataset.fluidType = exportData.fluidType;
-            newImporter.dataset.fluidAmount++;
-            exportData.fluidAmount--;
-          }
-        }, 500);
-        break;
-    }
-  }
-  move(importer, exporter, currentItem) {
-    importer.dataset.itemAmount++;
-    importer.dataset.itemType = currentItem;
-    exporter.dataset.itemAmount--;
   }
 
   createClickArea(xSize, zSize) {
@@ -290,20 +148,22 @@ class Building {
 
     //Process loop
     function spawnItem() {
-      updatedProductTime = tileData.productionTime;
-      if (!processItemStarted && tileData.itemAmountOutput < maxCapacity) {
-        processItemStarted = true;
-        progressBarAnimation = moveProgressBar(menu, updatedProductTime, spawnItem);
-        if (progressBarAnimation.width == 0) {
-          setTimeout(() => {
-            const itemValue = String(parseFloat(tileData.itemAmountOutput) + materials.prodAmount);
-            tileData.itemAmountOutput = itemValue;
-            itemAmountSpan.textContent = itemValue;
-            itemNameSpan.textContent = tileData.itemTypeOutput;
-            processItemStarted = false;
-          }, updatedProductTime);
-        } else {
-          progressBarAnimation.stop();
+      if (!isPaused) {
+        updatedProductTime = tileData.productionTime;
+        if (!processItemStarted && tileData.itemAmountOutput < maxCapacity) {
+          processItemStarted = true;
+          progressBarAnimation = moveProgressBar(menu, updatedProductTime, spawnItem);
+          if (progressBarAnimation.width == 0) {
+            setTimeout(() => {
+              const itemValue = String(parseFloat(tileData.itemAmountOutput) + materials.prodAmount);
+              tileData.itemAmountOutput = itemValue;
+              itemAmountSpan.textContent = itemValue;
+              itemNameSpan.textContent = tileData.itemTypeOutput;
+              processItemStarted = false;
+            }, updatedProductTime);
+          } else {
+            progressBarAnimation.stop();
+          }
         }
       }
     }
@@ -320,7 +180,6 @@ class Building {
     let updatedProductTime;
     //Set images
 
-    console.log(materials);
     const materialImageSrc = allItems.find((item) => item.name == materials.res1Name).imageSrc;
     menu.querySelector(".materialImage").src = materialImageSrc;
     menu.querySelector(".productImage").src = imageSrc;
@@ -330,7 +189,13 @@ class Building {
     //Process loop
     function processItem() {
       updatedProductTime = tileData.productionTime;
-      if (!processItemStarted && tileData.itemAmount >= materials.res1Amount) {
+      const isWaterNeeded = materials.isWaterNeeded;
+
+      if (
+        !processItemStarted &&
+        tileData.itemAmount >= materials.res1Amount &&
+        (!isWaterNeeded || (isWaterNeeded && tileData.fluidType == "water"))
+      ) {
         createSmoke(tile);
         processItemStarted = true;
         progressBarAnimation = moveProgressBar(menu, updatedProductTime, processItem);
@@ -389,6 +254,7 @@ class Building {
     tileData.intervalId = productionInterval;
 
     function assemblying() {
+      createSmoke(tile);
       processItemStarted = true;
       progressBarAnimation = moveProgressBar(menu, updatedProductTime, processItem);
       if (progressBarAnimation.width == 0) {
@@ -415,9 +281,11 @@ class Building {
 
     function processItem() {
       updatedProductTime = tileData.productionTime;
-      createListToCompare(materials);
-      function createListToCompare({ matName1, matAmount1, matName2, matAmount2, matName3, matAmount3 }) {
-        const itemList = [matName1, matAmount1, matName2, matAmount2, matName3, matAmount3];
+
+      createListToCompare();
+
+      function createListToCompare() {
+        const itemList = [res1Name, res1Amount, res2Name, res2Amount, res3Name, res3Amount];
         let recipeList = [];
         for (let i = 0; i < itemList.length; i += 2) {
           const itemInfo = {
@@ -440,7 +308,6 @@ class Building {
             amount: +tileData.thirdMatAmount,
           },
         ];
-
         const allItemsMatch = recipeList.every((item) =>
           items.some((i) => i.name === item.name && i.amount >= item.amount)
         );
@@ -471,19 +338,16 @@ class Building {
   //MENU CREATION
   createMenu(className, menuData, idName, clickArea, buildingData) {
     let targetTile = this.findTargetTile();
-    console.log(idName);
     const classMenu = new className(targetTile, idName);
     classMenu.menuCreation(buildingData);
+    console.log(`[data-menu-type="${menuData}"][data-menu-id="${idName}"]`);
     const menu = document.querySelector(`[data-menu-type="${menuData}"][data-menu-id="${idName}"]`);
-    console.log(menu);
+
     clickArea.addEventListener("click", () => {
       if (currentTool != "demolition" && !undergroundOpened) {
         menu.classList.remove("hidden");
-        const buildingImage = targetTile.querySelector(`[data-main-building-img="true"]`);
-        buildingImage.classList.add("hidden");
         resetGhost();
         // document.addEventListener("click", cameraMoveCenter);
-        targetTile.querySelector(".clickArea").style.pointerEvents = "none";
         classMenu.menuOpened = true;
         switchUpgrades();
         if (!allOpenedMenu.includes(menu)) allOpenedMenu.push(menu);
@@ -494,8 +358,8 @@ class Building {
 }
 
 function findMainTile(building) {
-  let currentId = building.dataset.buildingId;
-  let allBuildingTiles = document.querySelectorAll(`[data-building-id="${currentId}"]`);
+  const currentId = building.dataset.buildingId;
+  const allBuildingTiles = document.querySelectorAll(`[data-building-id="${currentId}"]`);
   return Array.from(allBuildingTiles).find(
     (tile) =>
       tile.dataset.itemAmount || tile.dataset.itemAmountOutput || tile.dataset.buildingType == "tradingTerminal"

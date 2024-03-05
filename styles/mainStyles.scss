@@ -35,9 +35,21 @@
   user-select: none;
   font-family: "Roboto";
   font-weight: 400;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #4a4a4a;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #636262;
+  }
 }
 .buttonActive {
-  outline: 3px solid black;
+  outline: 4px solid orange;
 }
 body {
   overflow: hidden;

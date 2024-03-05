@@ -5,12 +5,13 @@ function findcost(point, currentTile) {
   return distance;
 }
 
-function findNeighbors(currentX, currentZ) {
+function findNeighbors(currentTile) {
+  const [currentX, currentZ] = findXZpos(currentTile);
   return [
-    this.findTopTile(currentX, currentZ),
-    this.findRightTile(currentX, currentZ),
-    this.findBottomTile(currentX, currentZ),
-    this.findLeftTile(currentX, currentZ),
+    findTarget.findTopTile(currentX, currentZ),
+    findTarget.findRightTile(currentX, currentZ),
+    findTarget.findBottomTile(currentX, currentZ),
+    findTarget.findLeftTile(currentX, currentZ),
   ];
 }
 function findXZpos(currentTile) {
@@ -19,8 +20,7 @@ function findXZpos(currentTile) {
 function isTileBorder(newBuilding) {
   const hoveredCells = document.querySelectorAll(`[data-hover="true"]`);
   return Array.from(hoveredCells).some((cell) => {
-    let [currentX, currentZ] = findXZpos(cell);
-    let neighborsTilesFunc = findNeighbors.bind(newBuilding, currentX, currentZ);
+    const neighborsTilesFunc = findNeighbors.bind(newBuilding, cell);
     const neighborsTiles = neighborsTilesFunc();
     return neighborsTiles.some((tile) => !tile.dataset.type);
   });

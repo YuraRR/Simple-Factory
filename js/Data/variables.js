@@ -12,6 +12,7 @@ let quarryMenuId = 1;
 let brickFactoryMenuId = 1;
 let glassFactoryMenuId = 1;
 let truckIdCounter = 1;
+let conveyorItemId = 1;
 //BUILDING ID
 let buildingId = 1;
 //GLOBAL AMOUNT
@@ -28,6 +29,8 @@ let blockCameraMove = false;
 let undergroundOpened = false;
 let foundryType;
 let conveyorIntervalId;
+let cheatMode = true;
+let isPaused = false;
 //MONEY
 let money = 500;
 //TRUCKS
@@ -35,6 +38,8 @@ let trucksTotal = 0;
 let trucksAvailable = 0;
 let routeId = 1;
 let allRoutesList = [];
+
+//GLOBAL RESOURCES
 
 //CONVEYOR DIRECTIONS
 const connectorDirections = [
@@ -83,140 +88,6 @@ const allDirections = conveyorDirections.concat(
 );
 //ITEMS LIST
 
-//BUIDINGS LIST
-const allBuilding = [
-  //SOURCE
-  {
-    name: "mineshaft",
-    type: "source",
-    xSize: 1,
-    zSize: 1,
-  },
-  {
-    name: "quarry",
-    type: "source",
-    xSize: 2,
-    zSize: 2,
-  },
-  {
-    name: "waterPump",
-    type: "source",
-    xSize: 1,
-    zSize: 1,
-  },
-  //PROCESSING
-  {
-    name: "oreProcessing",
-    type: "processing",
-    xSize: 2,
-    zSize: 2,
-  },
-  {
-    name: "smelter",
-    type: "processing",
-    xSize: 3,
-    zSize: 3,
-  },
-  {
-    name: "assembler",
-    type: "processing",
-    xSize: 6,
-    zSize: 4,
-  },
-  {
-    name: "cementPlant",
-    type: "processing",
-    xSize: 2,
-    zSize: 2,
-  },
-  {
-    name: "concretePlant",
-    type: "processing",
-    xSize: 3,
-    zSize: 3,
-  },
-  {
-    name: "brickFactory",
-    type: "processing",
-    xSize: 2,
-    zSize: 2,
-  },
-  {
-    name: "glassFactory",
-    type: "processing",
-    xSize: 2,
-    zSize: 3,
-  },
-
-  //STORAGE
-  {
-    name: "storage",
-    type: "storage",
-    xSize: 2,
-    zSize: 2,
-  },
-  //TRANSPORTATION
-  {
-    name: "conveyor",
-    type: "conveyors",
-    xSize: 1,
-    zSize: 1,
-  },
-  {
-    name: "connector",
-    type: "conveyors",
-    xSize: 1,
-    zSize: 1,
-  },
-  {
-    name: "splitter",
-    type: "conveyors",
-    xSize: 1,
-    zSize: 1,
-  },
-  {
-    name: "pipe",
-    type: "conveyors",
-    xSize: 1,
-    zSize: 1,
-  },
-  {
-    name: "fluidSplitter",
-    type: "conveyors",
-    xSize: 1,
-    zSize: 1,
-  },
-  {
-    name: "road",
-    type: "transport",
-    xSize: 1,
-    zSize: 1,
-  },
-  {
-    name: "cargoStation",
-    type: "transport",
-    xSize: 1,
-    zSize: 1,
-  },
-  {
-    name: "tradingTerminal",
-    type: "transport",
-    xSize: 3,
-    zSize: 3,
-  },
-  {
-    name: "powerPlant",
-    type: "energy",
-    xSize: 3,
-    zSize: 3,
-  },
-  //MISC
-  {
-    name: "demolition",
-    xSize: 1,
-    zSize: 1,
-  },
-];
 //RECEPIES LIST
 const allProcessingOreRecipes = [
   {
@@ -351,14 +222,28 @@ const smelterEquipment = [
     img: "",
   },
 ];
-const equipmentsList = [
+const structuresList = [
   {
     factoryName: "mineshaft",
-    equipments: ["TNT"],
+    structures: ["TNT"],
   },
   {
     factoryName: "quarry",
-    equipments: ["Crusher", "Extra Excavator"],
+    structures: ["Crusher"],
+    Stone: "Gravel",
+    Limestone: "Crushed Limestone",
+  },
+  {
+    factoryName: "cementPlant",
+    structures: ["WaterTower"],
+  },
+  {
+    factoryName: "brickFactory",
+    structures: ["WaterTower"],
+  },
+  {
+    factoryName: "glassFactory",
+    structures: ["WaterTower"],
   },
 ];
 //COLORS

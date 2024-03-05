@@ -89,31 +89,24 @@ class CargoStationMenu extends BuildingMenu {
     const trucksAvailableText = menu.querySelector(".trucks__available");
 
     let item;
-    let stationObj = defaultItem.stationObj;
+    const stationObj = defaultItem.stationObj;
 
     setInterval(() => {
-      let selectedExportItem = this.tileData.cargoStationItem;
+      const selectedExportItem = this.tileData.cargoStationItem;
       if (this.tileData.cargoStationType == "Export" && this.tileData.connectedTo != "tradingTerminal") {
-        item = stationObj.updateData(defaultItem.mainFactoryTile, "export");
+        item = stationObj.updateData(defaultItem.mainFactoryTile, "export", selectedExportItem);
       } else if (this.tileData.cargoStationType == "Export" && this.tileData.connectedTo == "tradingTerminal") {
+        console.log(selectedExportItem);
         item = stationObj.updateData(defaultItem.mainFactoryTile, "export", selectedExportItem);
       } else {
-        item = stationObj.updateData(defaultItem.mainFactoryTile, "import");
-      }
-
-      //prettier-ignore
-      {
-        // itemPriceBuy.textContent = `Buy 1 for ${item.buyPrice}$  —  ${item.amount} for ${item.buyPrice * item.amount}$ `
-        // itemPriceSell.textContent = `Sell 1 for ${item.sellPrice}$  —  ${item.amount} for ${item.sellPrice * item.amount}$ `
-        // itemEfficency.innerHTML = `${item.amountPerMin} ${item.name} — 60 <img src="img/buttonIcons/clock.png" alt="" />`
-        
+        item = stationObj.updateData(defaultItem.mainFactoryTile, "import", selectedExportItem);
       }
 
       itemName.textContent = item.name || "Empty";
       itemAmount.textContent = item.amount;
       itemImg.src = item.imgSrc || "./img/resourcesIcons/noItem.svg";
       if (this.tileData.connectedTo != "tradingTerminal") {
-        this.tileData.cargoStationItem = item.name;
+        // this.tileData.cargoStationItem = item.name;
       }
 
       this.updateTrucksAmountInfo(trucksAvailableText);
@@ -159,23 +152,42 @@ class CargoStationMenu extends BuildingMenu {
         trucksCurrentText.textContent = `Trucks on current route —  ${trucksOnRoute}/${maxTrucksOnRoute}`;
       }
     };
-    if (defaultItem.mainFactoryTile.dataset.buildingType == "mineshaft") {
+    if (defaultItem.mainFactoryTile.dataset.buildingCategory == "Out") {
       stationExportBtn.classList.add("buttonActive");
     } else {
-      stationExportBtn.onclick = () => {
+      const exportSelect = menu.querySelector(".exportSelect");
+      const importSelect = menu.querySelector(".importSelect");
+
+      stationExportBtn.onclick = (event) => {
+        event.stopPropagation();
         this.tileData.cargoStationType = "Export";
         stationExportBtn.classList.add("buttonActive");
         stationImportBtn.classList.remove("buttonActive");
-        menu.querySelector(".exportSelect").classList.remove("hidden");
-        menu.querySelector(".importSelect").classList.add("hidden");
+
+        exportSelect.classList.remove("hidden");
+        importSelect.classList.add("hidden");
+
+        document.addEventListener("click", (e) => handleClickOutside(e, exportSelect));
       };
-      stationImportBtn.onclick = () => {
+
+      stationImportBtn.onclick = (event) => {
+        event.stopPropagation();
         this.tileData.cargoStationType = "Import";
         stationImportBtn.classList.add("buttonActive");
         stationExportBtn.classList.remove("buttonActive");
-        menu.querySelector(".importSelect").classList.remove("hidden");
-        menu.querySelector(".exportSelect").classList.add("hidden");
+
+        exportSelect.classList.add("hidden");
+        importSelect.classList.remove("hidden");
+
+        document.addEventListener("click", (e) => handleClickOutside(e, importSelect));
       };
+
+      function handleClickOutside(event, clickTarget) {
+        if (!clickTarget.contains(event.target) && !event.target.closest("." + clickTarget.classList.value)) {
+          clickTarget.classList.add("hidden");
+          document.removeEventListener("click", (e) => handleClickOutside(e, clickTarget));
+        }
+      }
     }
   }
   updateTrucksAmountInfo(trucksText) {
@@ -199,12 +211,16 @@ class CargoStationMenu extends BuildingMenu {
         if (noStationsText) routeContainer.innerHTML = "";
         const routeElem = document.createElement("div");
         routeElem.classList.add("cargoStationMenu__route");
+        let imageSrc;
+        if (stationObj.provideItemName && stationObj.provideItemName != "Empty") {
+          imageSrc = allItems.find((item) => item.name == stationObj.provideItemName).imageSrc;
+        }
         const htmlContent = `
               <span>
               Cargo Station ${stationObj.id} — <img src="/img/buttonIcons/${stationObj.type}Small.png" title="${stationObj.type}" /> —
               </span>
               <span class="itemNameImg">
-              ${stationObj.provideItemName} <img src="/img/buttonIcons/${stationObj.provideItemName}.png"/>
+              ${stationObj.provideItemName} <img src="${imageSrc}"/>
               </span>
               <input type="radio" id="Cargo Station ${stationObj.id}" name="selectStation" />`;
         routeElem.innerHTML = htmlContent;
@@ -224,7 +240,6 @@ class CargoStationMenu extends BuildingMenu {
   selectStation(menu) {
     currentStationChangeText(menu);
     function currentStationChangeText(menu) {
-      console.log(menu);
       const stationsRadioBtns = menu.querySelectorAll('input[name="selectStation"]');
       const routeInfoText = menu.querySelector(".cargoStationMenu__routeInfo-span");
       const tile = document.getElementById(menu.dataset.parentTileId);
@@ -241,7 +256,8 @@ class CargoStationMenu extends BuildingMenu {
     function targetStationChangeText(id, tile) {
       const targetStationId = parseInt(id.split(" ").pop(), 10);
       const targetStation = document.querySelector(`[data-station-id="${targetStationId}"]`);
-      targetStation.dataset.routeFrom = `${tile.dataset.stationId}`;
+      targetStation.dataset.routeFrom = tile.dataset.stationId;
+      targetStation.dataset.cargoStationItem = tile.dataset.cargoStationItem;
       const menu = document.querySelector(`[data-cargo-station-id="${targetStationId}"]`);
       const routeInfoText = menu.querySelector(".cargoStationMenu__routeInfo-span");
       routeInfoText.textContent = `Cargo Station ${tile.dataset.stationId} 
@@ -263,9 +279,10 @@ class CargoStationMenu extends BuildingMenu {
     items.forEach((item) => {
       const itemBlock = document.createElement("div");
       itemBlock.classList.add("importItem");
+      console.log(item);
       itemBlock.innerHTML = `
         <button class="importItem-button">
-        <img src="${item.src}"/>
+        <img src="${item.imageSrc}"/>
         </button>
         <span>${item.name}</span>
          `;
@@ -280,16 +297,20 @@ class CargoStationMenu extends BuildingMenu {
   selectExportMaterial(menu, { mainFactoryTile, stationTile }) {
     const buildingName = mainFactoryTile.dataset.buildingType;
     const exportSelect = menu.querySelector(".exportSelect");
-    const items = allItems.filter((item) => item.producedIn == buildingName);
+    let items = allItems.filter((item) => item.producedIn == buildingName);
+    if (mainFactoryTile.dataset.buildingType == "tradingTerminal") items = allItems;
+
     items.forEach((item) => {
       const itemBlock = document.createElement("div");
       itemBlock.classList.add("exportItem");
+
       itemBlock.innerHTML = `
         <button class="exportItem-button">
-        <img src="${item.src}"/>
+          <img src="${item.imageSrc}"/>
         </button>
         <span>${item.name}</span>`;
       exportSelect.appendChild(itemBlock);
+
       itemBlock.querySelector(".exportItem-button").onclick = () => {
         stationTile.dataset.cargoStationItem = item.name;
         exportSelect.classList.add("hidden");

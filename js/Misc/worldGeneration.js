@@ -21,7 +21,8 @@ class Generator {
       img.src = `/img/features/${featureVariant}.webp`;
       img.draggable = false;
       img.classList.add(featureVariant);
-      img.dataset.imageType = featureType;
+      img.dataset.imageType = "natureFeature";
+      img.dataset.imageSubType = featureType;
       tile.appendChild(img);
       tile.dataset.featuresType = featureType;
       img.style.zIndex = this.x + this.z;
@@ -204,8 +205,7 @@ class Limestone extends Generator {
       this.tilesOccupation(3, 3);
     }
     rockTiles.forEach((tile) => {
-      const [currentX, currentZ] = findXZpos(tile);
-      const neighborsTilesFunc = findNeighbors.bind(this, currentX, currentZ);
+      const neighborsTilesFunc = findNeighbors.bind(this, tile);
       const neighborsTiles = neighborsTilesFunc();
       neighborsTiles.forEach((tile) => {
         tile.dataset.groundType = "limestone";
@@ -268,6 +268,22 @@ class StoneRock extends Generator {
     this.generateOne("rock", rocksList);
   }
 }
+function spawnTerminal() {
+  let z = randomId();
+  if (z + 3 > gridSize) {
+    z -= 3;
+  }
+  const cell = document.getElementById(`0.${z}`);
+  const newBuilding = new TradingTerminal(cell);
+  newBuilding.getId(cell.id);
+  cell.dataset.type = "building";
+  cell.dataset.buildingType = "tradingTerminal";
+  cell.dataset.buildingId = 0;
+  cell.dataset.mainTile = "true";
+  newBuilding.createBuildingImage();
+  newBuilding.tilesOccupation(4, 2);
+  newBuilding.createClickArea(4, 2);
+}
 
 function randomId() {
   return Math.floor(Math.random() * gridSize);
@@ -291,13 +307,14 @@ function spawnObj(objClass, amount) {
 }
 let state = localStorage.getItem("toGenerate");
 if (state == "true") {
+  spawnTerminal();
   spawnObj(Water, 1);
   spawnObj(Sand, 1);
   spawnObj(Clay, 2);
   spawnObj(Limestone, 1);
   spawnObj(Stone, 1);
   spawnObj(Forest, 2);
-  spawnObj(Tree, 20);
+  spawnObj(Tree, 5);
   spawnObj(Iron, 4);
   spawnObj(Copper, 4);
   spawnObj(StoneRock, 10);

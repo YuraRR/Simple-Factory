@@ -66,6 +66,7 @@ function loadGame() {
   const loadTiles = JSON.parse(retrievedInfo);
   loadTiles.forEach((tile) => {
     const foundTile = document.getElementById(`${tile.id}`);
+
     loadVariables();
     loadDatasets(tile, foundTile);
     loadImages(tile, foundTile);
@@ -141,9 +142,10 @@ function loadDivs(tile, foundTile) {
   }
 }
 function startIntervals(tile, foundTile) {
-  let className = tile.dataset.buildingType;
-  let clickArea = foundTile.querySelector(".clickArea");
-  if (className && tile.classes.some((item) => item !== "grid-cell" && item !== "upgrade")) {
+  const className = tile.dataset.buildingType;
+  const clickArea = foundTile.querySelector(".clickArea");
+
+  if (className && foundTile.dataset.mainTile == "true") {
     const buildingClasses = {
       mineshaft: Mineshaft,
       waterPump: WaterPump,
@@ -161,36 +163,11 @@ function startIntervals(tile, foundTile) {
       cementPlant: CementPlant,
     };
 
-    let newBuilding = new buildingClasses[className](tile);
-    newBuilding.getId(foundTile.id);
-
-    switch (className) {
-      case "oreProcessing":
-      case "smelter":
-      case "assembler":
-      case "cementPlant":
-        newBuilding.processing(clickArea);
-        break;
-      case "mineshaft":
-        newBuilding.extraction(clickArea);
-        break;
-      case "conveyor":
-        newBuilding.restoreMovement(foundTile);
-        break;
-      case "connector":
-        newBuilding.restoreMovement(foundTile);
-        newBuilding.exportItem();
-        break;
-      case "splitter":
-        newBuilding.splitItems("item");
-        break;
-      case "pipe":
-        newBuilding.addPipeDirection();
-        break;
-      case "fluidSplitter":
-        newBuilding.splitItems("fluid");
-        break;
-    }
+    const newBuilding = new buildingClasses[className](tile);
+    newBuilding.getId(tile.id);
+    if (newBuilding.processing) newBuilding.processing(clickArea);
+    if (newBuilding.addItemToStorage) newBuilding.addItemToStorage(clickArea);
+    if (newBuilding.extraction) newBuilding.extraction(clickArea);
   }
 }
 function toLowerCase(str) {

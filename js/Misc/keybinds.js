@@ -30,6 +30,16 @@ document.addEventListener("keydown", (event) => {
   }
 });
 document.addEventListener("keydown", (event) => {
+  if (event.code === "KeyZ") {
+    !cheatMode ? (cheatMode = true) : (cheatMode = false);
+  }
+});
+document.addEventListener("keydown", (event) => {
+  if (event.code === "KeyP") {
+    !isPaused ? (isPaused = true) : (isPaused = false);
+  }
+});
+document.addEventListener("keydown", (event) => {
   if (event.code === "KeyL") {
     localStorage.setItem("toGenerate", "false");
     location.reload();

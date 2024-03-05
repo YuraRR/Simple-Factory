@@ -11,18 +11,20 @@ class OreProcessingPlant extends Building {
     if (!this.tileData.itemAmount) {
       this.tileData.itemAmount = 0;
       this.tileData.itemAmountOutput = 0;
-      this.tileData.fluidAmount = 0;
     }
 
     this.tileData.productionTime = this.productionTime;
 
     const menu = this.createMenu(OneMaterialsProcessingMenu, "oreProcessing", oreProcessingMenuId++, clickArea);
-    if (this.tileData.itemType) {
-      const recipeObj = allItems.find(
-        (recipe) => recipe.producedIn === "oreProcessing" && recipe.materials.res1Name == this.tileData.itemType
-      );
-      this.itemProcessingOneMaterial(this.findTargetTile(), menu, recipeObj);
-    }
+    let intervalId = setInterval(() => {
+      if (this.tileData.itemType) {
+        const recipeObj = allItems.find(
+          (recipe) => recipe.producedIn === "oreProcessing" && recipe.materials.res1Name == this.tileData.itemType
+        );
+        this.itemProcessingOneMaterial(this.findTargetTile(), menu, recipeObj);
+        clearInterval(intervalId);
+      }
+    }, 1000);
   }
 }
 
@@ -40,7 +42,6 @@ class Smelter extends Building {
     if (!this.tileData.itemAmount) {
       this.tileData.itemAmount = 0;
       this.tileData.itemAmountOutput = 0;
-      this.tileData.fluidAmount = 0;
     }
     this.tileData.productionTime = this.productionTime;
     //MENU CREATION
@@ -103,6 +104,10 @@ class CementPlant extends Building {
     const menu = this.createMenu(TwoMaterialsProcessingMenu, "cementPlant", cementPlantMenuId++, clickArea);
     const recipeObj = allItems.find((recipe) => recipe.producedIn === "cementPlant");
     this.itemProcessingTwoMaterial(this.tile, menu, recipeObj);
+
+    this.tileData.firstMatName = recipeObj.materials.res1Name;
+    this.tileData.secondMatName = recipeObj.materials.res2Name;
+    this.tileData.itemTypeOutput = recipeObj.name;
   }
 }
 class ConcretePlant extends Building {
@@ -126,6 +131,11 @@ class ConcretePlant extends Building {
     const menu = this.createMenu(ThreeMaterialsProcessingMenu, "concretePlant", concretePlantMenuId++, clickArea);
     const recipeObj = allItems.find((recipe) => recipe.producedIn === "concretePlant");
     this.itemProcessingThreeMaterial(this.tile, menu, recipeObj);
+
+    this.tileData.firstMatName = recipeObj.materials.res1Name;
+    this.tileData.secondMatName = recipeObj.materials.res2Name;
+    this.tileData.thirdMatName = recipeObj.materials.res3Name;
+    this.tileData.itemTypeOutput = recipeObj.name;
   }
 }
 class BrickFactory extends Building {
@@ -142,12 +152,14 @@ class BrickFactory extends Building {
     if (!this.tileData.itemAmount) {
       this.tileData.itemAmount = 0;
       this.tileData.itemAmountOutput = 0;
-      this.tileData.fluidAmount = 0;
+      this.tileData.fluidType = "";
     }
 
     const menu = this.createMenu(OneMaterialsProcessingMenu, "brickFactory", brickFactoryMenuId++, clickArea);
     const recipeObj = allItems.find((recipe) => recipe.producedIn === "brickFactory");
-    this.itemProcessingTwoMaterial(this.tile, menu, recipeObj);
+    this.itemProcessingOneMaterial(this.tile, menu, recipeObj);
+
+    this.tileData.itemTypeOutput = recipeObj.name;
   }
 }
 class GlassFactory extends Building {
@@ -170,6 +182,10 @@ class GlassFactory extends Building {
     const menu = this.createMenu(TwoMaterialsProcessingMenu, "glassFactory", glassFactoryMenuId++, clickArea);
     const recipeObj = allItems.find((recipe) => recipe.producedIn === "glassFactory");
     this.itemProcessingTwoMaterial(this.tile, menu, recipeObj);
+
+    this.tileData.firstMatName = recipeObj.materials.res1Name;
+    this.tileData.secondMatName = recipeObj.materials.res2Name;
+    this.tileData.itemTypeOutput = recipeObj.name;
   }
 }
 //UPGRADES
@@ -217,7 +233,7 @@ function foundryCreating(event) {
     if (cell.dataset.buildingType == "smelter") {
       cell.classList.add("upgrade");
       let newBuilding = new Foundry(cell, foundryType);
-      let mainTile = findMainTile(cell);
+      const mainTile = findMainTile(cell);
       if (!mainTile.dataset.selectedProduct) {
         newBuilding.getId(cell.id);
         newBuilding.createBuildingImage(true);

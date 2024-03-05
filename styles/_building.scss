@@ -39,6 +39,12 @@
   top: -246px;
   left: -201px;
 }
+[data-image-type="cementPlant"] {
+  @include buildingBase;
+  width: 329px;
+  top: -106px;
+  left: -138px;
+}
 [data-image-type="assembler"] {
   @include buildingBase;
   width: 558px;
@@ -51,14 +57,17 @@
   top: -74px;
   left: -125px;
 }
+[data-image-type="tradingTerminal"] {
+  @include buildingBase;
+  width: 335px;
+  top: -22px;
+  left: -134px;
+}
 
 .ghostImg {
   position: relative;
   img {
     @include buildingBase;
-    width: 345px;
-    top: -246px;
-    left: -201px;
     opacity: 60%;
     z-index: 10000;
   }
@@ -75,8 +84,6 @@
   position: relative;
 }
 .clickArea {
-  border: 2px solid black;
-  box-sizing: border-box;
   position: relative;
   z-index: 1;
 }
@@ -89,8 +96,6 @@
 }
 
 [data-type="building"] {
-  outline: 1px solid rgb(156, 155, 155) !important;
-  background-image: url(/img/textures/concrete.jpg) !important;
   position: relative;
 }
 .equipment {
