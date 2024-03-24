@@ -12,6 +12,7 @@ class BuildingMenu {
       if (event.code === "Escape") this.closeMenu();
     });
     this.closeMenu = () => {
+      click3.play();
       menu.classList.add("hidden");
       this.menuOpened = false;
       resetGhost();
@@ -162,9 +163,11 @@ class SourceBuildingsMenu extends BuildingMenu {
   menuUpdate(menu) {
     let itemAmount = menu.querySelector(".productAmount");
     let itemImage = menu.querySelector(".productImage");
-    setInterval(() => {
+    const intervalId = setInterval(() => {
       itemImage.src = allItems.find((item) => item.name == this.tile.dataset.itemTypeOutput).imageSrc;
       itemAmount.textContent = this.tile.dataset.itemAmountOutput;
+
+      menu.dataset.updateInterval = intervalId;
     }, 1000);
   }
 }
@@ -214,14 +217,14 @@ class StorageBuildingsMenu extends BuildingMenu {
     const itemName = menu.querySelector(".productName");
     setInterval(() => {
       if (this.tile.dataset.itemType) {
-        itemImage.src = allItems.find((item) => item.name == this.tile.dataset.itemType).imageSrc;
+        itemImage.src = allItems.find((item) => item.name == this.tile.dataset.itemTypeOutput).imageSrc;
       }
-      itemAmount.textContent = this.tile.dataset.itemAmount;
-      itemName.textContent = this.tile.dataset.itemType;
+      itemAmount.textContent = this.tile.dataset.itemAmountOutput;
+      itemName.textContent = this.tile.dataset.itemTypeOutput;
     }, 1000);
   }
 }
-class OneMaterialsProcessingMenu extends BuildingMenu {
+class OneMatProcessingMenu extends BuildingMenu {
   constructor(tile, id) {
     super(tile, id);
     this.tile = tile;
@@ -249,14 +252,23 @@ class OneMaterialsProcessingMenu extends BuildingMenu {
           <span class = "materialAmount" data-material="first">0</span>
         </div>
       </div>
-      <div class="oneMaterialsMenu__arrow">
-        <img src="img/buttonIcons/arrow.png" />
+      <div class="oneMaterialsMenu__timeBlock">
+         <span class="resAmountPerMin">0 / </span>
+          <img src="/img/buttonIcons/whiteClock.png" class="timeImage" draggable="false" />
+          <span class="resTime">60</span>
+
+          <div class="oneMaterialsMenu__arrow">
+            <img src="img/buttonIcons/arrow.png" />
+          </div>
       </div>
       <div class="oneMaterialsMenu__product">
         <div class="oneMaterialsMenu__item">
         <img src="img/resourcesIcons/noItem.svg" class = "productImage"/>
         <span class = "productAmount">0</span>
       </div>
+      </div>
+      <div class="waterBlock hidden">
+        <img src="img/resourcesIcons/water.png" class = "waterImage"/>
       </div>
     </div>
 
@@ -266,24 +278,40 @@ class OneMaterialsProcessingMenu extends BuildingMenu {
     </div>
     <div class="factoryStructures"></div>
     <button class="close-button"></button>`;
+
     container.appendChild(menu);
     this.menuUpdate(menu);
     this.closeButton(menu);
-    this.factoryStructureBlock(menu);
+    // this.factoryStructureBlock(menu);
   }
   menuUpdate(menu) {
     const materialAmount = menu.querySelector(`[data-material="first"]`);
     const productAmount = menu.querySelector(".productAmount");
-    setInterval(() => {
+    const waterBlock = menu.querySelector(".waterBlock");
+    const resAmountPerMin = menu.querySelector(".resAmountPerMin");
+
+    const intervalId = setInterval(() => {
       materialAmount.textContent = this.tile.dataset.itemAmount;
       productAmount.textContent = this.tile.dataset.itemAmountOutput;
+      if (this.tile.dataset.waterRequired == "true") waterBlock.classList.remove("hidden");
+      if (this.tile.dataset.fluidType == "water") {
+        waterBlock.style.setProperty("background-color", "var(--transGreen)");
+      }
+      if (this.tile.dataset.itemType) {
+        const resTime = allItems.find(
+          (item) => item.materials && item.materials.res1Name === this.tile.dataset.itemType
+        );
+        resAmountPerMin.textContent = 60 * (1000 / resTime.materials.time) + " /";
+      }
     }, 500);
     menu.id = `${this.name}${this.id}`;
     dragElement(menu.id);
+
+    menu.dataset.updateInterval = intervalId;
   }
 }
 
-class TwoMaterialsProcessingMenu extends BuildingMenu {
+class TwoMatsProcessingMenu extends BuildingMenu {
   constructor(tile, id) {
     super(tile, id);
     this.tile = tile;
@@ -323,6 +351,9 @@ class TwoMaterialsProcessingMenu extends BuildingMenu {
         <span class = "productAmount">0</span>
       </div>
       </div>
+      <div class="waterBlock hidden">
+        <img src="img/resourcesIcons/water.png" class = "waterImage"/>
+      </div>
     </div>
 
     <div class="progressBarBlock">
@@ -330,11 +361,10 @@ class TwoMaterialsProcessingMenu extends BuildingMenu {
       <span></span>
     </div>
     <button class="close-button"></button>`;
+
     container.appendChild(menu);
     this.menuUpdate(menu);
     this.closeButton(menu);
-
-    // this.upgradeMenu(menu, oreProcessingUpgrades);
   }
   menuUpdate(menu) {
     const firstMaterialAmount = menu.querySelector(`[data-material="first"]`);
@@ -345,7 +375,9 @@ class TwoMaterialsProcessingMenu extends BuildingMenu {
 
     const productAmount = menu.querySelector(".productAmount");
     const productImg = menu.querySelector(".productImage");
-    setInterval(() => {
+
+    const waterBlock = menu.querySelector(".waterBlock");
+    const intervalId = setInterval(() => {
       firstMaterialImg.src = allItems.find((item) => item.name == this.tile.dataset.firstMatName).imageSrc;
       secondMaterialImg.src = allItems.find((item) => item.name == this.tile.dataset.secondMatName).imageSrc;
 
@@ -355,13 +387,20 @@ class TwoMaterialsProcessingMenu extends BuildingMenu {
       secondMaterialAmount.textContent = this.tile.dataset.secondMatAmount;
 
       productAmount.textContent = this.tile.dataset.itemAmountOutput;
+
+      if (this.tile.dataset.waterRequired == "true") waterBlock.classList.remove("hidden");
+      if (this.tile.dataset.fluidType == "water") {
+        waterBlock.style.setProperty("background-color", "var(--transGreen)");
+      }
     }, 500);
     // this.allAssemblyItems(menu);
     menu.id = `${this.name}${this.id}`;
     dragElement(menu.id);
+
+    menu.dataset.updateInterval = intervalId;
   }
 }
-class ThreeMaterialsProcessingMenu extends BuildingMenu {
+class ThreeMatsProcessingMenu extends BuildingMenu {
   constructor(tile, id) {
     super(tile, id);
     this.tile = tile;
@@ -406,6 +445,9 @@ class ThreeMaterialsProcessingMenu extends BuildingMenu {
         <span class = "productAmount">0</span>
       </div>
       </div>
+      <div class="waterBlock hidden">
+        <img src="img/resourcesIcons/water.png" class = "waterImage"/>
+      </div>
     </div>
 
     <div class="progressBarBlock">
@@ -413,6 +455,7 @@ class ThreeMaterialsProcessingMenu extends BuildingMenu {
       <span></span>
     </div>
     <button class="close-button"></button>`;
+
     container.appendChild(menu);
     this.menuUpdate(menu);
     this.closeButton(menu);
@@ -431,7 +474,9 @@ class ThreeMaterialsProcessingMenu extends BuildingMenu {
 
     const productAmount = menu.querySelector(".productAmount");
     const productImg = menu.querySelector(".productImage");
-    setInterval(() => {
+
+    const waterBlock = menu.querySelector(".waterBlock");
+    const intervalId = setInterval(() => {
       firstMaterialImg.src = allItems.find((item) => item.name == this.tile.dataset.firstMatName).imageSrc;
       secondMaterialImg.src = allItems.find((item) => item.name == this.tile.dataset.secondMatName).imageSrc;
       thirdMaterialImg.src = allItems.find((item) => item.name == this.tile.dataset.thirdMatName).imageSrc;
@@ -442,33 +487,16 @@ class ThreeMaterialsProcessingMenu extends BuildingMenu {
       thirdMaterialAmount.textContent = this.tile.dataset.thirdMatAmount;
 
       productAmount.textContent = this.tile.dataset.itemAmountOutput;
+
+      if (this.tile.dataset.waterRequired == "true") waterBlock.classList.remove("hidden");
+      if (this.tile.dataset.fluidType == "water") {
+        waterBlock.style.setProperty("background-color", "var(--transGreen)");
+      }
     }, 500);
     // this.allAssemblyItems(menu);
     menu.id = `${this.name}${this.id}`;
     dragElement(menu.id);
-  }
-  // allAssemblyItems(menu) {
-  //   const recipesBlock = menu.querySelector(".recipesBlock");
-  //   allAssemblyRecipes.forEach((recipe) => {
-  //     let recipeBlock = document.createElement("div");
-  //     recipeBlock.classList.add("assemblyRecipe");
 
-  //     let materialItem = `
-  //       <div class="materialBlock">
-  //       <span class="recipeName">${recipe.materialName}</span>
-  //         <img src=${recipe.materialImage} />
-  //         <span>${recipe.materialAmount}</span>
-  //       </div>
-  //       <div class="arrowBlock">
-  //         <img src="img/buttonIcons/arrow.png" />
-  //       </div>
-  //       <div class="productBlock">
-  //       <span class="recipeName">${recipe.productName}</span>
-  //       <img src=${recipe.productImage} />
-  //       <span>${recipe.productAmount}</span>
-  //     </div>`;
-  //     recipeBlock.innerHTML = materialItem;
-  //     recipesBlock.appendChild(recipeBlock);
-  //   });
-  // }
+    menu.dataset.updateInterval = intervalId;
+  }
 }

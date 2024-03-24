@@ -7,7 +7,7 @@
   transform: rotateZ(323deg) rotateY(68deg) rotate3d(8, -11, -5, 11deg);
   position: absolute;
   pointer-events: all;
-  z-index: 100;
+  z-index: 101;
 
   top: -16px;
   left: -22px;
@@ -19,7 +19,7 @@
   img {
     background-color: rgba(0, 0, 0, 0);
     background-size: cover;
-    width: 55px;
+    width: 70px;
   }
   span {
     position: absolute;
@@ -46,7 +46,7 @@
   display: block;
   position: absolute;
   margin: auto;
-  z-index: 99;
+  z-index: 100;
 }
 .topRoute,
 .rightRoute,

@@ -40,7 +40,7 @@ function handleWheel(event) {
 limitContainer.addEventListener("wheel", handleWheel, { passive: false });
 
 function zoom(delta) {
-  const scaleFactor = 1.3; // Множитель масштаба
+  const scaleFactor = 1.25; // Множитель масштаба
 
   if (delta > 0) {
     // Прокрутка вверх

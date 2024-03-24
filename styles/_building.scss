@@ -14,6 +14,19 @@
     background-color: rgba(255, 0, 0, 0.5);
   }
 }
+@mixin buildingShadow($bottom, $left, $width, $height) {
+  z-index: 1;
+  content: "";
+  position: absolute;
+  bottom: $bottom;
+  left: $left;
+  transform: translateX(-50%);
+  width: $width;
+  height: $height;
+  background-color: rgba(0, 0, 0, 0.4);
+  filter: blur(8px);
+  pointer-events: none;
+}
 
 [data-image-type="mineshaft"] {
   @include buildingBase;
@@ -27,31 +40,43 @@
   top: -21px;
   left: -74px;
 }
+
+//ORE PROCESSING
 [data-image-type="oreProcessing"] {
   @include buildingBase;
-  width: 227px;
-  top: -114px;
-  left: -114px;
+  transform: rotateZ(323deg) rotateY(63deg) rotate3d(8, -11, -5, 11deg);
+  width: 245px;
+  top: -128px;
+  left: -127px;
 }
-[data-image-type="smelter"] {
+[data-building-type="oreProcessing"][data-main-tile="true"]:after {
+  @include buildingShadow(-36px, 28px, 92px, 106px); //bottom, left, width, height
+}
+
+[data-image-type="ironFoundry"] {
   @include buildingBase;
   width: 345px;
-  top: -246px;
-  left: -201px;
+  top: -175px;
+  left: -175px;
 }
 [data-image-type="cementPlant"] {
   @include buildingBase;
-  width: 329px;
-  top: -106px;
-  left: -138px;
+  transform: rotateZ(323deg) rotateY(65deg) rotate3d(8, -11, -5, 11deg);
+  width: 339px;
+  top: -125px;
+  left: -147px;
 }
+[data-building-type="cementPlant"][data-main-tile="true"]:after {
+  @include buildingShadow(-63px, 49px, 132px, 126px); //bottom, left, width, height
+}
+
 [data-image-type="assembler"] {
   @include buildingBase;
   width: 558px;
   top: -120px;
   left: -238px;
 }
-[data-image-type="storage"] {
+[data-image-type="mediumStorage"] {
   @include buildingBase;
   width: 280px;
   top: -74px;
@@ -73,17 +98,20 @@
   }
 }
 
-.waterPump {
-  position: relative;
-  img {
-    @include buildingBase;
-    background-image: url(/img/buildings/waterPump.png);
-  }
+[data-image-type="waterPump"] {
+  @include buildingBase;
+  transform: rotateZ(324deg) rotateY(62deg) rotate3d(8, -11, -5, 11deg);
+  width: 85px;
+  top: -25px;
+  left: -34px;
+  z-index: 99;
+  background-image: none !important;
 }
 [data-underground-type="pipe"] {
   position: relative;
 }
-.clickArea {
+
+possibleConnectWith .clickArea {
   position: relative;
   z-index: 1;
 }
@@ -92,14 +120,19 @@
 }
 
 .transperentBuilding {
-  opacity: 50%;
+  opacity: 60%;
 }
 
 [data-type="building"] {
   position: relative;
 }
-.equipment {
+.structure {
   position: relative;
+}
+.clickArea {
+  position: relative;
+  // pointer-events: all;
+  z-index: 300;
 }
 
 [data-image-type="upgrade"] {

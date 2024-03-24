@@ -6,7 +6,22 @@
   pointer-events: none;
   z-index: 100;
 }
+[data-ore-type="Iron Ore"] {
+  background-image: url(/img/ores/iron_ore.png);
+}
+[data-ore-type="Copper Ore"] {
+  background-image: url(/img/ores/copper_ore.png);
+}
+[data-ore-type="Coal Ore"] {
+  background-image: url(/img/ores/coal_ore.png);
+}
+[data-ore-type="Quartz Ore"] {
+  background-image: url(/img/ores/quartz.webp);
+}
 
+.deepOreGround {
+  background-image: url(/img/textures/stone.png);
+}
 [data-ground-type="grass"] {
   background-image: url(/img/textures/grass.png);
   outline: 1px solid #1dbc4d36;
@@ -33,13 +48,25 @@
   outline: none;
 }
 
-[data-ground-type="forest"] {
-  background-image: url(/img/textures/darkGrass.png);
-  outline: none;
+[data-sub-ground-type="forest0"] {
+  background-image: url(/img/textures/forest0.png);
 }
-[data-ground-type="flowers"] {
-  background-image: url(/img/textures/mediumGrass.png);
-  outline: none;
+
+[data-sub-ground-type="forest1"] {
+  background-image: url(/img/textures/forest1.png);
+}
+[data-sub-ground-type="forest2"] {
+  background-image: url(/img/textures/forest2.png);
+}
+
+[data-sub-ground-type="flowers0"] {
+  background-image: url(/img/textures/flowers0.png);
+}
+[data-sub-ground-type="flowers1"] {
+  background-image: url(/img/textures/flowers1.png);
+}
+[data-sub-ground-type="flowers2"] {
+  background-image: url(/img/textures/flowers2.png);
 }
 [data-features-type="limeStoneRock"] {
   position: relative;
@@ -59,6 +86,10 @@
     left: -25px;
   }
 }
+.oak3 {
+  top: -19px !important;
+}
+
 [data-features-type="rock"] {
   position: relative;
   [data-image-type="natureFeature"] {
@@ -85,4 +116,21 @@
     top: -20px;
     left: -17px;
   }
+}
+
+//Shadows
+[data-features-type]:not([data-features-type="limeStoneRock"]):after,
+[data-building-category="conveyor"]:after {
+  z-index: 1;
+  content: "";
+  position: absolute;
+  bottom: -5px;
+  left: 20px;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 86%;
+  background-color: rgba(0, 0, 0, 0.4);
+  filter: blur(8px);
+  pointer-events: none;
 }

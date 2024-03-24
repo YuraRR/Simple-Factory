@@ -37,34 +37,56 @@
             <span>Storage </span>
             <span>Transportation </span>
           </div> -->
-          <div class="tool-menu__buttons">
-            <button class="tool-menu__category" id="source">
-              <img src="/img/toolButtons/mineshaft.png" draggable="false" />
-            </button>
-            <button class="tool-menu__category" id="processing">
-              <img src="/img/toolButtons/smelter.png" draggable="false" />
-            </button>
-            <button class="tool-menu__category" id="storage">
-              <img src="/img/toolButtons/storage.png" draggable="false" />
-            </button>
-            <button class="tool-menu__category" id="energy">
-              <img src="/img/toolButtons/energy.png" draggable="false" />
-            </button>
-            <button class="tool-menu__category" id="conveyors">
-              <img src="/img/toolButtons/conveyor.png" draggable="false" />
-            </button>
-            <button class="tool-menu__category" id="transport">
-              <img src="/img/toolButtons/road.jpg" draggable="false" />
-            </button>
+          <div class="tool-menu__bottomMenu">
+            <div class="tool-menu__indicators">
+              <span class="energyAmount">0 kW</span>
+            </div>
+            <div class="tool-menu__buttons">
+              <button class="tool-menu__category" id="source">
+                <img src="/img/toolButtons/mineshaft.png" draggable="false" />
+                <div id="sourceTip" role="tooltip">Source</div>
+              </button>
+              <button class="tool-menu__category" id="processing">
+                <img src="/img/toolButtons/smelter.png" draggable="false" />
+                <div id="processingTip" role="tooltip">Processing</div>
+              </button>
+              <button class="tool-menu__category" id="storage">
+                <img src="/img/toolButtons/storage.png" draggable="false" />
+                <div id="storageTip" role="tooltip">Storage</div>
+              </button>
+              <button class="tool-menu__category" id="energy">
+                <img src="/img/toolButtons/energy.png" draggable="false" />
+                <div id="energyTip" role="tooltip">Energy</div>
+              </button>
+              <button class="tool-menu__category" id="conveyors">
+                <img src="/img/toolButtons/conveyor.png" draggable="false" />
+                <div id="conveyorsTip" role="tooltip">Conveyors</div>
+              </button>
+              <button class="tool-menu__category" id="transport">
+                <img src="/img/toolButtons/road.jpg" draggable="false" />
+                <div id="transportTip" role="tooltip">Transport</div>
+              </button>
+            </div>
+            <div class="tool-menu__modes">
+              <button class="tool-menu__mode-btn" id="demolitionButton">
+                <div id="demolitionButtonTip" role="tooltip">Demolition mode</div>
+                <img src="/img/toolButtons/demo.png" alt="" />
+              </button>
+              <button class="tool-menu__mode-btn" id="undergroundButton">
+                <div id="undergroundButtonTip" role="tooltip">Underground mode</div>
+                <img src="/img/toolButtons/ugd.png" alt="" />
+              </button>
+              <button class="tool-menu__mode-btn" id="transparentButton">
+                <div id="transparentButtonTip" role="tooltip">Transparent buildings</div>
+                <img src="/img/toolButtons/trans.png" alt="" />
+              </button>
+            </div>
           </div>
-        </div>
-        <div id="customContextMenu" class="context-menu">
-          <button class="contextMenu-button" id="demolitionButton">Demolition Mode</button>
-          <button class="contextMenu-button" id="undergroundButton">Underground Mode</button>
         </div>
       </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+    <script src="/js/Modules/interact.min.js"></script>
+    <script src="/js/Modules/popper.js"></script>
     <script src="/js/Misc/mixins.js"></script>
     <script src="/js/Data/itemsData.js"></script>
     <script src="/js/Data/variables.js"></script>
@@ -73,18 +95,19 @@
     <script src="/js/Misc/visualGraphics.js"></script>
     <script src="/js/Logic/buildingPlacing.js"></script>
     <script src="/js/Logic/mainBuildingLogic.js"></script>
+    <script src="/js/Logic/conveyorLogic.js"></script>
     <script src="/js/Logic/transportationBuildingLogic.js"></script>
     <script src="/js/Logic/buildingsLogic.js"></script>
     <script src="/js/Logic/processingBuildingsLogic.js"></script>
     <script src="/js/Logic/upgradesLogic.js"></script>
     <script src="/js/Logic/pathFindfingLogic.js"></script>
+    <script src="/js/Misc/keybinds.js"></script>
     <script src="/js/Interface/interface.js"></script>
     <script src="/js/Interface/buildingsMenu.js"></script>
     <script src="/js/Interface/transportMenu.js"></script>
     <script src="/js/Misc/savingGame.js"></script>
     <script src="/js/Misc/worldGeneration.js"></script>
     <script src="/js/playerActions.js"></script>
-    <script src="/js/Misc/keybinds.js"></script>
     <script src="/js/Misc/sounds.js"></script>
   </body>
 </html>

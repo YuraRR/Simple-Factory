@@ -32,12 +32,10 @@
   .grid-cell {
     background-size: cover;
     background-repeat: repeat;
-    position: relative;
   }
 }
 .containerOpacity {
-  .grid-cell {
-    outline: 1px solid rgb(58, 32, 7);
+  .grid-cell:not([data-ground-type="deepOre"]):not([data-type="ore"]) {
     background-image: url(/img/textures/dirt.png);
   }
 }

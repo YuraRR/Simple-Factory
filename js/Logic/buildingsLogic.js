@@ -10,50 +10,25 @@ class Mineshaft extends Building {
   }
 
   extraction(clickArea) {
-    console.log(this.tileData.oreType);
-    switch (this.tileData.oreType) {
-      case "iron":
-        this.tileData.itemTypeOutput = "Iron Ore";
-        break;
-      case "copper":
-        this.tileData.itemTypeOutput = "Copper Ore";
-        break;
-    }
+    this.tileData.itemAmountOutput ??= 0;
 
-    if (!this.tileData.itemAmountOutput) {
-      this.tileData.itemAmountOutput = 0;
-    }
-
-    const menu = this.createMenu(SourceBuildingsMenu, "mineshaft", mineshaftMenuId++, clickArea);
-    const recipeObj = allItems.find((recipe) => recipe.name === this.tileData.itemTypeOutput);
+    const menu = this.createMenu(
+      SourceBuildingsMenu,
+      this.name,
+      buildingsMenuId[`${this.name}MenuId`]++,
+      clickArea
+    );
+    const recipeObj = allItems.find((recipe) => recipe.name === this.tileData.oreType);
+    this.tileData.itemTypeOutput = recipeObj.name;
     this.tileData.productionTime = recipeObj.processTime;
     this.itemSpawningInSources(this.findTargetTile(), menu, recipeObj);
-
-    // let interval = setInterval(() => {
-    //   targetTile.dataset.itemAmountOutput++;
-    //   if (this.itemStorage == this.maxItemStorage) {
-    //     clearInterval(interval);
-    //   }
-    // }, 1000);
   }
 }
 
-class IronMineshaft extends Mineshaft {
-  constructor(cell) {
-    super(cell, "ironMiner");
-  }
-}
-class CopperMineshaft extends Mineshaft {
-  constructor(cell) {
-    super(cell, "copperMiner");
-  }
-}
 class Quarry extends Building {
   constructor(tile, id) {
     super(tile, id);
     this.name = "quarry";
-    // this.itemStorage = 0;
-    // this.maxItemStorage = 10;
     this.id = id;
     this.tile = tile;
     this.tileData = tile.dataset;
@@ -67,15 +42,14 @@ class Quarry extends Building {
     this.name = `${resType}Quarry`;
     this.createBuildingImage();
 
-    const menu = this.createMenu(SourceBuildingsMenu, "quarry", quarryMenuId++, clickArea);
+    const menu = this.createMenu(SourceBuildingsMenu, "quarry", buildingsMenuId[`quarryMenuId`]++, clickArea);
 
     const recipeObj = allItems.find((recipe) => recipe.name === this.tileData.resType);
     this.itemSpawningInSources(this.findTargetTile(), menu, recipeObj);
 
     const quarryTiles = document.querySelectorAll(`[data-building-id="${targetTile.dataset.buildingId}"]`);
     quarryTiles.forEach((tile) => {
-      const neighborsTilesFunc = findNeighbors.bind(this, tile);
-      const neighborsTiles = neighborsTilesFunc();
+      const neighborsTiles = findNeighbors(tile);
 
       neighborsTiles.forEach((tile) => {
         if (tile.dataset.type == "empty") tile.dataset.structurePossibleFor = targetTile.dataset.buildingId;
@@ -91,38 +65,23 @@ class WaterPump extends Building {
     this.tileData = tile.dataset;
     Object.assign(this, findTarget);
   }
-
-  startPumping() {
-    // let menu = this.createMenu(MineshaftMenu, "mineshaftMenu", "mineshaft", mineshaftMenuId);
-    this.tileData.fluidType = "water";
-  }
-  giveFluid() {
-    const neighborsTiles = [this.findTopTile(), this.findRightTile(), this.findBottomTile(), this.findLeftTile()];
-    // setInterval(() => {
-    //   neighborsTiles.forEach((tile) => {
-    //     if (tile.dataset.undergroundType == "pipe") {
-    //       this.moveItem(this.tile, tile, "pipe");
-    //     }
-    //   });
-    // }, 500);
-  }
 }
 
 class Storage extends Building {
   constructor(tile, id) {
     super(tile, id);
-    this.name = "storage";
+    this.name = "mediumStorage";
     this.tile = tile;
     this.buildingId = tile.dataset.buildingId;
   }
   addItemToStorage(clickArea) {
-    this.createMenu(StorageBuildingsMenu, "storage", storageMenuId++, clickArea);
+    this.createMenu(StorageBuildingsMenu, this.name, buildingsMenuId[`${this.name}MenuId`]++, clickArea);
     this.tileData = this.tile.dataset;
-    this.tileData.itemAmount = 0;
+    this.tileData.itemAmountOutput = 0;
     const storageObj = {
       id: this.tileData.buildingId,
-      resName: this.tileData.itemType,
-      resAmount: +this.tileData.itemAmount,
+      resName: this.tileData.itemTypeOutput,
+      resAmount: +this.tileData.itemAmountOutput,
     };
     storageResources.push(storageObj);
     this.updateGlobalAmount();
@@ -131,8 +90,8 @@ class Storage extends Building {
     console.log(this.id);
     const storageObj = storageResources.find((storage) => storage.id == this.tile.dataset.buildingId);
     setInterval(() => {
-      storageObj.resName = this.tile.dataset.itemType;
-      storageObj.resAmount = +this.tile.dataset.itemAmount;
+      storageObj.resName = this.tile.dataset.itemTypeOutput;
+      storageObj.resAmount = +this.tile.dataset.itemAmountOutput;
       console.log(storageResources);
     }, 4000);
   }
@@ -144,8 +103,39 @@ class SmallStorage extends Building {
     this.tile = tile;
   }
   addItemToStorage(clickArea) {
-    this.createMenu(StorageBuildingsMenu, "smallStorage", storageMenuId++, clickArea);
+    this.createMenu(StorageBuildingsMenu, this.name, buildingsMenuId[`${this.name}MenuId`]++, clickArea);
     this.tileData = this.tile.dataset;
     this.tileData.itemAmount = 0;
+  }
+}
+class PowerPlant extends Building {
+  constructor(tile, id) {
+    super(tile, id);
+    this.name = "powerPlant";
+    this.tile = tile;
+    this.productionTime = 12000;
+  }
+  processing(clickArea) {
+    this.tileData = this.tile.dataset;
+    this.tileData.productionTime = this.productionTime;
+    if (!this.tileData.itemAmount) {
+      this.tileData.itemAmount = 0;
+      this.tileData.itemAmountOutput = 0;
+    }
+    this.tileData.energyInNetwork = "false";
+    this.tileData.buildingState = "Idle";
+
+    const menu = this.createMenu(
+      OneMatProcessingMenu,
+      this.name,
+      buildingsMenuId[`${this.name}MenuId`]++,
+      clickArea
+    );
+
+    const recipeObj = allItems.find((recipe) => recipe.producedIn === this.name);
+    this.itemProcessingOneMaterial(this.tile, menu, recipeObj);
+
+    this.tileData.itemType = recipeObj.materials.res1Name;
+    this.tileData.itemTypeOutput = recipeObj.name;
   }
 }

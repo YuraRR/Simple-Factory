@@ -3,147 +3,139 @@ const buildingCreating = {
 
   //MINESHAFT
   mineshaft: (event) => {
-    transperentBuildingsRemove();
-    if (undergroundOpened) showUnderground();
     if (event.target.classList.contains("grid-cell")) {
-      const cell = event.target;
-      if (cell.dataset.type == "ore" && cell.dataset.buildingType != "mineshaft") {
-        let newBuilding;
-        switch (cell.dataset.oreType) {
-          case "iron":
-            newBuilding = new IronMineshaft(cell);
-            break;
-          case "copper":
-            newBuilding = new CopperMineshaft(cell);
-        }
-        const startMethods = startBuildingMethods.bind(newBuilding, cell);
+      const tile = event.target;
+      if (tile.dataset.type == "ore" && tile.dataset.buildingType != "mineshaft") {
+        const newBuilding = new Mineshaft(tile);
+        const startMethods = startBuildingMethods.bind(newBuilding, tile);
         startMethods();
       }
     }
   },
   //QUARRY
   quarry: (event) => {
-    transperentBuildingsRemove();
-    if (undergroundOpened) showUnderground();
     if (event.target.classList.contains("grid-cell") && !toBlockConstruction()) {
-      const cell = event.target;
+      const tile = event.target;
       if (
-        cell.dataset.groundType == "sand" ||
-        cell.dataset.groundType == "clay" ||
-        cell.dataset.groundType == "limestone" ||
-        cell.dataset.groundType == "stone"
+        tile.dataset.groundType == "sand" ||
+        tile.dataset.groundType == "clay" ||
+        tile.dataset.groundType == "limestone" ||
+        tile.dataset.groundType == "stone"
       ) {
-        const newBuilding = new Quarry(cell);
-        const startMethods = startBuildingMethods.bind(newBuilding, cell);
+        const newBuilding = new Quarry(tile);
+        const startMethods = startBuildingMethods.bind(newBuilding, tile);
         startMethods();
       }
     }
   },
   //WATER PUMP
   waterPump: (event) => {
-    transperentBuildingsRemove();
-    if (undergroundOpened) showUnderground();
-    if (event.target.classList.contains("grid-cell")) {
-      const cell = event.target;
+    if (event.target.classList.contains("grid-cell") && !toBlockConstruction()) {
+      const tile = event.target;
 
-      const newBuilding = new WaterPump(cell);
-      newBuilding.getId(cell.id);
+      const newBuilding = new WaterPump(tile);
+      newBuilding.getId(tile.id);
       newBuilding.createBuilding();
       newBuilding.createBuildingImage();
-      newBuilding.startPumping();
+
+      createPipe(tile);
+      tile.dataset.fluidType = "water";
     }
   },
   //////PROCESSING//////
 
   //ORE PROCESSING PLANT
   oreProcessing: (event) => {
-    transperentBuildingsRemove();
-    if (undergroundOpened) showUnderground();
     if (event.target.classList.contains("grid-cell")) {
-      const cell = event.target;
-      if (cell.dataset.type == "empty" && !toBlockConstruction()) {
-        const newBuilding = new OreProcessingPlant(cell);
-        const startMethods = startBuildingMethods.bind(newBuilding, cell);
+      const tile = event.target;
+      if (tile.dataset.type == "empty" && !toBlockConstruction()) {
+        const newBuilding = new OreProcessingPlant(tile);
+        const startMethods = startBuildingMethods.bind(newBuilding, tile);
         startMethods();
+        createPipe(tile);
       }
     }
   },
-  //SMELTER
-  smelter: (event) => {
-    transperentBuildingsRemove();
-    if (undergroundOpened) showUnderground();
+  //IRON FOUNDRY
+  ironFoundry: (event) => {
     if (event.target.classList.contains("grid-cell")) {
-      const cell = event.target;
-      if (cell.dataset.type == "empty" && !toBlockConstruction()) {
-        const newBuilding = new Smelter(cell);
-        const startMethods = startBuildingMethods.bind(newBuilding, cell);
+      const tile = event.target;
+      if (tile.dataset.type == "empty" && !toBlockConstruction()) {
+        const newBuilding = new IronFoundry(tile);
+        const startMethods = startBuildingMethods.bind(newBuilding, tile);
         startMethods();
+        createPipe(tile);
+      }
+    }
+  },
+  //STEEL FOUNDRY
+  steelFoundry: (event) => {
+    if (event.target.classList.contains("grid-cell")) {
+      const tile = event.target;
+      if (tile.dataset.type == "empty" && !toBlockConstruction()) {
+        const newBuilding = new SteelFoundry(tile);
+        const startMethods = startBuildingMethods.bind(newBuilding, tile);
+        startMethods();
+        createPipe(tile);
       }
     }
   },
   //ASSEMBLER
   assembler: (event) => {
-    transperentBuildingsRemove();
-    if (undergroundOpened) showUnderground();
     if (event.target.classList.contains("grid-cell")) {
-      const cell = event.target;
-      if (cell.dataset.type == "empty" && !toBlockConstruction()) {
-        cell.classList.add("assembler");
-        const newBuilding = new Assembler(cell);
-        const startMethods = startBuildingMethods.bind(newBuilding, cell);
+      const tile = event.target;
+      if (tile.dataset.type == "empty" && !toBlockConstruction()) {
+        tile.classList.add("assembler");
+        const newBuilding = new Assembler(tile);
+        const startMethods = startBuildingMethods.bind(newBuilding, tile);
         startMethods();
       }
     }
   },
   //CEMENT PLANT
   cementPlant: (event) => {
-    transperentBuildingsRemove();
-    if (undergroundOpened) showUnderground();
     if (event.target.classList.contains("grid-cell")) {
-      const cell = event.target;
-      if (cell.dataset.type == "empty" && !toBlockConstruction()) {
-        const newBuilding = new CementPlant(cell);
-        const startMethods = startBuildingMethods.bind(newBuilding, cell);
+      const tile = event.target;
+      if (tile.dataset.type == "empty" && !toBlockConstruction()) {
+        const newBuilding = new CementPlant(tile);
+        const startMethods = startBuildingMethods.bind(newBuilding, tile);
         startMethods();
       }
     }
   },
   //CONCRETE PLANT
   concretePlant: (event) => {
-    transperentBuildingsRemove();
-    if (undergroundOpened) showUnderground();
     if (event.target.classList.contains("grid-cell")) {
-      const cell = event.target;
-      if (cell.dataset.type == "empty" && !toBlockConstruction()) {
-        const newBuilding = new ConcretePlant(cell);
-        const startMethods = startBuildingMethods.bind(newBuilding, cell);
+      const tile = event.target;
+      if (tile.dataset.type == "empty" && !toBlockConstruction()) {
+        const newBuilding = new ConcretePlant(tile);
+        const startMethods = startBuildingMethods.bind(newBuilding, tile);
         startMethods();
+        createPipe(tile);
       }
     }
   },
   //BRICK FACTORY
   brickFactory: (event) => {
-    transperentBuildingsRemove();
-    if (undergroundOpened) showUnderground();
     if (event.target.classList.contains("grid-cell")) {
-      const cell = event.target;
-      if (cell.dataset.type == "empty" && !toBlockConstruction()) {
-        const newBuilding = new BrickFactory(cell);
-        const startMethods = startBuildingMethods.bind(newBuilding, cell);
+      const tile = event.target;
+      if (tile.dataset.type == "empty" && !toBlockConstruction()) {
+        const newBuilding = new BrickFactory(tile);
+        const startMethods = startBuildingMethods.bind(newBuilding, tile);
         startMethods();
+        createPipe(tile);
       }
     }
   },
   //GLASS FACTORY
   glassFactory: (event) => {
-    transperentBuildingsRemove();
-    if (undergroundOpened) showUnderground();
     if (event.target.classList.contains("grid-cell")) {
-      const cell = event.target;
-      if (cell.dataset.type == "empty" && !toBlockConstruction()) {
-        const newBuilding = new GlassFactory(cell);
-        const startMethods = startBuildingMethods.bind(newBuilding, cell);
+      const tile = event.target;
+      if (tile.dataset.type == "empty" && !toBlockConstruction()) {
+        const newBuilding = new GlassFactory(tile);
+        const startMethods = startBuildingMethods.bind(newBuilding, tile);
         startMethods();
+        createPipe(tile);
       }
     }
   },
@@ -151,25 +143,21 @@ const buildingCreating = {
 
   //STORAGE
   smallStorage: (event) => {
-    transperentBuildingsRemove();
-    if (undergroundOpened) showUnderground();
     if (event.target.classList.contains("grid-cell")) {
-      const cell = event.target;
-      if (cell.dataset.type == "empty" && !toBlockConstruction()) {
-        const newBuilding = new SmallStorage(cell);
-        const startMethods = startBuildingMethods.bind(newBuilding, cell);
+      const tile = event.target;
+      if (tile.dataset.type == "empty" && !toBlockConstruction()) {
+        const newBuilding = new SmallStorage(tile);
+        const startMethods = startBuildingMethods.bind(newBuilding, tile);
         startMethods();
       }
     }
   },
-  storage: (event) => {
-    transperentBuildingsRemove();
-    if (undergroundOpened) showUnderground();
+  mediumStorage: (event) => {
     if (event.target.classList.contains("grid-cell")) {
-      const cell = event.target;
-      if (cell.dataset.type == "empty" && !toBlockConstruction()) {
-        const newBuilding = new Storage(cell);
-        const startMethods = startBuildingMethods.bind(newBuilding, cell);
+      const tile = event.target;
+      if (tile.dataset.type == "empty" && !toBlockConstruction()) {
+        const newBuilding = new Storage(tile);
+        const startMethods = startBuildingMethods.bind(newBuilding, tile);
         startMethods();
       }
     }
@@ -179,30 +167,25 @@ const buildingCreating = {
 
   //CONVEYOR
   conveyor: (event) => {
-    transperentBuildingsShow();
-    if (undergroundOpened) showUnderground();
     if (event.target.classList.contains("grid-cell")) {
-      const cell = event.target;
-      if (cell.dataset.type == "empty") {
-        const newBuilding = new Conveyor(cell);
-        newBuilding.getId(cell.id);
-        newBuilding.createBuildingImage();
+      const tile = event.target;
+      if (tile.dataset.type == "empty") {
+        const newBuilding = new Conveyor(tile);
+        newBuilding.getId(tile.id);
         newBuilding.createBuilding();
+        newBuilding.createBuildingImage();
         newBuilding.addDirection();
-
-        // newConveyor.checkNeighbors();
+        newBuilding.curvedObjCreating();
       }
     }
   },
   //CONNECTOR
   connector: (event) => {
-    transperentBuildingsShow();
-    if (undergroundOpened) showUnderground();
     if (event.target.classList.contains("grid-cell")) {
-      const cell = event.target;
-      if (cell.dataset.type == "empty") {
-        let newBuilding = new Connector(cell);
-        newBuilding.getId(cell.id);
+      const tile = event.target;
+      if (tile.dataset.type == "empty") {
+        const newBuilding = new Connector(tile);
+        newBuilding.getId(tile.id);
         newBuilding.createBuilding();
         newBuilding.createBuildingImage();
         newBuilding.addDirection();
@@ -212,42 +195,52 @@ const buildingCreating = {
   },
   //SPLITTER
   splitter: (event) => {
-    transperentBuildingsShow();
-    if (undergroundOpened) showUnderground();
     if (event.target.classList.contains("grid-cell")) {
-      const cell = event.target;
-      if (cell.dataset.type == "empty") {
-        let newBuilding = new Splitter(cell);
-        newBuilding.getId(cell.id);
+      const tile = event.target;
+      if (tile.dataset.type == "empty") {
+        let newBuilding = new Splitter(tile);
+        newBuilding.getId(tile.id);
         newBuilding.createBuilding();
+        newBuilding.createBuildingImage();
         newBuilding.addDirection();
-        newBuilding.splitItems("item");
+        newBuilding.splitItems();
+      }
+    }
+  },
+  undergroundConveyor: (event) => {
+    if (event.target.classList.contains("grid-cell")) {
+      const tile = event.target;
+      if (tile.dataset.type == "empty") {
+        let newBuilding = new UndergroundConveyor(tile);
+        newBuilding.getId(tile.id);
+        newBuilding.createBuilding();
+        newBuilding.createBuildingImage();
+        newBuilding.addDirection();
+        newBuilding.createUGDEntrance();
       }
     }
   },
   //PIPE
   pipe: (event) => {
-    if (!undergroundOpened) showUnderground();
     if (event.target.classList.contains("grid-cell")) {
-      const cell = event.target;
-      cell.style.position = "relative";
-      if (!cell.dataset.undergroundType) {
-        const newBuilding = new Pipe(cell);
-        newBuilding.getId(cell.id);
+      const tile = event.target;
+      tile.style.position = "relative";
+      if (!tile.dataset.undergroundType) {
+        const newBuilding = new Pipe(tile);
+        newBuilding.getId(tile.id);
         newBuilding.createBuildingImage();
         newBuilding.addPipeDirection();
-        newBuilding.curvedPipeCreating();
-        // newConveyor.checkNeighbors();
+        newBuilding.curvedObjCreating();
       }
     }
   },
   //ROAD
   road: (event) => {
     if (event.target.classList.contains("grid-cell")) {
-      const cell = event.target;
-      if (cell.dataset.type == "empty") {
-        let newBuilding = new Road(cell);
-        newBuilding.getId(cell.id);
+      const tile = event.target;
+      if (tile.dataset.type == "empty") {
+        let newBuilding = new Road(tile);
+        newBuilding.getId(tile.id);
         newBuilding.createBuilding();
       }
     }
@@ -255,27 +248,26 @@ const buildingCreating = {
   //CARGO STATION
   cargoStation: (event) => {
     if (event.target.classList.contains("grid-cell")) {
-      const cell = event.target;
-      const cellData = cell.dataset;
-      const factoryTile = findTargetTileByDirection(cell, true);
-      if (cellData.type == "empty" && factoryTile) {
+      const tile = event.target;
+      const tileData = tile.dataset;
+      const factoryTile = findTargetTileByDirection(tile, true);
+      if (tileData.type == "empty" && factoryTile) {
         //Object creation
-        const newBuilding = new CargoStation(cell);
-        const startMethods = startBuildingMethods.bind(newBuilding, cell);
+        const newBuilding = new CargoStation(tile);
+        const startMethods = startBuildingMethods.bind(newBuilding, tile);
         const clickArea = startMethods();
         //Datasets
-        cellData.direction = { 0: "up", 1: "right", 2: "down", 3: "left" }[buildingDirection];
-        cellData.cargoStationType = "Export";
-        cellData.cargoStationItem = "Empty";
-        console.log(clickArea);
-        const factoryTile = findTargetTileByDirection(cell, true);
-        console.log(factoryTile);
+        tileData.direction = { 0: "up", 1: "right", 2: "down", 3: "left" }[buildingDirection];
+        tileData.cargoStationType = "Export";
+        tileData.cargoStationItem = "Empty";
+        const factoryTile = findTargetTileByDirection(tile, true);
         const stationData = newBuilding.updateData(factoryTile);
-        cellData.connectedTo = factoryTile.dataset.buildingType;
+        tileData.connectedTo = factoryTile.dataset.buildingType;
+        const name = "cargoStation";
         const menu = newBuilding.createMenu(
           CargoStationMenu,
-          "cargoStation",
-          cargoStationMenuId++,
+          name,
+          buildingsMenuId[`${name}MenuId`]++,
           clickArea,
           stationData
         );
@@ -284,7 +276,17 @@ const buildingCreating = {
     }
   },
 
-  powerPlant: (event) => {},
+  powerPlant: (event) => {
+    if (event.target.classList.contains("grid-cell")) {
+      const tile = event.target;
+      if (tile.dataset.type == "empty" && !toBlockConstruction()) {
+        const newBuilding = new PowerPlant(tile);
+        const startMethods = startBuildingMethods.bind(newBuilding, tile);
+        startMethods();
+        createPipe(tile);
+      }
+    }
+  },
 };
 const structureCreating = {
   Crusher: (event) => {
@@ -305,7 +307,7 @@ const structureCreating = {
   ExtraExcavator: (event) => {},
 };
 function startBuildingMethods(tile) {
-  const buildingInfo = allBuilding.find((bld) => bld.name === currentTool);
+  const buildingInfo = allBuildings.find((bld) => bld.name === currentTool);
   let isEnough = true;
   if (buildingInfo) {
     const buildingCost = buildingInfo.cost;
@@ -326,6 +328,7 @@ function startBuildingMethods(tile) {
       }
     }
     if (isEnough || cheatMode == true) {
+      playConstructionSound();
       const { xSize, zSize } = buildingInfo;
       this.getId(tile.id);
       this.createBuilding();
@@ -344,6 +347,16 @@ function startBuildingMethods(tile) {
 }
 //TO BLOCK CONSTRUCTION
 function toBlockConstruction() {
-  let CELLS = document.querySelectorAll(".grid-cell");
-  return [...CELLS].some((cell) => cell.classList.contains("cantBePlaced"));
+  let tileS = document.querySelectorAll(".grid-cell");
+  return [...tileS].some((tile) => tile.classList.contains("cantBePlaced"));
+}
+function createPipe(tile) {
+  const newPipe = new Pipe(tile);
+  newPipe.getId(tile.id);
+  const pipeImg = newPipe.createBuildingImage();
+  newPipe.addPipeDirection();
+  newPipe.curvedObjCreating();
+  pipeImg.src = `img/pipes/cross.png`;
+  pipeImg.dataset.pipeType = "connector";
+  pipeImg.classList.add("hidden");
 }

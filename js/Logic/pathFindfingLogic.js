@@ -18,10 +18,9 @@ function findXZpos(currentTile) {
   return currentTile.id.split(".").map(Number);
 }
 function isTileBorder(newBuilding) {
-  const hoveredCells = document.querySelectorAll(`[data-hover="true"]`);
-  return Array.from(hoveredCells).some((cell) => {
-    const neighborsTilesFunc = findNeighbors.bind(newBuilding, cell);
-    const neighborsTiles = neighborsTilesFunc();
+  const hoveredtiles = document.querySelectorAll(`[data-hover="true"]`);
+  return Array.from(hoveredtiles).some((tile) => {
+    const neighborsTiles = findNeighbors(tile);
     return neighborsTiles.some((tile) => !tile.dataset.type);
   });
 }

@@ -1,24 +1,12 @@
 //MENU ID
-let mineshaftMenuId = 1;
-let smelterMenuId = 1;
-let cementFactoryId = 1;
-let storageMenuId = 1;
-let oreProcessingMenuId = 1;
-let assemblerMenuId = 1;
-let cargoStationMenuId = 1;
-let cementPlantMenuId = 1;
-let concretePlantMenuId = 1;
-let quarryMenuId = 1;
-let brickFactoryMenuId = 1;
-let glassFactoryMenuId = 1;
 let truckIdCounter = 1;
 let conveyorItemId = 1;
+
+const buildingsMenuId = {};
 //BUILDING ID
 let buildingId = 1;
 //GLOBAL AMOUNT
-let ironOreAmount = 0;
-let copperOreAmount = 0;
-let woodAmount = 0;
+let totalEnergy = 0;
 //BUILDING DIRECTIONS
 let DIRECTIONS;
 let buildingDirection = 0;
@@ -41,51 +29,6 @@ let allRoutesList = [];
 
 //GLOBAL RESOURCES
 
-//CONVEYOR DIRECTIONS
-const connectorDirections = [
-  "connectorUp-hover",
-  "connectorRight-hover",
-  "connectorDown-hover",
-  "connectorLeft-hover",
-];
-const conveyorDirections = ["conveyorUp-hover", "conveyorRight-hover", "conveyorDown-hover", "conveyorLeft-hover"];
-const splitterDirections = ["splitterUp-hover", "splitterRight-hover", "splitterDown-hover", "splitterLeft-hover"];
-const fluidSplitterDirections = [
-  "fluidSplitterUp-hover",
-  "fluidSplitterRight-hover",
-  "fluidSplitterDown-hover",
-  "fluidSplitterLeft-hover",
-];
-// prettier-ignore
-const pipeDirections = [
-  "pipeUp-hover",
-  "pipeRight-hover",
-  "pipeDown-hover",
-  "pipeLeft-hover",
-];
-
-const waterPumpDirections = ["mineshaft-hover", "mineshaft-hover", "mineshaft-hover", "mineshaft-hover"];
-const mineshaftDirections = ["mineshaft-hover", "mineshaft-hover", "mineshaft-hover", "mineshaft-hover"];
-
-const demolitionHover = ["demolition-hover", "demolition-hover", "demolition-hover", "demolition-hover"];
-const directionsList = {
-  conveyor: conveyorDirections,
-  connector: connectorDirections,
-  splitter: splitterDirections,
-  pipe: pipeDirections,
-  mineshaft: mineshaftDirections,
-  waterPump: waterPumpDirections,
-  demolition: demolitionHover,
-  fluidSplitter: fluidSplitterDirections,
-};
-const allDirections = conveyorDirections.concat(
-  connectorDirections,
-  splitterDirections,
-  pipeDirections,
-  waterPumpDirections,
-  demolitionHover,
-  fluidSplitterDirections
-);
 //ITEMS LIST
 
 //RECEPIES LIST
@@ -248,34 +191,34 @@ const structuresList = [
 ];
 //COLORS
 const colors = [
-  "#ff0000", // Красный
-  "#00ff00", // Зеленый
-  "#0000ff", // Синий
-  "#ffff00", // Желтый
-  "#ff00ff", // Розовый
-  "#00ffff", // Бирюзовый
-  "#800080", // Фиолетовый
-  "#ffA500", // Оранжевый
-  "#008000", // Темно-зеленый
-  "#000080", // Темно-синий
-  "#8B0000", // Темно-красный
-  "#228B22", // Темно-зеленый лес
-  "#8B008B", // Темно-фиолетовый
-  "#4169E1", // Стальной синий
-  "#FA8072", // Лососевый
-  "#40E0D0", // Бирюзовый
-  "#FFD700", // Золотой
-  "#B8860B", // Темно-золотой
-  "#008B8B", // Темно-бирюзовый
-  "#A52A2A", // Коричневый
-  "#2E8B57", // Морская зелень
-  "#FF6347", // Томатный
-  "#556B2F", // Темно-оливковый
-  "#CD853F", // Перуанский коричневый
-  "#483D8B", // Темно-сиреневый
-  "#8B4513", // Коричнево-красный
-  "#9932CC", // Темно-фиолетовый
-  "#8B4513", // Коричнево-красный
-  "#FFFAFA", // Ледяной
-  "#008080", // Темно-циан
+  "#ff6666", // Светло-красный
+  "#66ff66", // Светло-зеленый
+  "#6666ff", // Светло-синий
+  "#ffff99", // Светло-желтый
+  "#ff99ff", // Светло-розовый
+  "#99ffff", // Светло-бирюзовый
+  "#996699", // Светло-фиолетовый
+  "#ffcc66", // Светло-оранжевый
+  "#66cc66", // Светло-темно-зеленый
+  "#6666cc", // Светло-темно-синий
+  "#cc6666", // Светло-темно-красный
+  "#66cc66", // Светло-темно-зеленый лес
+  "#cc66cc", // Светло-темно-фиолетовый
+  "#6699e1", // Светло-стальной синий
+  "#f09999", // Светло-лососевый
+  "#66e0cc", // Светло-бирюзовый
+  "#ffdcb3", // Светло-золотой
+  "#ccae66", // Светло-темно-золотой
+  "#66cccc", // Светло-темно-бирюзовый
+  "#b38258", // Светло-коричневый
+  "#8ebf8e", // Светло-морская зелень
+  "#ffae99", // Светло-томатный
+  "#8f9c6b", // Светло-темно-оливковый
+  "#ccae7a", // Светло-перуанский коричневый
+  "#9480cd", // Светло-темно-сиреневый
+  "#c4876b", // Светло-коричнево-красный
+  "#ae99cc", // Светло-темно-фиолетовый
+  "#c4876b", // Светло-коричнево-красный
+  "#f5f5f5", // Светло-ледяной
+  "#66cccc", // Светло-темно-циан
 ];

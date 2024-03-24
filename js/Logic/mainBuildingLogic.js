@@ -4,7 +4,6 @@ class Building {
     Object.assign(this, ocupieTiles);
     this.type = type;
     this.tile = targetTile;
-    this.tileData = targetTile.dataset;
   }
   getId(id) {
     this.id = id.split(["."]);
@@ -12,46 +11,40 @@ class Building {
     this.z = parseInt(this.id[1]);
   }
   createBuilding() {
-    console.log(`Building a ${this.name}`);
+    this.tileData = this.tile.dataset;
+    console.log(`Строится ${this.name}`);
     const building = document.getElementById(`${this.x}.${this.z}`);
-    switch (this.name) {
-      case "conveyor":
-      case "connector":
-      case "splitter":
-      case "road":
-        building.dataset.type = "transportation";
-        break;
-      default:
-        building.dataset.type = "building";
-        building.dataset.mainTile = "true";
-        break;
-    }
 
-    switch (this.name) {
-      case "smelter":
-      case "oreProcessing":
-      case "brickFactory":
-        building.dataset.buildingCategory = "inOut1";
+    const buildingCategories = {
+      inOut1: ["oreProcessing", "brickFactory", "steelFoundry"],
+      inOut2: ["assembler", "cementPlant", "glassFactory"],
+      inOut3: ["concretePlant", "ironFoundry"],
+      Out: ["mineshaft", "quarry"],
+      In: ["powerPlant"],
+      conveyor: ["conveyor", "connector", "splitter", "undergroundConveyor"],
+      storage: ["mediumStorage", "smallStorage"],
+    };
+
+    building.dataset.type = this.tileData.type === "transportation" ? "transportation" : "building";
+    building.dataset.mainTile = "true";
+
+    for (const category in buildingCategories) {
+      if (buildingCategories[category].includes(this.name)) {
+        building.dataset.buildingCategory = category;
         break;
-      case "assembler":
-      case "cementPlant":
-      case "glassFactory":
-        building.dataset.buildingCategory = "inOut2";
-        break;
-      case "concretePlant":
-        building.dataset.buildingCategory = "inOut3";
-        break;
-      case "mineshaft":
-      case "quarry":
-        building.dataset.buildingCategory = "Out";
-        break;
+      }
     }
 
     building.dataset.buildingType = this.name;
     building.dataset.buildingId = buildingId++;
     handleMouseLeave();
+
+    const buildingInfo = findBldObjInList(this.tileData.buildingType);
+    const energyConsumption = buildingInfo.energyConsumption;
+    energyConsumption ? (this.tileData.energyConsumption = false) : "";
   }
   createBuildingImage(isUpgrade) {
+    this.tileData = this.tile.dataset;
     const img = document.createElement("img");
     if (isUpgrade) {
       img.dataset.imageType = "upgrade";
@@ -59,66 +52,19 @@ class Building {
       img.dataset.imageType = this.tileData.buildingType;
       img.dataset.mainBuildingImg = true;
     }
-
-    if (this.tileData.type == "transportation") {
-      const buidlingImg = allBuilding.find((bld) => bld.name == this.name);
-      console.log(buidlingImg.imageSrc);
+    const buidlingImg = allBuildings.find((bld) => bld.name == this.name);
+    if (this.tileData.buildingCategory == "conveyor") {
+      console.log(buidlingImg);
       img.src = buidlingImg.imageSrc[buildingDirection];
+      img.dataset.imageType = this.name;
     } else if (this.name == "pipe") {
-      img.dataset.imageType = "pipe";
-      switch (buildingDirection) {
-        case 0:
-        case 2:
-          img.src = "/img/pipes/vertical.png";
-          break;
-        case 1:
-        case 3:
-          img.src = "/img/pipes/horizontal.png";
-          break;
-      }
-    } else if (this.name == "conveyor") {
-      img.dataset.imageType = "conveyor";
-      switch (buildingDirection) {
-        case 0:
-          img.src = "/img/conveyors/conveyorTop.gif";
-          break;
-        case 1:
-          img.src = "/img/conveyors/conveyorRight.gif";
-          break;
-        case 2:
-          img.src = "/img/conveyors/conveyorDown.gif";
-          break;
-        case 3:
-          img.src = "/img/conveyors/conveyorLeft.gif";
-          break;
-      }
+      img.dataset.imageType = this.name;
     } else img.src = `/img/buildings/${this.name}.webp`;
 
     this.tile.appendChild(img);
     img.style.zIndex = this.x + this.z;
-  }
-
-  addPipeDirection(targetTile) {
-    const img = this.tile.querySelector(`[data-image-type="pipe"]`);
-    this.tileData.undergroundType = "pipe";
-    switch (this.direction) {
-      case 0:
-        this.tileData.pipeDirection = "up";
-        img.classList.add(`${this.name}Up`);
-        break;
-      case 1:
-        this.tileData.pipeDirection = "right";
-        img.classList.add(`${this.name}Right`);
-        break;
-      case 2:
-        this.tileData.pipeDirection = "down";
-        img.classList.add(`${this.name}Down`);
-        break;
-      case 3:
-        this.tileData.pipeDirection = "left";
-        img.classList.add(`${this.name}Left`);
-        break;
-    }
+    this.tileData.buildingCategory == "conveyor" ? img.style.zIndex-- : "";
+    return img;
   }
 
   createClickArea(xSize, zSize) {
@@ -185,11 +131,12 @@ class Building {
     menu.querySelector(".productImage").src = imageSrc;
     const materialAmountSpan = menu.querySelector(".materialAmount");
     const productAmountSpan = menu.querySelector(".productAmount");
-    const itemNameSpan = menu.querySelector(".productName");
+
     //Process loop
     function processItem() {
       updatedProductTime = tileData.productionTime;
       const isWaterNeeded = materials.isWaterNeeded;
+      if (isWaterNeeded) tileData.waterRequired = "true";
 
       if (
         !processItemStarted &&
@@ -197,13 +144,14 @@ class Building {
         (!isWaterNeeded || (isWaterNeeded && tileData.fluidType == "water"))
       ) {
         createSmoke(tile);
+        energyUsing(tile, "on");
         processItemStarted = true;
         progressBarAnimation = moveProgressBar(menu, updatedProductTime, processItem);
         if (progressBarAnimation.width == 0) {
           tileData.itemAmount -= materials.res1Amount;
           setTimeout(() => {
+            energyUsing(tile, "off");
             if (tileData.itemAmount <= materials.res1Amount) deleteSmoke(tile);
-
             tileData.itemAmountOutput = String(parseFloat(tileData.itemAmountOutput) + materials.prodAmount);
             tileData.itemTypeOutput = name;
             materialAmountSpan.textContent = tileData.itemAmount;
@@ -229,7 +177,6 @@ class Building {
     let progressBarAnimation;
     let processItemStarted = false;
     let updatedProductTime = time;
-    console.log(materials);
     function processItem() {
       updatedProductTime = tileData.productionTime;
 
@@ -242,10 +189,13 @@ class Building {
           parseInt(tileData.secondMatAmount, 10) >= matAmount2
         );
       }
+      const isWaterNeeded = materials.isWaterNeeded;
+      if (isWaterNeeded) tileData.waterRequired = "true";
 
       if (
         isTileDataValid(tileData, res1Name, res1Amount, res2Name, res2Amount) ||
-        isTileDataValid(tileData, res2Name, res2Amount, res1Name, res1Amount)
+        (isTileDataValid(tileData, res2Name, res2Amount, res1Name, res1Amount) &&
+          (!isWaterNeeded || (isWaterNeeded && tileData.fluidType == "water")))
       ) {
         assemblying();
       }
@@ -272,8 +222,7 @@ class Building {
   }
   //TWO MATERIALS PROCESSING
   itemProcessingThreeMaterial(tile, menu, { name, imageSrc, materials }) {
-    const { res1Name, res1Amount, res2Name, res2Amount, res3Name, res3Amount, waterAmount, time, prodAmount } =
-      materials;
+    const { res1Name, res1Amount, res2Name, res2Amount, res3Name, res3Amount, time, prodAmount } = materials;
     const tileData = tile.dataset;
     let progressBarAnimation;
     let processItemStarted = false;
@@ -311,7 +260,16 @@ class Building {
         const allItemsMatch = recipeList.every((item) =>
           items.some((i) => i.name === item.name && i.amount >= item.amount)
         );
-        if (allItemsMatch && processItemStarted == false) assemblying();
+
+        const isWaterNeeded = materials.isWaterNeeded;
+        if (isWaterNeeded) tileData.waterRequired = "true";
+        if (
+          allItemsMatch &&
+          processItemStarted == false &&
+          (!isWaterNeeded || (isWaterNeeded && tileData.fluidType == "water"))
+        ) {
+          assemblying();
+        }
       }
     }
     let productionInterval = setInterval(processItem, updatedProductTime / 100);
@@ -337,19 +295,18 @@ class Building {
 
   //MENU CREATION
   createMenu(className, menuData, idName, clickArea, buildingData) {
-    let targetTile = this.findTargetTile();
+    const targetTile = this.findTargetTile();
     const classMenu = new className(targetTile, idName);
     classMenu.menuCreation(buildingData);
-    console.log(`[data-menu-type="${menuData}"][data-menu-id="${idName}"]`);
     const menu = document.querySelector(`[data-menu-type="${menuData}"][data-menu-id="${idName}"]`);
 
     clickArea.addEventListener("click", () => {
       if (currentTool != "demolition" && !undergroundOpened) {
+        playMenuOpenSound(menuData);
         menu.classList.remove("hidden");
         resetGhost();
         // document.addEventListener("click", cameraMoveCenter);
         classMenu.menuOpened = true;
-        switchUpgrades();
         if (!allOpenedMenu.includes(menu)) allOpenedMenu.push(menu);
       }
     });
@@ -357,6 +314,43 @@ class Building {
   }
 }
 
+function energyUsing(tile, action) {
+  const energyAmountSpan = document.querySelector(".energyAmount");
+  const buildingInfo = findBldObjInList(tile.dataset.buildingType);
+  const energyConsumption = buildingInfo.energyConsumption;
+  switch (action) {
+    case "on":
+      //Power Plant
+      if (tile.dataset.energyInNetwork == "false") {
+        totalEnergy += tile.dataset.buildingState == "Working" ? 4 : 0;
+        energyAmountSpan.textContent = `${totalEnergy} kW`;
+        tile.dataset.energyInNetwork = "true";
+      }
+      //Buildings
+      if (tile.dataset.energyConsumption == "false") {
+        totalEnergy -= energyConsumption;
+        energyAmountSpan.textContent = `${totalEnergy} kW`;
+        tile.dataset.energyConsumption = "true";
+      }
+      break;
+
+    case "off":
+      //Power Plant
+      if (tile.dataset.energyInNetwork == "true") {
+        totalEnergy -= 4;
+        energyAmountSpan.textContent = `${totalEnergy} kW`;
+        tile.dataset.energyInNetwork = "false";
+      }
+      //Buildings
+      if (tile.dataset.energyConsumption == "true") {
+        console.log("stop");
+        totalEnergy += energyConsumption;
+        energyAmountSpan.textContent = `${totalEnergy} kW`;
+        tile.dataset.energyConsumption = "false";
+      }
+      break;
+  }
+}
 function findMainTile(building) {
   const currentId = building.dataset.buildingId;
   const allBuildingTiles = document.querySelectorAll(`[data-building-id="${currentId}"]`);

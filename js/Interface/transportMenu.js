@@ -106,7 +106,7 @@ class CargoStationMenu extends BuildingMenu {
       itemAmount.textContent = item.amount;
       itemImg.src = item.imgSrc || "./img/resourcesIcons/noItem.svg";
       if (this.tileData.connectedTo != "tradingTerminal") {
-        // this.tileData.cargoStationItem = item.name;
+        this.tileData.cargoStationItem = item.name;
       }
 
       this.updateTrucksAmountInfo(trucksAvailableText);
@@ -135,11 +135,30 @@ class CargoStationMenu extends BuildingMenu {
     menu.querySelector(".addTruck").onclick = () => {
       if (trucksOnRoute != maxTrucksOnRoute && trucksAvailable > 0) {
         this.selectStation(menu);
-        let route = newBuilding.calculateRoute([this.tile, []]);
-        newBuilding.createRouteDirections(route);
-        trucksAvailable--, trucksOnRoute++;
-        this.updateTrucksAmountInfo(trucksAvailableText);
-        trucksCurrentText.textContent = `Trucks on current route —  ${trucksOnRoute}/${maxTrucksOnRoute}`;
+        const route = newBuilding.calculateRoute([this.tile, []]);
+        const isRouteValid = newBuilding.createRouteDirections(route, trucksCurrentText);
+        const firstStation = route[0];
+        const lastStation = route[route.length - 1];
+        console.log(isRouteValid);
+        if (isRouteValid) {
+          trucksAvailable--, trucksOnRoute++;
+          this.updateTrucksAmountInfo(trucksAvailableText);
+          trucksCurrentText.textContent = `Trucks on current route —  ${trucksOnRoute}/${maxTrucksOnRoute}`;
+        } else {
+          const firstStationText = menu.querySelector(".cargoStationMenu__routeInfo-span");
+
+          firstStation.dataset.CargoStationItem = "Empty";
+          firstStation.dataset.routeTo = "";
+          firstStationText.textContent = `Route not selected`;
+
+          lastStation.dataset.routeTo = "";
+          lastStation.dataset.CargoStationItem = "Empty";
+          const secondStationMenu = document.querySelector(
+            `[data-menu-id="${lastStation.dataset.stationId}"][data-menu-type="cargoStation"]`
+          );
+          const secondStationText = secondStationMenu.querySelector(".cargoStationMenu__routeInfo-span");
+          secondStationText.textContent = `Route not selected`;
+        }
       }
     };
     menu.querySelector(".deleteTruck").onclick = () => {
@@ -237,8 +256,16 @@ class CargoStationMenu extends BuildingMenu {
       this.createRouteBlock(menu);
     });
   }
+  // checkStation(menu) {
+  //   const stationsRadioBtns = menu.querySelectorAll('input[name="selectStation"]');
+  //   const tile = document.getElementById(menu.dataset.parentTileId);
+  //   stationsRadioBtns.forEach((btn) => {
+  //     btn.checked ? (tile.dataset.routeTo = parseInt(btn.id.split(" ").pop(), 10)) : "";
+  //   });
+  // }
   selectStation(menu) {
     currentStationChangeText(menu);
+
     function currentStationChangeText(menu) {
       const stationsRadioBtns = menu.querySelectorAll('input[name="selectStation"]');
       const routeInfoText = menu.querySelector(".cargoStationMenu__routeInfo-span");
@@ -257,7 +284,7 @@ class CargoStationMenu extends BuildingMenu {
       const targetStationId = parseInt(id.split(" ").pop(), 10);
       const targetStation = document.querySelector(`[data-station-id="${targetStationId}"]`);
       targetStation.dataset.routeFrom = tile.dataset.stationId;
-      targetStation.dataset.cargoStationItem = tile.dataset.cargoStationItem;
+
       const menu = document.querySelector(`[data-cargo-station-id="${targetStationId}"]`);
       const routeInfoText = menu.querySelector(".cargoStationMenu__routeInfo-span");
       routeInfoText.textContent = `Cargo Station ${tile.dataset.stationId} 
@@ -274,7 +301,12 @@ class CargoStationMenu extends BuildingMenu {
       return processingInArray.includes(buildingName);
     });
 
-    if (mainFactoryTile.dataset.buildingType == "tradingTerminal") items = allItems;
+    if (
+      mainFactoryTile.dataset.buildingType == "tradingTerminal" ||
+      mainFactoryTile.dataset.buildingCategory == "storage"
+    ) {
+      items = allItems;
+    }
 
     items.forEach((item) => {
       const itemBlock = document.createElement("div");
@@ -332,18 +364,14 @@ class TruckMenu {
     this.importStationId = importStation.dataset.stationId;
   }
   closeTruckMenu(menu) {
-    let closeBtn = menu.querySelector(".close-button");
+    const closeBtn = menu.querySelector(".close-button");
     closeBtn.addEventListener("click", () => {
       menu.classList.add("hidden");
       resetGhost();
-      switchUpgrades();
     });
 
     document.addEventListener("keydown", (event) => {
-      if (event.code == "Escape") {
-        switchUpgrades();
-        resetGhost();
-      }
+      event.code == "Escape" ? resetGhost() : null;
     });
   }
   menuCreation() {
@@ -354,10 +382,10 @@ class TruckMenu {
     }, 200);
 
     const container = document.querySelector("#menu-container");
-    let menu = document.createElement("div");
+    const menu = document.createElement("div");
     menu.classList.add("truckMenu", "hidden");
     menu.id = `Truck${this.id}`;
-    let menuContent = `
+    const menuContent = `
     <h3 class="truckMenu__truckName">Truck ${this.id}</h3>
     <div class="truckMenu__resBlock">
       <img class="truckMenu__resImg" src="/img/resourcesIcons/${this.itemName}.png" />

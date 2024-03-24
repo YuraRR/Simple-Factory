@@ -11,13 +11,10 @@
 .tool-menu {
   display: flex;
   position: absolute;
-  background-color: var(--darkGray);
-
   width: 100%;
   bottom: 0;
   flex-direction: column;
   z-index: 1000;
-  border: 4px solid var(--black);
   pointer-events: all;
   // &__group:not(:last-child) {
   //   border-right: 3px solid #2c2a2a98;
@@ -28,9 +25,11 @@
     position: relative;
     align-items: center;
     justify-content: center;
-    background-color: var(--lightGray);
+    background-color: var(--transGray);
   }
   &__btn {
+    background-color: transparent;
+    border: none;
     img {
       max-width: 100%;
       height: 100%;
@@ -40,26 +39,34 @@
     display: flex;
     position: absolute;
     justify-content: space-around;
-    width: 70%;
+    width: 30%;
     margin: 0 auto;
 
     button {
-      height: 80px;
-      width: 80px;
+      height: 70px;
+      width: 70px;
     }
+  }
+  &__bottomMenu {
+    display: flex;
+    background-color: var(--darkGray);
+    width: 100%;
   }
   &__buttons {
     display: flex;
-    width: 40%;
     justify-content: center;
     margin: 0 auto;
     padding: 10px;
+    width: 25%;
   }
   &__category {
-    width: 30px;
-    height: 30px;
+    width: 35px;
+    height: 35px;
     margin: 0 auto;
     position: relative;
+    background-color: transparent;
+    border: none;
+    padding: 1px;
     img {
       max-width: 100%;
     }
@@ -73,32 +80,26 @@
     span {
       font-size: 9px;
       text-align: center;
-      color: #e0e0e0;
     }
   }
 
-  // &__groupNames {
-  //   display: flex;
-  //   position: relative;
-  //   span {
-  //     position: absolute;
-  //     color: #ccc;
-  //     font-size: 14px;
-  //   }
+  &__modes {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+  }
 
-  //   :nth-child(1) {
-  //     left: 22%;
-  //   }
-  //   :nth-child(2) {
-  //     left: 32%;
-  //   }
-  //   :nth-child(3) {
-  //     left: 42.4%;
-  //   }
-  //   :nth-child(4) {
-  //     right: 35%;
-  //   }
-  // }
+  &__mode-btn {
+    width: 25px;
+    height: 25px;
+    background-color: transparent;
+    border: none;
+    padding: 2px;
+    img {
+      max-width: 100%;
+    }
+  }
 }
 #menu-container {
   display: flex;
@@ -234,16 +235,18 @@
 
 .close-button {
   position: absolute;
-  top: 0;
-  right: 0;
-  background-image: url(/img/buttonIcons/close-btn.png);
+  top: 3px;
+  right: 3px;
+  background-image: url(/img/buttonIcons/close.svg);
   background-size: contain;
   background-repeat: no-repeat;
+  background-color: transparent;
   width: 20px;
   height: 20px;
   margin-bottom: auto;
   pointer-events: all;
   border: none;
+  cursor: pointer;
 }
 
 .storageMenu {
@@ -332,7 +335,7 @@ h3 {
   background-color: var(--black);
   font-size: 17px;
   text-transform: uppercase;
-  padding: 0 10px;
+  padding: 2px 10px;
 }
 
 .twoMaterialsMenu,
@@ -350,14 +353,13 @@ h3 {
   max-width: 450px;
   height: 450px;
   pointer-events: all;
-
   box-shadow: 5px 5px 15px 0px rgba(0, 0, 0, 0.5);
 
   &__items {
     align-items: center;
     justify-content: center;
     display: flex;
-    padding: 15px;
+    padding: 50px 15px 15px;
     background-color: var(--darkGray);
   }
 
@@ -373,12 +375,12 @@ h3 {
     text-align: center;
     color: #ccc;
     background-color: var(--black);
+    border-radius: 10px 0 10px 0;
   }
   .materialImage,
   .productImage {
     margin: 0 auto;
     max-width: 80px;
-    border: 3px solid var(--black);
   }
   .productName {
     padding: 3px 0;
@@ -392,11 +394,51 @@ h3 {
     color: lightblue;
   }
 
+  &__timeBlock {
+    display: flex;
+    position: relative;
+    justify-content: center;
+    height: 80px;
+    width: 115px;
+    padding: 2px 0;
+    .resAmountPerMin {
+      position: absolute;
+      left: 10px;
+      width: 43px;
+      text-align: right;
+    }
+    .timeImage {
+      position: absolute;
+      width: 15px;
+      height: 15px;
+      padding: 3px;
+      right: 37px;
+    }
+    .resTime {
+      position: absolute;
+      right: 17px;
+      top: 2px;
+    }
+  }
   &__arrow {
     display: flex;
     align-items: center;
+    img {
+      width: 70px;
+    }
   }
-
+  .waterBlock {
+    display: flex;
+    position: absolute;
+    left: 9px;
+    top: 24px;
+    background-color: var(--transRed);
+    padding: 5px;
+    border: 2px solid var(--black);
+    img {
+      width: 17px;
+    }
+  }
   .factoryStructures {
     display: flex;
     justify-content: center;
@@ -432,12 +474,19 @@ h3 {
       h3 {
         position: absolute;
         right: 0;
-        bottom: 73px;
+        bottom: 42px;
         writing-mode: vertical-lr;
         text-orientation: upright;
         white-space: nowrap;
         font-size: 14px;
         padding: 10px 2px;
+      }
+    }
+    &__arrow {
+      display: flex;
+      align-items: center;
+      img {
+        width: 70px;
       }
     }
   }
@@ -487,6 +536,7 @@ h3 {
         background-color: var(--lightGreen);
         height: 40px;
         padding: 0 5px;
+        color: var(--black);
       }
       &__amount {
       }
@@ -498,6 +548,7 @@ h3 {
         background-color: var(--lightYellow);
         height: 40px;
         padding: 0 5px;
+        color: var(--black);
       }
     }
   }

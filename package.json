@@ -3,6 +3,7 @@
     "@neodrag/vanilla": "^2.0.3"
   },
   "devDependencies": {
+    "electron": "^29.1.5",
     "prettier-html": "^0.0.2"
   }
 }

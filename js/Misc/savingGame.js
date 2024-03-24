@@ -157,7 +157,6 @@ function startIntervals(tile, foundTile) {
       connector: Connector,
       splitter: Splitter,
       pipe: Pipe,
-      fluidSplitter: FluidSplitter,
       road: Road,
       cargoStation: CargoStation,
       cementPlant: CementPlant,

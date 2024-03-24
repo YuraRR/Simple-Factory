@@ -6,10 +6,12 @@ function createSmoke(tile) {
     smokeImg.classList.add(`${tile.dataset.buildingType}Smoke`);
     smokeImg.dataset.visualType = "smoke";
     tile.appendChild(smokeImg);
+    tile.dataset.buildingState = "Working";
   }
 }
 
 function deleteSmoke(tile) {
   const smokeImg = tile.querySelector(`[data-visual-type='smoke']`);
   smokeImg.remove();
+  tile.dataset.buildingState = "Idle";
 }

@@ -15,51 +15,20 @@
   width: 60px;
 }
 
-.connector-up {
-  @include connectorBase();
-}
-
-.connector-right {
-  @include connectorBase();
-  // transform: rotate(90deg);
-}
-
-.connector-down {
-  @include connectorBase();
-  // transform: rotate(180deg);
-}
-
-.connector-left {
-  @include connectorBase();
-  // transform: rotate(270deg);
-}
-.splitter-up {
-  @include splitterBase();
-}
-
-.splitter-right {
-  @include splitterBase();
-  // transform: rotate(90deg);
-}
-
-.splitter-down {
-  @include splitterBase();
-  // transform: rotate(180deg);
-}
-
-.splitter-left {
-  @include splitterBase();
-  // transform: rotate(270deg);
-}
-
 [data-image-type="conveyor"] {
   @include buildingBase;
   position: absolute;
   width: 119px;
-  top: -30px;
-  left: -41px;
+  top: -31px;
+  left: -39px;
 }
 
+[data-image-type="pipe"][data-ghost-img="true"] {
+  @include pipeBase();
+  top: -14px;
+  left: -9px;
+  transform: rotate(319deg);
+}
 [data-pipe-type="cross"] {
   @include pipeBase();
   top: -14px;
@@ -124,50 +93,11 @@
   @include pipeBase();
   transform: rotate(318deg);
 }
-// .pipeUp {
-//   @include pipeBase();
-//   transform: rotate(313deg);
-// }
-// .pipeRight {
-//   @include pipeBase();
-//   transform: rotate(316deg);
-// }
-// .pipeDown {
-//   @include pipeBase();
-//   transform: rotate(313deg);
-// }
-// .pipeLeft {
-//   @include pipeBase();
-//   transform: rotate(316deg);
-// }
-// .pipeTopRightCorner {
-//   @include pipeBase();
-//   transform: rotate(322deg);
-//   top: -21px;
-//   left: -3px;
-// }
-// .pipeRightBottomCorner {
-//   @include pipeBase();
-//   transform: rotate(312deg);
-//   top: -13px;
-//   left: -8px;
-// }
-// .pipeBottomLeftCorner {
-//   @include pipeBase();
-//   transform: rotate(310deg);
-//   top: -5px;
-//   left: -19px;
-// }
-// .pipeLeftTopCorner {
-//   @include pipeBase();
-//   transform: rotate(310deg);
-//   top: -20px;
-//   left: -21px;
-// }
-
-.fluidConnector {
-  @include connectorBase();
-  background-image: url(/img/buildings/liquidConnectorModel.png) !important;
+[data-pipe-type="connector"] {
+  @include pipeBase();
+  top: -14px;
+  left: -9px;
+  transform: rotate(308deg);
 }
 
 [data-direction="up"],
@@ -175,6 +105,10 @@
   position: relative;
   [data-image-type="conveyor"] {
     transform: rotateZ(323deg) rotateY(64deg) rotate3d(8, -11, -5, 11deg);
+  }
+  [data-image-type="connector"] {
+    top: -40px;
+    left: -48px;
   }
 }
 [data-direction="right"],
@@ -185,26 +119,37 @@
   }
 }
 
-[data-image-type="conveyor"] {
-  @include buildingBase;
-  position: absolute;
-  width: 119px;
-  top: -30px;
-  left: -41px;
-}
 [data-image-type="connector"] {
   @include buildingBase;
   position: absolute;
-  width: 137px;
-  top: -38px;
-  left: -50px;
+  width: 116px;
+  top: -42px;
+  left: -48px;
+  transform: rotateZ(323deg) rotateY(64deg) rotate3d(8, -11, -5, 11deg);
+}
+[data-image-type="undergroundConveyor"] {
+  @include buildingBase;
+  position: absolute;
+  width: 114px;
+  top: -41px;
+  left: -47px;
+  transform: rotateZ(323deg) rotateY(64deg) rotate3d(8, -11, -5, 11deg);
+}
+
+[data-image-type="splitter"] {
+  @include buildingBase;
+  position: absolute;
+  width: 138px;
+  top: -44px;
+  left: -53px;
   transform: rotateZ(323deg) rotateY(64deg) rotate3d(8, -11, -5, 11deg);
 }
 [data-image-type="conveyorImg"] {
   @include buildingBase;
-  width: 30px;
+  opacity: 0;
+  width: 25px;
   position: absolute;
   transition: all 750ms linear;
   top: -5px;
-  left: -10px;
+  left: -1px;
 }

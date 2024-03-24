@@ -7,7 +7,6 @@ class Equipment extends Building {
     console.log(`Building a equipment${this.name}`);
     let equipmentTile = document.getElementById(`${this.x}.${this.z}`);
     equipmentTile.dataset.equipmentType = this.name;
-    handleMouseLeave();
   }
 }
 
@@ -19,8 +18,10 @@ class Crusher extends Equipment {
     Object.assign(this, findTarget);
   }
   addEfficiency() {
-    const id = this.tile.dataset.equipmentPossibleFor;
+    const id = this.tile.dataset.structurePossibleFor;
+
     const mainTile = document.querySelector(`[data-building-id="${id}"][data-main-tile="true"]`);
+
     if (mainTile.dataset.resType == "Stone") mainTile.dataset.itemTypeOutput = "Gravel";
     if (mainTile.dataset.resType == "Limestone") mainTile.dataset.itemTypeOutput = "Crushed Limestone";
   }

@@ -14,12 +14,16 @@ class OreProcessingPlant extends Building {
     }
 
     this.tileData.productionTime = this.productionTime;
-
-    const menu = this.createMenu(OneMaterialsProcessingMenu, "oreProcessing", oreProcessingMenuId++, clickArea);
-    let intervalId = setInterval(() => {
+    const menu = this.createMenu(
+      OneMatProcessingMenu,
+      this.name,
+      buildingsMenuId[`${this.name}MenuId`]++,
+      clickArea
+    );
+    const intervalId = setInterval(() => {
       if (this.tileData.itemType) {
         const recipeObj = allItems.find(
-          (recipe) => recipe.producedIn === "oreProcessing" && recipe.materials.res1Name == this.tileData.itemType
+          (recipe) => recipe.producedIn === this.name && recipe.materials.res1Name == this.tileData.itemType
         );
         this.itemProcessingOneMaterial(this.findTargetTile(), menu, recipeObj);
         clearInterval(intervalId);
@@ -28,10 +32,10 @@ class OreProcessingPlant extends Building {
   }
 }
 
-class Smelter extends Building {
+class IronFoundry extends Building {
   constructor(tile, id) {
     super(tile, id);
-    this.name = "smelter";
+    this.name = "ironFoundry";
     this.productionTime = 4000;
     this.tile = tile;
     Object.assign(this, findTarget);
@@ -39,22 +43,26 @@ class Smelter extends Building {
 
   processing(clickArea) {
     this.tileData = this.tile.dataset;
-    if (!this.tileData.itemAmount) {
-      this.tileData.itemAmount = 0;
-      this.tileData.itemAmountOutput = 0;
-    }
     this.tileData.productionTime = this.productionTime;
-    //MENU CREATION
-
-    let menu = this.createMenu(SmelterMenu, "smelter", smelterMenuId++, clickArea);
-    //PROCESSING INTERVAL
-
-    let selectedProduct = this.tileData.selectedProduct;
-    let recipeObj = allSmeltingRecipes.find(
-      (recipe) =>
-        recipe.productSubtype === this.tileData.selectedProduct && recipe.materialName === this.tileData.itemType
+    if (!this.tileData.firstMatAmount) {
+      this.tileData.firstMatAmount = 0;
+      this.tileData.secondMatAmount = 0;
+      this.tileData.itemAmountOutput = 0;
+      this.tileData.thirdMatAmount = 0;
+    }
+    const menu = this.createMenu(
+      ThreeMatsProcessingMenu,
+      this.name,
+      buildingsMenuId[`${this.name}MenuId`]++,
+      clickArea
     );
-    this.itemProcessingOneMaterial(this.findTargetTile(), menu, recipeObj);
+    const recipeObj = allItems.find((recipe) => recipe.producedIn === "ironFoundry");
+    this.itemProcessingThreeMaterial(this.tile, menu, recipeObj);
+
+    this.tileData.firstMatName = recipeObj.materials.res1Name;
+    this.tileData.secondMatName = recipeObj.materials.res2Name;
+    this.tileData.thirdMatName = recipeObj.materials.res3Name;
+    this.tileData.itemTypeOutput = recipeObj.name;
   }
 }
 
@@ -76,7 +84,12 @@ class Assembler extends Building {
     }
 
     this.tileData.selectedProduct = "Iron frame";
-    const menu = this.createMenu(TwoMaterialsProcessingMenu, "assembler", assemblerMenuId++, clickArea);
+    const menu = this.createMenu(
+      TwoMatsProcessingMenu,
+      this.name,
+      buildingsMenuId[`${this.name}MenuId`]++,
+      clickArea
+    );
 
     const selectedProduct = this.tileData.selectedProduct;
     const recipeObj = allAssemblyRecipes.find((recipe) => recipe.productName == this.tileData.selectedProduct);
@@ -101,7 +114,12 @@ class CementPlant extends Building {
       this.tileData.itemAmountOutput = 0;
     }
 
-    const menu = this.createMenu(TwoMaterialsProcessingMenu, "cementPlant", cementPlantMenuId++, clickArea);
+    const menu = this.createMenu(
+      TwoMatsProcessingMenu,
+      this.name,
+      buildingsMenuId[`${this.name}MenuId`]++,
+      clickArea
+    );
     const recipeObj = allItems.find((recipe) => recipe.producedIn === "cementPlant");
     this.itemProcessingTwoMaterial(this.tile, menu, recipeObj);
 
@@ -128,7 +146,12 @@ class ConcretePlant extends Building {
       this.tileData.thirdMatAmount = 0;
     }
 
-    const menu = this.createMenu(ThreeMaterialsProcessingMenu, "concretePlant", concretePlantMenuId++, clickArea);
+    const menu = this.createMenu(
+      ThreeMatsProcessingMenu,
+      this.name,
+      buildingsMenuId[`${this.name}MenuId`]++,
+      clickArea
+    );
     const recipeObj = allItems.find((recipe) => recipe.producedIn === "concretePlant");
     this.itemProcessingThreeMaterial(this.tile, menu, recipeObj);
 
@@ -152,13 +175,19 @@ class BrickFactory extends Building {
     if (!this.tileData.itemAmount) {
       this.tileData.itemAmount = 0;
       this.tileData.itemAmountOutput = 0;
-      this.tileData.fluidType = "";
     }
 
-    const menu = this.createMenu(OneMaterialsProcessingMenu, "brickFactory", brickFactoryMenuId++, clickArea);
+    const menu = this.createMenu(
+      OneMatProcessingMenu,
+      this.name,
+      buildingsMenuId[`${this.name}MenuId`]++,
+      clickArea
+    );
     const recipeObj = allItems.find((recipe) => recipe.producedIn === "brickFactory");
     this.itemProcessingOneMaterial(this.tile, menu, recipeObj);
 
+    console.log(recipeObj.materials.res1Name);
+    this.tileData.itemType = recipeObj.materials.res1Name;
     this.tileData.itemTypeOutput = recipeObj.name;
   }
 }
@@ -179,12 +208,45 @@ class GlassFactory extends Building {
       this.tileData.itemAmountOutput = 0;
     }
 
-    const menu = this.createMenu(TwoMaterialsProcessingMenu, "glassFactory", glassFactoryMenuId++, clickArea);
+    const menu = this.createMenu(
+      TwoMatsProcessingMenu,
+      this.name,
+      buildingsMenuId[`${this.name}MenuId`]++,
+      clickArea
+    );
     const recipeObj = allItems.find((recipe) => recipe.producedIn === "glassFactory");
     this.itemProcessingTwoMaterial(this.tile, menu, recipeObj);
 
     this.tileData.firstMatName = recipeObj.materials.res1Name;
     this.tileData.secondMatName = recipeObj.materials.res2Name;
+    this.tileData.itemTypeOutput = recipeObj.name;
+  }
+}
+class SteelFoundry extends Building {
+  constructor(tile, id) {
+    super(tile, id);
+    this.name = "steelFoundry";
+    this.productionTime = 24000;
+    this.tile = tile;
+    Object.assign(this, findTarget);
+  }
+  processing(clickArea) {
+    this.tileData = this.tile.dataset;
+    this.tileData.productionTime = this.productionTime;
+    if (!this.tileData.itemAmount) {
+      this.tileData.itemAmount = 0;
+      this.tileData.itemAmountOutput = 0;
+    }
+
+    const menu = this.createMenu(
+      OneMatProcessingMenu,
+      this.name,
+      buildingsMenuId[`${this.name}MenuId`]++,
+      clickArea
+    );
+    const recipeObj = allItems.find((recipe) => recipe.producedIn === this.name);
+    this.itemProcessingOneMaterial(this.tile, menu, recipeObj);
+
     this.tileData.itemTypeOutput = recipeObj.name;
   }
 }
@@ -205,22 +267,6 @@ function crusherCreating(event) {
       newBuilding.createBuildingImage(true);
       newBuilding.createUpgrade();
       newBuilding.addEfficiency();
-    }
-  }
-}
-function washerCreating(event) {
-  if (event.target.classList.contains("grid-cell")) {
-    const cell = event.target;
-    console.log(cell);
-    console.log(cell.dataset.buildingType);
-    if (cell.dataset.buildingType == "oreProcessing") {
-      console.log(cell);
-      cell.classList.add("upgrade");
-      let newBuilding = new Washer(cell);
-      newBuilding.getId(cell.id);
-      newBuilding.createBuildingImage(true);
-      newBuilding.createUpgrade();
-      newBuilding.addWaterToRecipe();
     }
   }
 }

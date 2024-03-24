@@ -12,26 +12,21 @@ function handleMouseEnter(event) {
     const x = parseInt(id[0]);
     const z = parseInt(id[1]);
     const img = document.createElement("img");
-    const xSize = allBuilding.find((bld) => bld.name === currentTool).xSize;
-    const zSize = allBuilding.find((bld) => bld.name === currentTool).zSize;
+    const xSize = allBuildings.find((bld) => bld.name === currentTool).xSize;
+    const zSize = allBuildings.find((bld) => bld.name === currentTool).zSize;
 
-    if (
-      currentTool != "demolition" &&
-      currentTool != "" &&
-      currentTool != "conveyor" &&
-      currentTool != "connector" &&
-      currentTool != "splitter" &&
-      currentTool != "pipe" &&
-      currentTool != "fluidSplitter" &&
-      currentTool != "road" &&
-      currentTool != "pointB" &&
-      !cell.dataset.buildingType
-    ) {
+    if (currentTool != "demolition" && currentTool != "" && currentTool != "road") {
+      const buildingInfo = allBuildings.find((bld) => bld.name === currentTool);
+      const buidlingImages = buildingInfo.imageSrc;
       img.src = `/img/buildings/${currentTool}.webp`;
       img.dataset.ghostImg = true;
       cell.classList.add("ghostImg");
       img.dataset.imageType = currentTool;
       cell.appendChild(img);
+      if (buidlingImages && Object.keys(buidlingImages).length === 4) {
+        img.src = buildingInfo.imageSrc[buildingDirection];
+      }
+
       for (let i = 0; i < xSize; i++) {
         for (let j = 0; j < zSize; j++) {
           const currentTile = document.getElementById(`${x + i}.${z + j}`);
@@ -54,14 +49,16 @@ function handleMouseEnter(event) {
 
             function applyPlacementClass(tile, targetType) {
               if (
-                (tile.dataset.groundType == targetType && !tile.dataset.featuresType) ||
-                targetType.includes(tile.dataset.groundType) ||
-                (targetType == "empty" && tile.dataset.type == "empty" && !tile.dataset.featuresType)
+                !tile.dataset.featuresType &&
+                (tile.dataset.groundType == targetType ||
+                  targetType.includes(tile.dataset.groundType) ||
+                  (targetType == "empty" && tile.dataset.type == "empty"))
               ) {
                 tile.classList.add("canBePlaced");
               } else {
-                tile.classList.add("cantBePlaced");
-                img.classList.add("buildingCantPlace");
+                currentTool == "pipe"
+                  ? tile.classList.add("canBePlaced")
+                  : (tile.classList.add("cantBePlaced"), img.classList.add("buildingCantPlace"));
               }
               factoryConnectionCheck(tile);
             }
@@ -93,41 +90,26 @@ function handleMouseLeave() {
 }
 
 function ghostRotating() {
-  // Удалите существующих слушателей событий
   CELLS.forEach((cell) => {
     cell.removeEventListener("mouseenter", handleMouseEnter);
     cell.removeEventListener("mouseleave", handleMouseLeave);
   });
 
-  // Добавьте новые слушатели событий
   CELLS.forEach((cell) => {
     cell.addEventListener("mouseenter", handleMouseEnter);
     cell.addEventListener("mouseleave", handleMouseLeave);
+    currentTool == "demolition"
+      ? cell.classList.add("demolition-hover")
+      : cell.classList.remove("demolition-hover");
   });
-
-  // Обновите стиль немедленно при вызове ghostRotating()
-  updateCellStyle();
 }
 
 function updateCellStyle() {
-  if (currentTool) {
-    DIRECTIONS = directionsList[currentTool];
-  }
-  if (DIRECTIONS) {
-    CELLS.forEach((cell) => {
-      DIRECTIONS.forEach((dir) => {
-        const isDemolition = currentTool === "demolition";
-        const isCellMatched = cell === currentHoveredCell && dir === DIRECTIONS[buildingDirection];
-
-        if (!isDemolition && cell.dataset.type === "empty" && cell.dataset.featuresType !== "tree") {
-          cell.classList.toggle(dir, isCellMatched);
-        } else if (isDemolition) {
-          cell.classList.toggle(dir, isCellMatched);
-        } else {
-          cell.classList.remove(dir);
-        }
-      });
-    });
+  const ghostImage = document.querySelector(`[data-ghost-img="true"]`);
+  const buildingInfo = allBuildings.find((bld) => bld.name === currentTool);
+  const buidlingImages = buildingInfo.imageSrc;
+  if (ghostImage && buidlingImages && Object.keys(buidlingImages).length === 4) {
+    ghostImage.src = buildingInfo.imageSrc[buildingDirection];
   }
 }
 
@@ -135,11 +117,6 @@ function resetGhost() {
   currentTool = "";
   resetTool();
   removeGhostBorders();
-  if (currentHoveredCell) {
-    allDirections.forEach((style) => {
-      currentHoveredCell.classList.remove(style);
-    });
-  }
   const connectedBuilding = document.querySelector(".connection-hover");
   connectedBuilding && connectedBuilding.classList.remove("connection-hover");
   CELLS.forEach((cell) => {
@@ -163,13 +140,20 @@ function removeGhostBorders() {
     delete tile.dataset.hover;
   });
 }
+function clearPossibleTiles(isToDelData) {
+  const possibleTiles = document.querySelectorAll(`[data-possible-connect-with]`);
+  possibleTiles.forEach((tile) => {
+    tile.classList.remove("possibleTile");
+    if (isToDelData) {
+      tile.removeAttribute("data-possible-connect-with");
+      tile.removeAttribute("data-direction-for-exit");
+    }
+  });
+}
 //DEMOLITION
 function demolitionFunc(event) {
-  if (event.target.classList.contains("clickArea")) {
-    deleteAllInTile(event.target.parentNode);
-  } else {
-    deleteAllInTile(event.target);
-  }
+  const tile = event.target.classList.contains("clickArea") ? event.target.parentNode : event.target;
+  deleteAllInTile(tile);
 }
 function deleteAllInTile(currentTile) {
   const currentId = currentTile.dataset.buildingId;
@@ -191,20 +175,19 @@ function deleteAllInTile(currentTile) {
       const divElement = tile.querySelector("div");
       clearInterval(tile.dataset.intervalId);
 
-      console.log(tile.dataset);
       if (tile.dataset.buildingType == "conveyor") {
         const itemImg = document.querySelector(`[data-image-item-id="${tile.dataset.itemId}"]`);
-        console.log(itemImg);
         itemImg && itemImg.remove();
       }
 
       for (const key in tile.dataset) {
-        if (key != "groundType") delete tile.dataset[key];
+        if (key != "groundType" && key != "oreType") delete tile.dataset[key];
       }
       tile.dataset.type = "empty";
       tile.className = "grid-cell";
 
-      menu && menu.remove();
+      menu && (clearInterval(menu.dataset.updateInterval), menu.remove());
+
       imgElement && tile.removeChild(imgElement);
       divElement && tile.removeChild(divElement);
 
@@ -215,17 +198,12 @@ function deleteAllInTile(currentTile) {
 
 //TRANSPERENT BUILDINGS
 function transperentBuildingsShow() {
-  const buildingElements = document.querySelectorAll("[data-building-type]");
+  const buildingElements = document.querySelectorAll(`[data-main-building-img="true"]`);
+
   // Применяем стили к каждому найденному элементу
   buildingElements.forEach((element) => {
-    switch (element.getAttribute("data-building-type")) {
-      case "smelter":
-      case "oreProcessing":
-      case "storage":
-      case "assembler":
-        element.classList.add("transperentBuilding");
-        break;
-    }
+    const data = element.parentElement.getAttribute("data-building-category");
+    data != "transportation" && data != "conveyor" ? element.classList.add("transperentBuilding") : "";
   });
 }
 function transperentBuildingsRemove() {
@@ -239,22 +217,23 @@ function transperentBuildingsRemove() {
 function showUnderground() {
   gridContainer.classList.toggle("containerOpacity");
   const allPipes = gridContainer.querySelectorAll(`[data-image-type="pipe"]`);
-  const allElemenstExeptEmpty = document.querySelectorAll(
-    '[data-ground-type]:not([data-ground-type="grass"]):not([data-type="ore"])'
-  );
+  const allConnectorPipes = document.querySelectorAll(`[data-pipe-type="connector"]`);
   const allBuildings = document.querySelectorAll(`[data-main-tile="true"]`);
-  console.log(allBuildings);
   allBuildings.forEach((el) => {
     const img = el.querySelector("img");
     const clickArea = el.querySelector(".clickArea");
-
-    if (img && clickArea && img.dataset.imageType != "pipe") {
-      img.classList.toggle("undergroundView");
-      clickArea.classList.toggle("noEvents");
+    console.log(el);
+    if (img.dataset.imageType != "pipe") {
+      img && img.classList.toggle("undergroundView");
+      clickArea && clickArea.classList.toggle("noEvents");
     }
   });
   allTrees.forEach((el) => {
     el.classList.toggle("hidden");
+    el.parentElement.classList.toggle("hiddenPseudo");
+  });
+  allConnectorPipes.forEach((el) => {
+    el.classList.toggle("waterConnector");
   });
   if (undergroundOpened) {
     [...allPipes].map((pipe) => pipe.classList.add("hidden"));
@@ -263,6 +242,11 @@ function showUnderground() {
     [...allPipes].map((pipe) => pipe.classList.remove("hidden"));
     undergroundOpened = true;
   }
+
+  const allDeepOreTiles = document.querySelectorAll(`[data-ground-type="deepOre"]`);
+  allDeepOreTiles.forEach((tile) => {
+    tile.classList.toggle("deepOreGround");
+  });
 }
 //MULTIPLY BUILDING
 let multiplyTilesList = [];
@@ -276,40 +260,34 @@ function multiplyBuilding(tilesList, event) {
     if (firstZ > secondZ) [firstZ, secondZ] = [secondZ, firstZ];
 
     let tempGhostTiles = [];
+
     if (firstZ == secondZ) {
       for (let i = firstX; i <= secondX; i++) {
-        let id = `${i}.${firstZ}`;
-        let tile = document.getElementById(id);
-        if (tilesList.length == 2) {
-          placeRoads(tile);
-        } else {
-          placeRoadsGhost(tile);
-        }
+        const id = `${i}.${firstZ}`;
+        const tile = document.getElementById(id);
+        tilesList.length == 2 ? placeObj(tile) : placeObjGhost(tile);
       }
     } else if (firstX == secondX) {
       for (let i = firstZ; i <= secondZ; i++) {
-        let id = `${firstX}.${i}`;
-        let tile = document.getElementById(id);
-        if (tilesList.length == 2) {
-          placeRoads(tile);
-        } else {
-          placeRoadsGhost(tile);
+        const id = `${firstX}.${i}`;
+        const tile = document.getElementById(id);
+
+        tilesList.length == 2 ? placeObj(tile) : placeObjGhost(tile);
+      }
+    }
+    function placeObj(tile) {
+      if (tile.dataset.type == "empty") {
+        if (tile.classList.contains("road-hover")) {
+          const newBuilding = new Road(tile);
+          newBuilding.getId(tile.id);
+          newBuilding.createBuilding();
+          document.removeEventListener("mouseover", placeMultiplyGhost);
         }
       }
     }
-    function placeRoads(tile) {
-      if (tile.dataset.type == "empty") {
-        let allGhostTiles = document.querySelectorAll(".road-hover");
-        [...allGhostTiles].map((tile) => tile.classList.remove("road-hover"));
-        let newBuilding = new Road(tile);
-        newBuilding.getId(tile.id);
-        newBuilding.createBuilding();
-        document.removeEventListener("mouseover", placeMultiplyGhost);
-      }
-    }
 
-    function placeRoadsGhost(tile) {
-      let allGhostTiles = document.querySelectorAll(".road-hover");
+    function placeObjGhost(tile) {
+      const allGhostTiles = document.querySelectorAll(".road-hover");
       if (tile.dataset.type == "empty") {
         tile.classList.add("road-hover");
         tempGhostTiles.push(tile);
@@ -326,6 +304,10 @@ function multiplyBuilding(tilesList, event) {
 function findTileByMouse(event) {
   if (event.target.classList.contains("grid-cell")) {
     multiplyTilesList.push(event.target);
+    setTimeout(() => {
+      const allGhostTiles = document.querySelectorAll(".road-hover");
+      [...allGhostTiles].map((tile) => tile.classList.remove("road-hover"));
+    }, 0);
   }
 
   if (multiplyTilesList.length == 2) {
@@ -342,10 +324,7 @@ function findTargetTileByDirection(tile, isFindMainTile) {
   const x = findXZpos(tile)[0];
   const z = findXZpos(tile)[1] + 1;
   let factoryTile;
-  let direction = tile.dataset.direction || buildingDirection;
-  if (tile.dataset.direction) {
-    direction = tile.dataset.direction;
-  }
+  const direction = tile.dataset.direction || buildingDirection;
   switch (direction) {
     case 0:
     case "up":
@@ -364,19 +343,15 @@ function findTargetTileByDirection(tile, isFindMainTile) {
       factoryTile = findTarget.findLeftTile(x, z - 1);
       break;
   }
-  if (isFindMainTile) {
-    return findMainTile(factoryTile);
-  } else {
-    return factoryTile;
-  }
+
+  if (isFindMainTile) return findMainTile(factoryTile);
+  else return factoryTile;
 }
 function findItemObjInList(name) {
   return allItems.find((item) => item.name == name);
 }
-//SWITCH UPGRADES VISIBILITY
-function switchUpgrades() {
-  // let upgradesImageList = document.querySelectorAll("[data-image-type='upgrade']");
-  // [...upgradesImageList].map((img) => img.classList.toggle("hidden"));
+function findBldObjInList(name) {
+  return allBuildings.find((item) => item.name == name);
 }
 
 //PAUSE
