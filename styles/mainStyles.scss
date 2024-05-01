@@ -1,15 +1,17 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:300,regular,500,700,900);
-@import "grid.scss";
-@import "building.scss";
-@import "conveyors.scss";
-@import "tips.scss";
-@import "natureFeatures.scss";
-@import "ghosts.scss";
-@import "menu.scss";
-@import "transport.scss";
-@import "animations.scss";
-@import "buttons.scss";
-
+@import "./gameObjects/grid";
+@import "./gameObjects/building.scss";
+@import "./gameObjects/conveyors.scss";
+@import "./interface/tips.scss";
+@import "./gameObjects/natureFeatures.scss";
+@import "./gameObjects/ghosts.scss";
+@import "./interface/mainInterface.scss";
+@import "./interface/menu.scss";
+@import "./gameObjects/transport.scss";
+@import "./gameObjects/animations.scss";
+@import "./interface/buttons.scss";
+@import "./interface/cargoStationMenu.scss";
+@import "./interface/routesInfoMenu";
 :root {
   --black: #222222;
   --midDarkGray: #333333;
@@ -28,10 +30,19 @@
   --darkYellow: #ff9800;
   --yellow: #ffeb3b;
   --lightYellow: #fff176;
+  --lightBlue: #46a9c7;
+  --lightRed: #a52a2a;
 
   --transRed: rgba(255, 0, 0, 0.308);
   --transGreen: #7ac02b64;
   --transGray: #656464d7;
+  --transDarkGray: #3b3b3bdd;
+  --transXXDarkGray: #3b3b3ba7;
+
+  --radio-border-color: #8b8c89;
+  --radio-checked-color: #ff9800;
+  --radio-hover-color: #6b6b6b;
+  --radio-disabled-bg-color: #d9d9d9;
 }
 * {
   padding: 0;
@@ -52,9 +63,14 @@
     background-color: #636262;
   }
   p,
-  span {
+  span,
+  label {
     color: var(--white);
   }
+}
+button,
+input {
+  cursor: pointer;
 }
 .buttonActive {
   outline: 3px solid var(--lightWhite);
@@ -75,24 +91,23 @@ body {
   animation: fadeInAnimation 1.2s ease-in-out forwards;
 }
 
-@keyframes fadeInAnimation {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-.fade-out {
-  opacity: 1;
-  animation: fadeOutAnimation 750ms ease-in-out backwards;
+.clear-after::after {
+  content: none;
 }
 
-@keyframes fadeOutAnimation {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
+.orange {
+  color: var(--darkYellow);
+}
+.blue {
+  color: var(--lightBlue);
+}
+.red {
+  color: var(--lightRed);
+}
+.green {
+  color: var(--green);
+}
+.lockedImg {
+  pointer-events: none;
+  position: absolute;
 }

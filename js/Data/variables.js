@@ -5,6 +5,7 @@ let conveyorItemId = 1;
 const buildingsMenuId = {};
 //BUILDING ID
 let buildingId = 1;
+let structureBlockId = 1;
 //GLOBAL AMOUNT
 let totalEnergy = 0;
 //BUILDING DIRECTIONS
@@ -15,156 +16,40 @@ let currentTool;
 let allOpenedMenu = [];
 let blockCameraMove = false;
 let undergroundOpened = false;
+let fillingMode = false;
 let foundryType;
 let conveyorIntervalId;
 let cheatMode = true;
 let isPaused = false;
+const interfaceСont = document.querySelector("#interface-container");
 //MONEY
-let money = 500;
+let money = 5000;
 //TRUCKS
 let trucksTotal = 0;
 let trucksAvailable = 0;
 let routeId = 1;
 let allRoutesList = [];
 
-//GLOBAL RESOURCES
-
-//ITEMS LIST
-
-//RECEPIES LIST
-const allProcessingOreRecipes = [
+const lockedFeatures = [
   {
-    productName: "Refined Iron",
-    materialName: "Raw Iron Ore",
-    materialImage: "img/resourcesIcons/ironOre-icon.svg",
-    materialAmount: 2,
-    productImage: "img/resourcesIcons/refinedIronOre.svg",
-    productAmount: 1,
-  },
-  {
-    productName: "Refined Copper",
-    materialName: "Raw Copper Ore",
-    materialImage: "img/resourcesIcons/copperOre-icon.svg",
-    materialAmount: 2,
-    productImage: "img/resourcesIcons/copperIngot.svg",
-    productAmount: 1,
+    name: "Unlimited Delivery",
+    taskId: 8,
+    state: false,
   },
 ];
-const allSmeltingRecipes = [
-  {
-    productName: "Iron Plate",
-    productSubtype: "Plates",
-    materialName: "Refined Iron ",
-    materialImage: "img/resourcesIcons/refinedIronOre.svg",
-    materialAmount: 2,
-    productImage: "img/resourcesIcons/ironIngot.svg",
-    productAmount: 1,
-  },
-  {
-    productName: "Iron Ingot",
-    productSubtype: "Ingots",
-    materialName: "Refined Iron",
-    materialImage: "img/resourcesIcons/refinedIronOre.svg",
-    materialAmount: 3,
-    productImage: "img/resourcesIcons/ironIngot.svg",
-    productAmount: 1,
-  },
-  {
-    productName: "Iron Rod",
-    productSubtype: "Rods",
-    materialName: "Refined Iron",
-    materialImage: "img/resourcesIcons/refinedIronOre.svg",
-    materialAmount: 4,
-    productImage: "img/resourcesIcons/ironIngot.svg",
-    productAmount: 2,
-  },
-  {
-    productName: "Copper Plate",
-    productSubtype: "Plates",
-    materialName: "Refined Iron",
-    materialImage: "img/resourcesIcons/refinedCopperOre.svg",
-    materialAmount: 2,
-    productImage: "img/resourcesIcons/copperIngot.svg",
-    productAmount: 1,
-  },
-  {
-    productName: "Copper Ingot",
-    productSubtype: "Ingots",
-    materialName: "Refined Copper",
-    materialImage: "img/resourcesIcons/refinedCopperOre.svg",
-    materialAmount: 3,
-    productImage: "img/resourcesIcons/copperIngot.svg",
-    productAmount: 1,
-  },
-  {
-    productName: "Copper Pipe",
-    productSubtype: "Rods",
-    materialName: "Refined Copper",
-    materialImage: "img/resourcesIcons/refinedCopperOre.svg",
-    materialAmount: 4,
-    productImage: "img/resourcesIcons/copperIngot.svg",
-    productAmount: 2,
-  },
-];
-const allAssemblyRecipes = [
-  {
-    firstMatName: "Iron Ore",
-    firstMatAmount: 4,
-    firstMatImage: "",
-    secondMatName: "Copper Ore",
-    secondMatAmount: 4,
-    productName: "Iron frame",
-    productImage: "",
-    productAmount: 2,
-  },
-];
-
-const allRecepies = [
-  {
-    firstMatName: "Limestone",
-    firstMatAmount: 4,
-    firstMatImage: "",
-    secondMatName: "Clay",
-    secondMatAmount: 4,
-    productName: "Cement",
-    productImage: "",
-    productAmount: 2,
-    processTime: 4000,
-  },
-];
-//EQUIPMENT LIST
-const oreProcessingEquipment = [
-  {
-    name: "Crusher Machine",
-    img: "",
-  },
-  {
-    name: "Washing Machine",
-    img: "",
-  },
-];
-const smelterEquipment = [
-  {
-    name: "Blast Furnace",
-    img: "",
-  },
-  {
-    name: "Foundry (plates)",
-    img: "",
-  },
-  {
-    name: "Foundry (ingots)",
-    img: "",
-  },
-  {
-    name: "Foundry (rods)",
-    img: "",
-  },
-  {
-    name: "Slag Recycler",
-    img: "",
-  },
-];
+const buildingCategories = {
+  in1Out1: ["oreProcessing", "steelFoundry", "sawmill", "crushingPlant"],
+  in1Out2: ["steelMill"],
+  in2Out1: ["smallAssembly", "cementPlant", "glassFactory", "brickFactory", "chemicalPlant"],
+  in2Out2: ["smallFoundry", "oilRefinery"],
+  in3Out1: ["concretePlant", "bigAssembly"],
+  in3Out3: ["foundry"],
+  Out: ["mineshaft", "quarry", "rubberTreePlantation", "lumbermill"],
+  In: ["powerPlant"],
+  conveyor: ["conveyor", "connector", "splitter", "undergroundConveyor"],
+  storage: ["mediumStorage", "smallStorage"],
+  energy: ["powerPlant", "windTurbine"],
+};
 const structuresList = [
   {
     factoryName: "mineshaft",
@@ -177,16 +62,88 @@ const structuresList = [
     Limestone: "Crushed Limestone",
   },
   {
-    factoryName: "cementPlant",
-    structures: ["WaterTower"],
+    factoryName: "rubberTreePlantation",
+    structures: [""],
   },
   {
-    factoryName: "brickFactory",
-    structures: ["WaterTower"],
+    factoryName: "lumbermill",
+    structures: [""],
   },
   {
-    factoryName: "glassFactory",
-    structures: ["WaterTower"],
+    factoryName: "foundry",
+    recipesList: {
+      recipe1: {
+        material: "Molten Iron",
+        product: "Iron Pipes",
+      },
+      recipe2: {
+        material: "Molten Iron",
+        product: "Iron Gears",
+      },
+      recipe3: {
+        material: "Molten Iron",
+        product: "Iron Feedstock",
+      },
+      recipe4: {
+        material: "Molten Copper",
+        product: "Copper Sheets",
+      },
+      recipe5: {
+        material: "Molten Copper",
+        product: "Copper Coil",
+      },
+    },
+  },
+  {
+    factoryName: "steelMill",
+    recipesList: {
+      recipe1: {
+        material: "Molten Steel",
+        product: "Steel Beams",
+      },
+      recipe2: {
+        material: "Molten Steel",
+        product: "Steel Bolts",
+      },
+      recipe3: {
+        material: "Molten Steel",
+        product: "Steel Plates",
+      },
+    },
+  },
+  {
+    factoryName: "smallFoundry",
+    recipesList: {
+      recipe1: {
+        material: "Molten Copper",
+        product: "Copper Sheets",
+      },
+      recipe2: {
+        material: "Molten Copper",
+        product: "Copper Coil",
+      },
+      recipe3: {
+        material: "Molten Iron",
+        product: "Iron Pipes",
+      },
+      recipe4: {
+        material: "Molten Iron",
+        product: "Iron Gears",
+      },
+    },
+  },
+  {
+    factoryName: "oilRefinery",
+    recipesList: {
+      recipe1: {
+        material: "Oil",
+        product: "Rubber",
+      },
+      recipe2: {
+        material: "Oil",
+        product: "Plastic",
+      },
+    },
   },
 ];
 //COLORS

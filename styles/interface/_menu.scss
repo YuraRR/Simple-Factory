@@ -1,0 +1,318 @@
+@mixin orangeBorder {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 2px solid transparent;
+  border-radius: 10px 0 10px 0;
+  animation: wave-animation 4s linear infinite;
+  pointer-events: none;
+}
+.close-button {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background-image: url(../../img/buttonIcons/close.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  width: 20px;
+  height: 20px;
+  margin-bottom: auto;
+  pointer-events: all;
+  border: none;
+  cursor: pointer;
+}
+.close-button-black {
+  background-image: url(../../img/buttonIcons/closeBlack.svg);
+}
+.progressBarBlock {
+  display: flex;
+  width: 80%;
+  border-radius: 5px;
+  overflow: hidden;
+  border: 3px solid black;
+  margin: 10px auto;
+  align-items: center;
+  background-color: var(--lightGray);
+}
+.progressBar {
+  width: 0;
+  height: 20px;
+
+  background-color: rgb(202, 73, 26);
+  text-align: center;
+  line-height: 30px;
+  color: white;
+}
+h3 {
+  text-align: center;
+  color: #ccc;
+  background-color: var(--black);
+  font-size: 17px;
+  text-transform: uppercase;
+  padding: 2px 10px;
+}
+
+.buildingMenu,
+.storageBldMenu,
+.sourceBldMenu {
+  display: flex;
+  position: relative;
+  right: -130px;
+  top: 20px;
+  flex-direction: column;
+  background-color: var(--gray);
+  min-width: 400px;
+  max-width: 580px;
+  max-height: 520px;
+  pointer-events: all;
+  box-shadow: 5px 5px 15px 0px rgba(0, 0, 0, 0.5);
+
+  &__items {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    padding: 45px 15px 15px;
+    background-color: var(--darkGray);
+    pointer-events: all;
+  }
+
+  &__materials {
+    display: flex;
+    gap: 15px;
+  }
+
+  &__item {
+    display: flex;
+    position: relative;
+    align-items: center;
+    flex-direction: column;
+    text-align: center;
+    color: #ccc;
+    background-color: var(--black);
+    border-radius: 10px 0 10px 0;
+    width: 100px;
+    padding: 2px;
+    box-shadow: 5px 5px 15px 0px rgba(0, 0, 0, 0.5);
+  }
+  .materialImage,
+  .productImage {
+    margin: 0 auto;
+    max-width: 80px;
+    max-height: 67px;
+
+    border-radius: 40px;
+    background-color: transparent;
+  }
+  .productName {
+    padding: 3px 0;
+    max-width: 85px;
+    text-wrap: wrap;
+  }
+  .materialAmount,
+  .productAmount {
+    text-align: center;
+    font-size: 20px;
+    color: lightblue;
+  }
+
+  &__timeBlock {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;
+    height: 80px;
+    width: 115px;
+    gap: 5px;
+
+    .timeImage {
+      width: 15px;
+      height: 15px;
+    }
+  }
+  &__clock {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .recipeSelect {
+    display: grid;
+    grid-template-columns: auto auto auto auto;
+    grid-template-rows: auto auto auto;
+    padding: 10px 15px;
+    background-color: var(--black);
+    position: absolute;
+    top: 120px;
+    right: -70px;
+    align-self: center;
+    z-index: 999;
+    overflow: auto;
+    max-height: 382px;
+
+    .recipeItem {
+      display: flex;
+      flex-direction: column;
+      padding: 0 5px;
+      text-align: center;
+      align-items: center;
+      img {
+        width: 100%;
+        margin: 0 auto;
+      }
+      button {
+        border-radius: 10px 0 10px 0;
+        width: 75px;
+        height: 75px;
+        background-color: var(--lightGray);
+      }
+      span {
+        font-size: 14px;
+        padding: 5px 0;
+        font-weight: bold;
+        max-width: 90px;
+      }
+    }
+  }
+  &__product {
+    position: relative;
+    border-radius: 10px 0 10px 0;
+    pointer-events: all;
+    &:after {
+      @include orangeBorder();
+    }
+  }
+
+  &__arrow {
+    display: flex;
+    align-items: center;
+    img {
+      width: 70px;
+      padding: 0 5px;
+    }
+  }
+  &__upgrade {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    button {
+      padding: 10px 15px;
+      background-color: var(--black);
+      color: var(--white);
+      border-radius: 10px 0 10px 0;
+      font-size: 14px;
+    }
+  }
+  .indicatorsBlock {
+    display: flex;
+    position: absolute;
+    left: 15px;
+    top: 27px;
+    gap: 5px;
+    img {
+      border: 2px solid var(--black);
+      border-radius: 10px 0 10px 0;
+      padding: 4px;
+      background-color: var(--transRed);
+      width: 16px;
+      animation: flash 1s infinite;
+    }
+
+    @keyframes flash {
+      20% {
+        opacity: 1;
+      }
+      50% {
+        opacity: 0.1;
+      }
+      100% {
+        opacity: 1;
+      }
+    }
+  }
+}
+.factoryStructures {
+  display: flex;
+  background-color: var(--midLightGray);
+  flex-direction: column;
+  width: 100%;
+
+  overflow-y: auto;
+}
+.extraRecipe {
+  display: flex;
+  flex-direction: column;
+  .progressBarBlock {
+    margin: 8px auto;
+  }
+  .progressBar {
+    height: 10px;
+  }
+}
+.structureBlock {
+  display: flex;
+  padding: 10px 0 5px;
+  gap: 10px;
+  align-self: center;
+
+  &__item {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    text-align: center;
+    color: #ccc;
+    background-color: var(--black);
+    padding: 5px;
+
+    border-radius: 10px 0 10px 0;
+    box-shadow: 5px 5px 15px 0px rgba(0, 0, 0, 0.5);
+    img {
+      width: 52px;
+      height: auto;
+    }
+  }
+  &__amounts {
+    display: flex;
+    align-self: center;
+    gap: 5px;
+    justify-content: center;
+  }
+  &__button {
+    display: flex;
+    flex-direction: row-reverse;
+    .structureBtn {
+      position: relative;
+      background-image: url(../../img/buttonIcons/plus.png);
+      background-size: contain;
+      width: 50px;
+      height: 50px;
+      border: 5px solid var(--lightGray);
+      background-color: var(--lightGray);
+      margin-left: 10px;
+      align-self: center;
+    }
+    h3 {
+      font-size: 14px;
+      padding: 10px 2px;
+    }
+  }
+  &__arrow {
+    display: flex;
+    align-items: center;
+    img {
+      width: 70px;
+    }
+  }
+  .materialAmountPerMin,
+  .productAmountPerMin {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.highlightElem {
+  background-color: rgba(169, 169, 69, 0.628);
+}

@@ -11,24 +11,58 @@ function formatString(inputString) {
 function addBuildingsToMenu() {
   const buildingsNames = Object.values(buildingCreating);
   buildingsNames.forEach((bld) => {
-    const buildingInfo = allBuildings.find((item) => item.name === bld.name);
+    const buildingInfo = findBldObjInList(bld.name);
     const buildingType = buildingInfo.type;
     const toolContainer = document.querySelector(`[data-group-type="${buildingType}"]`);
     const buttonBlock = document.createElement("div");
-    buttonBlock.classList.add("tool-menu__block");
 
+    const buildingImage =
+      typeof buildingInfo.imageSrc == "string" ? buildingInfo.imageSrc : `/img/buildings/${bld.name}.webp`;
+    buttonBlock.classList.add("tool-menu__block");
     buttonBlock.innerHTML = `
-    <button class="tool-menu__btn" id="${bld.name}">
-      <img src="/img/buildings/${bld.name}.webp" draggable="false" />
+    <button class="tool-menu__btn" id="${bld.name}" data-locked>
+      <img src=${buildingImage} draggable="false" />
     </button>
+    <img class="lockImage" src="/img/buttonIcons/lock.png" draggable="false" />
+    <div class="unlockBld hidden">
+      <button class="tool-menu__unlockBtn">Unlock <span class="green">${buildingInfo.unlockPrice} $</span></button>
+      <button class="tool-menu__cancelBtn">Cancel</button>
+    </div>
     <span>${formatString(bld.name)}</span>
     <div id="${bld.name}Tip" role="tooltip">
       <h3>${formatString(bld.name)}</h3>
       <p>${buildingInfo.description}</p>
+      <div class="waterAndEnergyBlock">
+     </div>
     </div>
   `;
-
     toolContainer.appendChild(buttonBlock);
+    const unlockBtn = buttonBlock.querySelector(".tool-menu__unlockBtn");
+    const cancelBtn = buttonBlock.querySelector(".tool-menu__cancelBtn");
+    const toolBtn = buttonBlock.querySelector(".tool-menu__btn");
+    const lockImage = buttonBlock.querySelector(".lockImage");
+
+    buildingInfo.unlockPrice == 0 && removeLocked();
+
+    unlockBtn.onclick = () => {
+      if (money >= buildingInfo.unlockPrice) {
+        removeLocked();
+        money -= +buildingInfo.unlockPrice;
+        updateMoney();
+        moneySound();
+      } else {
+        unlockBtn.classList.add("shake");
+        setTimeout(() => unlockBtn.classList.remove("shake"), 500);
+        errorSound();
+        notyf.error("Not enough money! Go find a job");
+      }
+    };
+    function removeLocked() {
+      toolBtn.removeAttribute("data-locked");
+      unlockBtn.parentElement.remove();
+      lockImage.remove();
+    }
+    cancelBtn.onclick = () => unlockBtn.parentElement.classList.add("hidden");
 
     let dynamicKey = `${bld.name}MenuId`;
     buildingsMenuId[dynamicKey] = 1;
@@ -47,60 +81,69 @@ function recipeTipBlock(bld, buildingInfo) {
   const recipesBlock = document.createElement("div");
   recipesBlock.classList.add("recipesTipBlock");
 
+  addEnergyAndWaterIcons(tip, buildingInfo);
   buildingInfo.resources.forEach((resName) => {
     const tipResource = document.createElement("div");
-    const resInfo = allItems.find((item) => item.name == resName);
-    const resTime = resInfo.materials.time === 0 ? "∞" : 60 * (1000 / resInfo.materials.time);
+    const resInfo = findItemObjInList(resName);
+    const itemMaterials = bld.name == resInfo.producedIn ? resInfo.materials : resInfo.materials2;
+    const resTime = itemMaterials.time === 0 ? "∞" : 60 * (1000 / itemMaterials.time);
     let materialList = [];
     for (let i = 1; i <= 3; i++) {
-      const itemName = resInfo.materials[`res${i}Name`];
-      itemName && materialList.push(allItems.find((mat) => mat.name == itemName));
+      const itemName = itemMaterials[`res${i}Name`];
+      itemName && materialList.push(findItemObjInList(itemName));
     }
-    product = allItems.find((mat) => mat.name == resInfo.name);
+    product = findItemObjInList(resInfo.name);
 
     tipResource.classList.add("recipe__items");
     tipResource.innerHTML = `
-      <div class="recipe__waterAndEnergyBlock">
-        <img src="img/resourcesIcons/water.png" data-water-icon/>
-        <img src="img/resourcesIcons/energy.png" data-energy-icon/>
-      </div>
+
       <div class="recipe__materials">
       </div>
  
       <div class="recipe__timeBlock">
-         <span class="resAmountPerMin">${resTime} / </span>
-          <img src="/img/buttonIcons/whiteClock.png" class="timeImage" draggable="false" />
+          <span class="resAmountPerMin">${resTime} / </span>
           <span class="resTime">60</span>
-
-          <div class="recipe__arrow">
-            <img src="img/buttonIcons/arrow.png" />
-          </div>
+          <img src="/img/buttonIcons/whiteClock.png" class="timeImage" draggable="false" />
+          <img class="recipe__arrow" src="img/buttonIcons/arrow.png" />
       </div>
       <div class="recipe__product">
-        <div class="recipe__item">
-          <img src="${resInfo.imageSrc}" class = "recipe__itemImage"/>
-          <span class = "recipe__itemAmount">${resInfo.materials.prodAmount}</span>
-        </div>
+    
       </div>`;
-
     const allMaterials = tipResource.querySelector(".recipe__materials");
     for (let i = 0; i < materialList.length; i++) {
       const materialHTML = `
       <div class="recipe__item">
         <img src="${materialList[i].imageSrc}" class="recipe__itemImage" title="${materialList[i].name}"/>
-        <span class="recipe__itemAmount">${resInfo.materials[`res${i + 1}Amount`]}</span>
+        <span class="recipe__itemAmount">${itemMaterials[`res${i + 1}Amount`]}</span>
       </div>
     `;
 
       allMaterials.insertAdjacentHTML("beforeend", materialHTML);
     }
+    const allProducts = tipResource.querySelector(".recipe__product");
+    if (resInfo.type == "semiFinished") {
+      const productsList = Object.values(allItems).filter((item) => item.materials.res1Name == resInfo.name);
+      productsList.forEach((item) => {
+        const productHTML = `
+        <div class="recipe__item">
+          <img src="${item.imageSrc}" class="recipe__itemImage" title="${item.name}"/>
+          <span class="recipe__itemAmount">${item.materials.prodAmount}</span>
+        </div>`;
+
+        allProducts.insertAdjacentHTML("beforeend", productHTML);
+      });
+    } else {
+      const productHTML = `
+      <div class="recipe__item">
+        <img src="${resInfo.imageSrc}" class = "recipe__itemImage"/>
+        <span class = "recipe__itemAmount">${itemMaterials.prodAmount}</span>
+      </div>`;
+
+      allProducts.insertAdjacentHTML("beforeend", productHTML);
+    }
 
     recipesBlock.appendChild(tipResource);
     tip.appendChild(recipesBlock);
-
-    if (!resInfo.materials.isWaterNeeded) {
-      tip.querySelector("[data-water-icon]").remove();
-    }
   });
 }
 function resourcesTipBlock(bld, buildingInfo) {
@@ -108,23 +151,35 @@ function resourcesTipBlock(bld, buildingInfo) {
   const resourcesBlock = document.createElement("div");
   resourcesBlock.classList.add("resourcesBlock");
   buildingInfo.resources.forEach((res) => {
-    const tipResource = document.createElement("div");
-    const resInfo = allItems.find((item) => item.name == res);
+    const resInfo = findItemObjInList(res);
     const resImage = resInfo.imageSrc;
     const resTime = resInfo.materials.time === 0 ? "∞" : 60 * (1000 / resInfo.materials.time);
-    tipResource.innerHTML = `
-  <span class="resName">${res}</span>
-
-  <div class = "timeBlock"> 
-    <span class="resAmountPerMin">${resTime} / </span>
-    <img src="/img/buttonIcons/whiteClock.png" class="timeImage" draggable="false" />
-    <span class="resTime">60</span>
-  </div>
-  <img src="${resImage}" class="resImage" draggable="false" />
-`;
-    resourcesBlock.appendChild(tipResource);
+    const tipResourceHtml = `
+    <div class="resourseBlock">
+      <img src="${resImage}" class="resImage" draggable="false" />
+      <span class="resName">${res}</span>
+      <div class = "timeBlock"> 
+        <span class="resAmountPerMin">${resTime} / </span>
+        <span class="resTime">60</span>
+        <img src="/img/buttonIcons/whiteClock.png" class="timeImage" draggable="false" />
+      </div>
+    <div>`;
+    resourcesBlock.insertAdjacentHTML("beforeend", tipResourceHtml);
     tip.appendChild(resourcesBlock);
   });
+}
+function addEnergyAndWaterIcons(tip, buildingInfo) {
+  const waterAndEnergyBlock = tip.querySelector(".waterAndEnergyBlock");
+  if (buildingInfo.isWaterNeeded) {
+    const waterHTML = `<img src="img/resourcesIcons/water.png" data-water-icon/>`;
+    waterAndEnergyBlock.insertAdjacentHTML("beforeend", waterHTML);
+  }
+  if (buildingInfo.energyConsumption) {
+    const energyHTML = `
+    <img src="img/resourcesIcons/energy.png" data-energy-icon/>
+    <span class="energyAmount">${buildingInfo.energyConsumption} kW</span>`;
+    waterAndEnergyBlock.insertAdjacentHTML("beforeend", energyHTML);
+  }
 }
 function pricesTipBlock(bld, buildingInfo) {
   const tip = document.getElementById(bld.name + "Tip");
@@ -159,6 +214,7 @@ function activeToolCategory() {
     setTipes(btn.id);
     btn.addEventListener("click", () => {
       categoryButtons.forEach((btn) => btn.classList.remove("buttonActive"));
+      document.querySelectorAll(".unlockBld").forEach((btn) => btn.classList.add("hidden"));
       btn.classList.add("buttonActive");
       menuModal.classList.remove("hidden");
       const currentMenu = document.querySelector(`[data-group-type="${btn.id}"]`);
@@ -171,6 +227,11 @@ function activeToolCategory() {
 
   toolButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
+      if (btn.dataset.locked == "") {
+        document.querySelectorAll(".unlockBld").forEach((btn) => btn.classList.add("hidden"));
+        btn.parentElement.querySelector(".unlockBld").classList.remove("hidden");
+        return;
+      }
       modeButtons.forEach((btn) => btn.classList.remove("buttonActive"));
       currentTool = btn.id;
       removeButtonActive(toolButtons, btn);
@@ -201,6 +262,7 @@ function createEventListener(currentTool) {
   resetTool();
   gridContainer.removeEventListener("click", demolitionFunc);
   gridContainer.addEventListener("click", buildingCreating[currentTool]);
+  showBuildingCost();
   ghostRotating();
 }
 
@@ -211,10 +273,6 @@ function removeButtonActive(buttons, btn) {
 function resetTool() {
   const creatingMethods = Object.values(buildingCreating);
   creatingMethods.forEach((method) => {
-    gridContainer.removeEventListener("click", method);
-  });
-  const structuresMethods = Object.values(structureCreating);
-  structuresMethods.forEach((method) => {
     gridContainer.removeEventListener("click", method);
   });
 }
@@ -260,6 +318,7 @@ function moveProgressBar(menu, time, callback) {
 const demolitionButton = document.getElementById("demolitionButton");
 const undergroundButton = document.getElementById("undergroundButton");
 const transparentButton = document.getElementById("transparentButton");
+const backFillButton = document.getElementById("backfillingButton");
 const modeButtons = document.querySelectorAll(".tool-menu__mode-btn");
 modeButtons.forEach((btn) => {
   setTipes(btn.id);
@@ -267,19 +326,16 @@ modeButtons.forEach((btn) => {
 });
 demolitionButton.addEventListener("click", () => {
   currentTool = demolitionButton.classList.contains("buttonActive") ? "demolition" : "";
-  gridContainer.addEventListener("click", demolitionFunc);
+  demolitionEvent();
   ghostRotating();
 });
 
-undergroundButton.addEventListener("click", () => {
-  escapeButton();
-  showUnderground();
-});
-transparentButton.addEventListener("click", () => {
-  transperentBuildingsShow();
-});
+undergroundButton.addEventListener("click", () => showUnderground());
+transparentButton.addEventListener("click", () => transperentBuildingsShow());
+backFillButton.addEventListener("click", () => backFilling());
 
 function dragElement(id) {
+  console.log(id);
   const position = { x: 0, y: 0 };
   const container = document.querySelector("#limit-container");
   interact(`#${id}`).draggable({
@@ -336,4 +392,119 @@ function setTipes(buttonId) {
   hideEvents.forEach((event) => {
     button.addEventListener(event, hide);
   });
+}
+function handleClickOutside(event, clickTarget) {
+  if (!clickTarget.contains(event.target) && !event.target.closest("." + clickTarget.classList.value)) {
+    clickTarget.classList.add("hidden");
+    document.removeEventListener("click", (e) => handleClickOutside(e, clickTarget));
+  }
+}
+
+const notyf = new Notyf({
+  duration: 3000,
+  position: {
+    x: "right",
+    y: "bottom",
+  },
+  types: [
+    {
+      type: "warning",
+      background: "#ec942c",
+      icon: {
+        className: "material-icons",
+        tagName: "i",
+        text: "warning",
+      },
+    },
+    {
+      type: "error",
+      background: "indianred",
+      duration: 2000,
+      dismissible: true,
+    },
+  ],
+});
+
+let progressBarInterval; // Глобальная переменная для хранения интервала прогресс-бара
+function demolitionEvent() {
+  const progressBar = document.querySelector("#demolProgressBar");
+
+  gridContainer.addEventListener("mousedown", function (event) {
+    if (event.button === 2 && currentTool == "demolition") {
+      if (!progressBarInterval) {
+        // Проверяем, запущен ли уже интервал
+        const progressBarWidth = 100; // Ширина прогресс-бара (в пикселях)
+        const progressBarHeight = 10; // Высота прогресс-бара (в пикселях)
+        const progressBarLeft = event.clientX - progressBarWidth / 2; // Левая координата
+        const progressBarTop = event.clientY - progressBarHeight / 2 + 70; // Верхняя координата с учетом смещения
+
+        progressBar.style.left = progressBarLeft + "px";
+        progressBar.style.top = progressBarTop + "px";
+        progressBar.style.display = "block";
+
+        let progress = 0;
+        const totalSteps = 10; // Количество шагов анимации
+        const progressIncrement = progressBarWidth / totalSteps;
+
+        let destructionTime = 60;
+        if (event.target.dataset.buildingCategory == "conveyor") {
+          destructionTime = 30;
+        } else if (event.target.classList.contains("clickArea")) {
+          destructionTime = 100;
+        }
+
+        progressBarInterval = setInterval(() => {
+          progress += progressIncrement;
+          progressBar.style.width = progress + "px";
+
+          if (progress >= progressBarWidth) {
+            clearInterval(progressBarInterval);
+            demolitionFunc(event);
+            progressBar.style.display = "none";
+            progressBar.style.width = 0;
+            progressBarInterval = null; // Сбрасываем флаг интервала
+          }
+        }, destructionTime); // Интервал обновления
+      }
+    }
+  });
+
+  gridContainer.addEventListener("mouseup", function (event) {
+    if (event.button === 2) {
+      if (progressBarInterval) {
+        clearInterval(progressBarInterval);
+        progressBar.style.display = "none";
+        progressBar.style.width = 0;
+        progressBarInterval = null; // Сбрасываем флаг интервала
+      }
+    }
+  });
+}
+document.addEventListener("contextmenu", function (event) {
+  event.preventDefault(); // Отменяем стандартное контекстное меню
+  event.stopPropagation(); // Останавливаем всплытие события
+});
+
+function showBuildingCost() {
+  const costsBlocks = document.querySelector(".buildingCostBlock");
+  const costObj = findBldObjInList(currentTool).cost;
+  costsBlocks.innerHTML = "";
+  for (const key in costObj) {
+    if (Object.hasOwnProperty.call(costObj, key)) {
+      const itemAmount = costObj[key];
+      const itemImageSrc = findItemObjInList(key).imageSrc;
+      const storageItemAmount = buildingResources[key] || 0;
+      const materialHTML = `
+      <div class="buildingCostBlock__item">
+        <img src="${itemImageSrc}" class="buildingCostBlock__itemImage">
+        <span class="buildingCostBlock__itemInStorage${
+          storageItemAmount < itemAmount ? " red" : ""
+        }">${storageItemAmount}</span>
+        <span class="buildingCostBlock__itemAmount">/${itemAmount}</span>
+      </div>`;
+
+      costsBlocks.insertAdjacentHTML("beforeend", materialHTML);
+    }
+  }
+  currentTool == "" ? (costsBlocks.style.display = "none") : (costsBlocks.style.display = "flex"); // Показать элемент
 }

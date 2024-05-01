@@ -1,0 +1,101 @@
+.routesInfo-menu {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 100px;
+  background-color: var(--darkGray);
+  pointer-events: all;
+  width: 700px;
+  height: 300px;
+  box-shadow: 5px 5px 15px 0px rgba(0, 0, 0, 0.5);
+  &__block {
+    display: flex;
+    justify-content: space-around;
+    height: 100%;
+  }
+  &__routesList {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+  }
+
+  &__route {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--gray);
+
+    img {
+      width: 35px;
+    }
+  }
+  &__info {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    gap: 5px;
+  }
+  &__id {
+    width: 20px;
+    text-align: center;
+    color: var(--black);
+  }
+  &__itemName {
+    margin-left: auto;
+  }
+  &__itemImg {
+  }
+
+  &__trucksList {
+    display: flex;
+    flex-direction: column;
+  }
+  &__truck {
+    display: flex;
+    width: 100%;
+    background-color: var(--lightGray);
+  }
+  &__truck-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 7px;
+    width: 100%;
+  }
+  &__stationsList {
+    background-color: var(--gray);
+    display: flex;
+    flex-direction: column;
+    pointer-events: all;
+    gap: 10px;
+    width: 200px;
+  }
+  &__stationBlock {
+    background-color: var(--lightGray);
+    padding: 5px 10px;
+    &:hover {
+      background-color: var(--black);
+    }
+  }
+  &__deleteButton {
+    background-image: url(/img/buttonIcons/whiteMinus.png);
+    background-size: contain;
+    width: 20px;
+    height: 20px;
+    background-color: unset;
+    border: none;
+    margin-left: auto;
+    padding-right: 3px;
+  }
+  .noRoutes,
+  .noStations {
+    background-color: var(--gray);
+    width: 100%;
+    text-align: center;
+  }
+  .noStations {
+    background-color: var(--lightGray);
+  }
+  .redBg {
+    background-color: var(--transRed);
+  }
+}

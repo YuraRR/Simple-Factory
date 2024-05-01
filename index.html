@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/styles/css/mainStyles.min.css" />
+    <link rel="stylesheet" href="./styles/css/mainStyles.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css" />
     <link rel="icon" type="image/x-icon" href="/img/favicon.png" />
     <title>Simple Factory</title>
   </head>
@@ -12,14 +13,84 @@
       <div id="limit-container">
         <div class="grid-container"></div>
       </div>
-      <div class="interface-container">
+      <div id="interface-container">
+        <div class="mainMenu-container">
+          <img src="/img//mainMenu/logo.png" alt="" />
+          <button onclick="startGame()">Start Game</button>
+          <video autoplay muted loop id="video-background">
+            <source src="/img/test.mp4" type="video/mp4" />
+          </video>
+        </div>
         <div id="menu-container"></div>
+        <div class="resources-menu">
+          <div class="resBlock">
+            <img src="/img//resourcesIcons/planks.png" class="resImage" />
+            <span class="resAmount" data-res="Planks">0</span>
+          </div>
+          <div class="resBlock">
+            <img src="/img//resourcesIcons/gravel.png" class="resImage" />
+            <span class="resAmount" data-res="Gravel">0</span>
+          </div>
+          <div class="resBlock">
+            <img src="/img//resourcesIcons/concreteBlock.png" class="resImage" />
+            <span class="resAmount" data-res="Concrete Block">0</span>
+          </div>
+          <div class="resBlock">
+            <img src="/img//resourcesIcons/brick.png" class="resImage" />
+            <span class="resAmount" data-res="Bricks">0</span>
+          </div>
+          <div class="resBlock">
+            <img src="/img//resourcesIcons/glass.png" class="resImage" />
+            <span class="resAmount" data-res="Glass">0</span>
+          </div>
+          <div class="resBlock">
+            <img src="/img//resourcesIcons/steelBeams.png" class="resImage" />
+            <span class="resAmount" data-res="Steel Beams">0</span>
+          </div>
+          <div class="resBlock">
+            <img src="/img//resourcesIcons/ironPipes.png" class="resImage" />
+            <span class="resAmount" data-res="Iron Pipes">0</span>
+          </div>
+          <div class="resBlock">
+            <img src="/img//resourcesIcons/mechanicalParts.png" class="resImage" />
+            <span class="resAmount" data-res="Mechanical parts">0</span>
+          </div>
+        </div>
+        <div class="buildingCostBlock"></div>
+        <div class="selectConnectorItemBlock hidden"></div>
+        <div class="tasks-menu">
+          <h2 class="tasks-menu__title">Basic Materials</h2>
+          <div class="tasks-menu__list"></div>
+        </div>
+        <div id="routesInfo-menu" class="routesInfo-menu hidden">
+          <h3>Routes:</h3>
+          <div class="routesInfo-menu__block">
+            <div class="routesInfo-menu__stationsList">
+              <span class="noStations">No Stations</span>
+            </div>
+            <div class="routesInfo-menu__routesList">
+              <span class="noRoutes">No Routes</span>
+            </div>
+          </div>
+          <button class="close-button"></button>
+        </div>
+        <div id="pricesInfo-menu" class="pricesInfo-menu hidden">
+          <h3>Items</h3>
+          <div class="pricesInfo-menu__list"></div>
+          <button class="close-button"></button>
+        </div>
         <div class="tool-menu">
           <div class="tool-menu__modal hidden">
             <!-- SOURCE BUIDINGS -->
+            <div class="tool-menu__group hidden" data-group-type="metallurgy"></div>
+            <!-- CONSTRUCTION BUIDINGS -->
             <div class="tool-menu__group hidden" data-group-type="source"></div>
-            <!-- PROCESSING BUIDINGS -->
-            <div class="tool-menu__group hidden" data-group-type="processing"></div>
+            <!-- METALLURGY BUIDINGS -->
+            <div class="tool-menu__group hidden" data-group-type="construction"></div>
+            <!-- PETROCHEMICAL BUIDINGS -->
+            <div class="tool-menu__group hidden" data-group-type="petrochemical"></div>
+            <!-- ASSEMBLY BUIDINGS -->
+            <div class="tool-menu__group hidden" data-group-type="assemblyBlds"></div>
             <!-- STORAGE BUIDINGS -->
             <div class="tool-menu__group hidden" data-group-type="storage"></div>
             <!-- ENERGY BUIDINGS -->
@@ -31,24 +102,40 @@
             <button class="close-button"></button>
           </div>
 
-          <!-- <div class="tool-menu__groupNames">
-            <span>Source </span>
-            <span>Processing </span>
-            <span>Storage </span>
-            <span>Transportation </span>
-          </div> -->
           <div class="tool-menu__bottomMenu">
             <div class="tool-menu__indicators">
-              <span class="energyAmount">0 kW</span>
+              <div class="tool-menu__energyBlock">
+                <img src="/img/resourcesIcons/energy.png" alt="" />
+                <span class="totalEnergyAmount">0 mW</span>
+              </div>
+              <div class="tool-menu__trucksBlock">
+                <img src="/img/buttonIcons/truckIcon.png" alt="" />
+                <span class="totalTrucksAmount">0/0</span>
+              </div>
+              <div class="tool-menu__moneyBlock">
+                <span class="moneyAmount">0 $</span>
+              </div>
             </div>
             <div class="tool-menu__buttons">
               <button class="tool-menu__category" id="source">
                 <img src="/img/toolButtons/mineshaft.png" draggable="false" />
                 <div id="sourceTip" role="tooltip">Source</div>
               </button>
-              <button class="tool-menu__category" id="processing">
+              <button class="tool-menu__category" id="construction">
+                <img src="/img/toolButtons/construction.png" draggable="false" />
+                <div id="constructionTip" role="tooltip">Construction</div>
+              </button>
+              <button class="tool-menu__category" id="metallurgy">
                 <img src="/img/toolButtons/smelter.png" draggable="false" />
-                <div id="processingTip" role="tooltip">Processing</div>
+                <div id="metallurgyTip" role="tooltip">Metallurgy</div>
+              </button>
+              <button class="tool-menu__category" id="petrochemical">
+                <img src="/img/toolButtons/petrochemical.png" draggable="false" />
+                <div id="petrochemicalTip" role="tooltip">Petrochemical</div>
+              </button>
+              <button class="tool-menu__category" id="assemblyBlds">
+                <img src="/img/toolButtons/assembly.png" draggable="false" />
+                <div id="assemblyBldsTip" role="tooltip">Assembly</div>
               </button>
               <button class="tool-menu__category" id="storage">
                 <img src="/img/toolButtons/storage.png" draggable="false" />
@@ -56,7 +143,7 @@
               </button>
               <button class="tool-menu__category" id="energy">
                 <img src="/img/toolButtons/energy.png" draggable="false" />
-                <div id="energyTip" role="tooltip">Energy</div>
+                <div id="energyTip" role="tooltip">Energy & Water</div>
               </button>
               <button class="tool-menu__category" id="conveyors">
                 <img src="/img/toolButtons/conveyor.png" draggable="false" />
@@ -68,6 +155,10 @@
               </button>
             </div>
             <div class="tool-menu__modes">
+              <button class="tool-menu__mode-btn" id="backfillingButton">
+                <div id="backfillingButtonTip" role="tooltip">Backfilling</div>
+                <img src="/img/toolButtons/backfill.png" alt="" />
+              </button>
               <button class="tool-menu__mode-btn" id="demolitionButton">
                 <div id="demolitionButtonTip" role="tooltip">Demolition mode</div>
                 <img src="/img/toolButtons/demo.png" alt="" />
@@ -83,31 +174,56 @@
             </div>
           </div>
         </div>
+        <div class="musicPlayer">
+          <img src="/img/buttonIcons/music.png" alt="" />
+          <button class="musicBtn"></button>
+        </div>
       </div>
     </div>
-    <script src="/js/Modules/interact.min.js"></script>
-    <script src="/js/Modules/popper.js"></script>
-    <script src="/js/Misc/mixins.js"></script>
-    <script src="/js/Data/itemsData.js"></script>
-    <script src="/js/Data/variables.js"></script>
-    <script src="/js/Data/buildingsData.js"></script>
-    <script src="js/Misc/gridSettings.js"></script>
-    <script src="/js/Misc/visualGraphics.js"></script>
-    <script src="/js/Logic/buildingPlacing.js"></script>
-    <script src="/js/Logic/mainBuildingLogic.js"></script>
-    <script src="/js/Logic/conveyorLogic.js"></script>
-    <script src="/js/Logic/transportationBuildingLogic.js"></script>
-    <script src="/js/Logic/buildingsLogic.js"></script>
-    <script src="/js/Logic/processingBuildingsLogic.js"></script>
-    <script src="/js/Logic/upgradesLogic.js"></script>
-    <script src="/js/Logic/pathFindfingLogic.js"></script>
-    <script src="/js/Misc/keybinds.js"></script>
-    <script src="/js/Interface/interface.js"></script>
-    <script src="/js/Interface/buildingsMenu.js"></script>
-    <script src="/js/Interface/transportMenu.js"></script>
-    <script src="/js/Misc/savingGame.js"></script>
-    <script src="/js/Misc/worldGeneration.js"></script>
-    <script src="/js/playerActions.js"></script>
-    <script src="/js/Misc/sounds.js"></script>
+    <div id="demolProgressBar" style="position: absolute; display: none"></div>
+
+    <script src="./js/Modules/interact.min.js"></script>
+    <script src="./js/Modules/popper.js"></script>
+    <script src="./js/Modules/notyf.min.js"></script>
+    <script src="./js/Misc/mixins.js"></script>
+    <script src="./js/Data/itemsData.js"></script>
+    <script src="./js/Data/variables.js"></script>
+    <script src="./js/Data/buildingsData.js"></script>
+    <script src="./js/Misc/gridSettings.js"></script>
+    <script src="./js/Misc/visualGraphics.js"></script>
+    <script src="./js/Logic/findFunctions.js"></script>
+    <script src="./js/Logic/buildingPlacing.js"></script>
+    <script src="./js/Logic/energy.js"></script>
+
+    <script src="./js/Logic/Buildings Logic/mainBuildingLogic.js"></script>
+    <script src="./js/Logic/Buildings Logic/conveyor.js"></script>
+    <script src="./js/Logic/Buildings Logic/conveyourBuildings.js"></script>
+    <script src="./js/Logic/Buildings Logic/oneMaterial.js"></script>
+    <script src="./js/Logic/Buildings Logic/otherBuildings.js"></script>
+    <script src="./js/Logic/Buildings Logic/source.js"></script>
+    <script src="./js/Logic/Buildings Logic/threeMaterial.js"></script>
+    <script src="./js/Logic/Buildings Logic/transportationBuildings.js"></script>
+    <script src="./js/Logic/Buildings Logic/truck.js"></script>
+    <script src="./js/Logic/Buildings Logic/twoMaterial.js"></script>
+
+    <script src="./js/Misc/keybinds.js"></script>
+    <script src="./js/Interface/interface.js"></script>
+
+    <script src="./js/Interface/mainMenu.js"></script>
+    <script src="./js/Interface/Menu classes/mainMenuClass.js"></script>
+    <script src="./js/Interface/Menu classes/oneMatMenu.js"></script>
+    <script src="./js/Interface/Menu classes/otherMenus.js"></script>
+    <script src="./js/Interface/Menu classes/routesInfoMenu.js"></script>
+    <script src="./js/Interface/Menu classes/pricesInfo.js"></script>
+    <script src="./js/Interface/Menu classes/threeMatMenu.js"></script>
+    <script src="./js/Interface/Menu classes/cargoStationMenu.js"></script>
+    <script src="./js/Interface/Menu classes/transportMenu.js"></script>
+    <script src="./js/Interface/Menu classes/twoMatMenu.js"></script>
+
+    <script src="./js/Misc/worldGeneration.js"></script>
+    <script src="./js/Mechanics/modes.js"></script>
+    <script src="./js/playerActions.js"></script>
+    <script src="./js/Misc/sounds.js"></script>
+    <script src="./js/Interface/tasks.js"></script>
   </body>
 </html>

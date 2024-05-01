@@ -1,0 +1,325 @@
+.cargoStationMenu {
+  display: flex;
+  position: relative;
+  right: -130px;
+  top: 20px;
+  flex-direction: column;
+  background-color: var(--darkGray);
+  width: 440px;
+  height: 487px;
+  text-align: center;
+  pointer-events: all;
+  h2 {
+    background-color: var(--white);
+    text-transform: capitalize;
+    font-size: 20px;
+  }
+
+  &__routes {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 140px;
+    gap: 5px;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #4a4a4a;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: var(--midLightGray);
+    }
+  }
+
+  &__route {
+    display: flex;
+    padding: 5px;
+    height: 35px;
+    background-color: var(--lightGray);
+    label {
+      display: flex;
+      width: 100%;
+      padding: 5px;
+      justify-content: center;
+    }
+    span {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .itemNameImg {
+      padding-left: 3px;
+    }
+    img {
+      width: 30px;
+      height: 30px;
+    }
+
+    input {
+      margin-left: auto;
+      width: 25px;
+    }
+  }
+  &__noStations {
+    background-color: var(--midLightGray);
+    font-size: 18px;
+    padding: 10px;
+  }
+
+  &__mode {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-evenly;
+    padding: 5px 10px;
+    align-items: center;
+    button {
+      img {
+        max-height: 64px;
+        max-width: 80px;
+      }
+    }
+  }
+
+  &__button {
+    .stationExport,
+    .stationImport {
+      background-color: black;
+      border: none;
+      border-radius: 10px 0 10px 0;
+    }
+  }
+  &__deliveryType {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 5px;
+
+    .lockedImg {
+      width: 15px;
+      left: 17px;
+    }
+  }
+  &__quantityBlock {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 0 5px;
+    button {
+      background-color: transparent;
+      background-size: contain;
+      border: none;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+    span {
+      padding: 0 5px;
+      width: 27px;
+    }
+    .minusBtn {
+      background-image: url(/img/buttonIcons/whiteMinus.png);
+    }
+    .plusBtn {
+      background-image: url(/img/buttonIcons/whitePlus.png);
+    }
+  }
+
+  &__quantity {
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  &__button {
+    display: flex;
+    flex-direction: column;
+    color: #ccc;
+    text-transform: uppercase;
+    position: relative;
+
+    span {
+      padding: 5px 0;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    .importSelect,
+    .exportSelect {
+      display: grid;
+      grid-template-columns: auto auto auto auto;
+      grid-template-rows: auto auto auto;
+      padding: 10px 15px;
+      background-color: var(--black);
+      position: absolute;
+      top: 100px;
+      align-self: center;
+      z-index: 999;
+      overflow: auto;
+      max-height: 382px;
+      div {
+        width: 90px;
+        padding: 0 5px;
+      }
+      button {
+        border-radius: 10px 0 10px 0;
+        width: 75px;
+        height: 75px;
+        background-color: var(--lightGray);
+      }
+      span {
+        font-size: 12px;
+      }
+      img {
+        width: 70px;
+      }
+    }
+  }
+  &__routeInfo {
+    display: flex;
+    flex-direction: column;
+    pointer-events: all;
+    align-items: center;
+
+    span {
+      display: flex;
+      background-color: var(--black);
+      justify-content: center;
+      padding: 10px 0;
+      width: 100%;
+      color: var(--lightWhite);
+    }
+  }
+  &__trucks {
+    display: flex;
+
+    align-items: end;
+    justify-content: center;
+    background-color: var(--gray);
+
+    div {
+      display: flex;
+    }
+
+    .trucks {
+      &__buttons {
+        display: flex;
+        flex-direction: row;
+        align-self: center;
+        gap: 10px;
+        padding: 5px;
+
+        button {
+          height: 45px;
+          width: 55px;
+
+          background-color: var(--black);
+          background-size: contain;
+          background-repeat: no-repeat;
+          background-position: center;
+          border-radius: 10px 0 10px 0;
+          font-size: 14px;
+        }
+        .addTruck {
+          background-image: url(/img/buttonIcons/whitePlus.png);
+        }
+        .deleteTruck {
+          background-image: url(/img/buttonIcons/whiteMinus.png);
+        }
+      }
+      &__amount {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+      }
+      &__current {
+        background-color: var(--darkGray);
+
+        padding: 2px 10px;
+      }
+    }
+  }
+  &__item {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    margin-left: auto;
+    background-color: var(--lightGray);
+
+    pointer-events: all;
+    width: 240px;
+    border-left: 3px solid var(--black);
+    span {
+      position: absolute;
+      right: 7px;
+      bottom: 25px;
+      font-size: 24px;
+    }
+
+    img {
+      width: 80px;
+      height: auto;
+      margin: 0 auto;
+    }
+    h3 {
+      padding: 1.5px 5px;
+    }
+  }
+}
+.garageMenu {
+  display: flex;
+  position: relative;
+  right: -130px;
+  top: 20px;
+  flex-direction: column;
+  background-color: var(--darkGray);
+  width: 300px;
+  height: 420px;
+  text-align: center;
+  pointer-events: all;
+  &__truckList {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    height: 315px;
+    overflow-y: auto;
+    background-color: var(--gray);
+  }
+  &__truck {
+    display: flex;
+    background-color: var(--lightGray);
+    padding-left: 5px;
+  }
+  &__buttons {
+    display: flex;
+    padding: 5px 15px;
+  }
+  .truck-image__img {
+    width: 70px;
+  }
+  .buyTruck {
+    background-color: var(--black);
+    border: none;
+    border-radius: 10px 0 10px 0;
+    width: 65px;
+    height: 65px;
+    background-size: 80%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: url(/img/buttonIcons/cart.png);
+    margin-left: auto;
+  }
+  ul {
+    border-radius: 10px 0 10px 0;
+    padding: 5px 15px;
+    background-color: var(--black);
+    list-style: none;
+    text-align: left;
+    color: var(--white);
+  }
+}

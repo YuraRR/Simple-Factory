@@ -1,0 +1,51 @@
+@mixin ghostBase {
+  border: 1px solid transparent !important;
+  opacity: 80%;
+  background-repeat: no-repeat;
+  transform: rotate(313.5deg);
+}
+@mixin ghostPipeBase {
+  background-image: url(/img/conveyors/pipe.svg) !important;
+  background-size: 40px 40px !important;
+}
+
+.multiply-hover {
+  border: 3px solid lightblue !important;
+  position: relative;
+}
+.road-hover {
+  outline: 1px solid transparent !important;
+  background-image: url(/img/textures/road.png) !important;
+  position: relative;
+  opacity: 80%;
+}
+
+//DEMOLITION GHOST
+.demolition-hover:hover {
+  filter: grayscale(100%) sepia(50%) hue-rotate(320deg) saturate(600%);
+  z-index: 100;
+}
+//CONNECTION GHOST
+.connection-hover {
+  filter: grayscale(100%) sepia(50%) hue-rotate(13deg) saturate(600%);
+}
+.waterConnector {
+  filter: sepia(40%) hue-rotate(189deg) saturate(500%);
+}
+.buildingCantPlace {
+  filter: grayscale(100%) sepia(50%) hue-rotate(320deg) saturate(600%);
+}
+//BORDER GHOST
+.canBePlaced {
+  outline: 2px solid white !important;
+}
+.cantBePlaced {
+  border: 2px solid red !important;
+}
+.possibleTile,
+[data-processed-by] {
+  border: 2px solid rgb(220, 174, 34) !important;
+}
+[data-ghost-img="true"] {
+  z-index: 999;
+}

@@ -1,0 +1,268 @@
+@mixin connectorBase {
+  background-size: 40px 40px !important;
+  position: relative;
+}
+@mixin splitterBase {
+  background-size: 40px 40px !important;
+  position: relative;
+}
+@mixin pipeBase {
+  @include buildingBase;
+  top: -13px;
+  left: -13px;
+  width: 60px;
+}
+
+[data-image-type="conveyor"] {
+  @include buildingBase;
+  position: absolute;
+  width: 119px;
+  top: -31px;
+  left: -39px;
+}
+
+[data-image-type="pipe"][data-ghost-img="true"] {
+  @include pipeBase();
+  top: -14px;
+  left: -9px;
+  transform: rotate(319deg);
+}
+[data-pipe-type="cross"] {
+  @include pipeBase();
+  top: -14px;
+  left: -9px;
+  transform: rotate(308deg);
+}
+[data-pipe-type="tShapeTop"] {
+  @include pipeBase();
+  top: -14px;
+  left: -9px;
+  transform: rotate(308deg);
+}
+[data-pipe-type="tShapeRight"] {
+  @include pipeBase();
+  top: -14px;
+  left: -9px;
+  transform: rotate(308deg);
+}
+[data-pipe-type="tShapeBottom"] {
+  @include pipeBase();
+  top: -14px;
+  left: -9px;
+  transform: rotate(308deg);
+}
+[data-pipe-type="tShapeLeft"] {
+  @include pipeBase();
+  top: -14px;
+  left: -9px;
+  transform: rotate(308deg);
+}
+[data-pipe-type="topRightCorner"] {
+  @include pipeBase();
+  top: -21px;
+  left: -3px;
+  transform: rotate(322deg);
+}
+[data-pipe-type="rightBottomCorner"] {
+  @include pipeBase();
+  top: -14px;
+  left: -6px;
+  transform: rotate(310deg);
+}
+[data-pipe-type="bottomLeftCorner"] {
+  @include pipeBase();
+  top: -6px;
+  left: -18px;
+  transform: rotate(308deg);
+}
+[data-pipe-type="leftTopCorner"] {
+  @include pipeBase();
+  top: -19px;
+  left: -18px;
+  transform: rotate(308deg);
+}
+[data-pipe-type="vertical"] {
+  @include pipeBase();
+  top: -13px;
+  left: -11px;
+  transform: rotate(313deg);
+}
+[data-pipe-type="horizontal"] {
+  @include pipeBase();
+  transform: rotate(318deg);
+}
+[data-pipe-type="connector"] {
+  @include pipeBase();
+  top: -14px;
+  left: -9px;
+  transform: rotate(308deg);
+}
+
+[data-direction="up"],
+[data-direction="down"] {
+  position: relative;
+  [data-image-type="conveyor"] {
+    transform: rotateZ(323deg) rotateY(64deg) rotate3d(8, -11, -5, 11deg);
+  }
+  [data-image-type="connector"] {
+    top: -40px;
+    left: -48px;
+  }
+}
+[data-direction="right"],
+[data-direction="left"] {
+  position: relative;
+  [data-image-type="conveyor"] {
+    transform: rotateZ(323deg) rotateY(62deg) rotate3d(8, -11, -5, 11deg);
+  }
+}
+//CORNERS
+[data-conveyor-type="UpLeftCorner"] {
+  width: 121px;
+  top: -32px;
+  left: -41px;
+}
+[data-conveyor-type="LeftDownCorner"] {
+  width: 124px;
+  top: -33px;
+  left: -42px;
+}
+[data-conveyor-type="DownRightCorner"] {
+  width: 122px;
+  top: -32px;
+  left: -40px;
+}
+
+[data-conveyor-type="RightUpCorner"] {
+  width: 122px;
+  top: -33px;
+  left: -41px;
+}
+
+//REVERSE CORNERS
+[data-conveyor-type="LeftUpCorner"] {
+  width: 124px;
+  top: -33px;
+  left: -42px;
+}
+[data-conveyor-type="DownLeftCorner"] {
+  width: 121px;
+  top: -32px;
+  left: -39px;
+}
+[data-conveyor-type="RightDownCorner"] {
+  width: 124px;
+  top: -34px;
+  left: -42px;
+}
+[data-conveyor-type="UpRightCorner"] {
+  width: 121px;
+  top: -32px;
+  left: -41px;
+}
+
+[data-conveyor-type="UpCross"] {
+  width: 122px;
+  top: -37px;
+  left: -45px;
+}
+[data-conveyor-type="RightCross"] {
+  width: 123px;
+  top: -37px;
+  left: -46px;
+}
+[data-conveyor-type="DownCross"] {
+  width: 124px;
+  top: -38px;
+  left: -47px;
+}
+[data-conveyor-type="LeftCross"] {
+  width: 122px;
+  top: -38px;
+  left: -46px;
+}
+
+[data-image-type="connector"] {
+  @include buildingBase;
+  position: absolute;
+  width: 116px;
+  top: -42px;
+  left: -48px;
+  transform: rotateZ(323deg) rotateY(64deg) rotate3d(8, -11, -5, 11deg);
+}
+.connectorRes {
+  background-color: #002c3e;
+  z-index: 100;
+  position: absolute;
+}
+[data-direction="down"],
+[data-direction="up"] {
+  .connectorRes {
+    transform: rotateZ(306deg) rotateY(83deg) rotate3d(-239, -63, 66, 56deg);
+    width: 54px;
+    height: 23px;
+    top: -13px;
+    left: -26px;
+  }
+}
+[data-direction="up"] {
+  .connectorRes {
+    top: -10px;
+  }
+}
+[data-direction="right"],
+[data-direction="left"] {
+  .connectorRes {
+    transform: rotateZ(220deg) rotateY(83deg) rotate3d(-239, -63, 66, 56deg);
+    width: 54px;
+    height: 22px;
+    top: -14px;
+    left: -26px;
+  }
+}
+[data-direction="left"] {
+  .connectorRes {
+    left: -22px;
+  }
+}
+[data-image-type="undergroundConveyor"] {
+  @include buildingBase;
+  position: absolute;
+  width: 114px;
+  top: -41px;
+  left: -47px;
+  transform: rotateZ(323deg) rotateY(64deg) rotate3d(8, -11, -5, 11deg);
+}
+
+[data-image-type="splitter"] {
+  @include buildingBase;
+  position: absolute;
+  width: 138px;
+  top: -44px;
+  left: -53px;
+  transform: rotateZ(323deg) rotateY(64deg) rotate3d(8, -11, -5, 11deg);
+}
+[data-image-type="conveyorImg"] {
+  @include buildingBase;
+  opacity: 0;
+  width: 30px;
+  position: absolute;
+  transition: all 750ms linear;
+  top: -5px;
+  left: -3px;
+}
+
+[data-ground-item] {
+  position: relative;
+  img {
+    @include buildingBase;
+    width: 35px;
+    position: absolute;
+    top: -1px;
+    left: -1px;
+  }
+  &:after {
+    @include buildingShadow(10px, 14px, 15px, 15px); //bottom, left, width, height
+    z-index: 0;
+  }
+}

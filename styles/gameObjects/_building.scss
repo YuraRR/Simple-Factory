@@ -1,0 +1,345 @@
+@mixin buildingBase {
+  background-color: rgba(0, 0, 0, 0) !important;
+  background-size: cover;
+  border: none !important;
+  transform: rotateZ(322deg) rotateY(60deg) rotate3d(16, -12, -5, 11deg);
+  position: absolute;
+  pointer-events: none;
+  &:hover {
+    width: 100%;
+    height: auto;
+    filter: brightness(1) contrast(100%) saturate(100%) hue-rotate(0deg);
+    /* Красный фильтр */
+    background-color: rgba(255, 0, 0, 0.5);
+  }
+}
+@mixin buildingShadow($bottom, $left, $width, $height) {
+  z-index: 1;
+  content: "";
+  position: absolute;
+  bottom: $bottom;
+  left: $left;
+  transform: translateX(-50%);
+  width: $width;
+  height: $height;
+  background-color: rgba(0, 0, 0, 0.4);
+  filter: blur(8px);
+  pointer-events: none;
+}
+
+[data-image-type="mineshaft"] {
+  transform: rotateZ(323deg) rotateY(62deg) rotate3d(8, -9, -5, 11deg);
+  @include buildingBase;
+  width: 200px;
+  top: -90px;
+  left: -113px;
+}
+[data-image-type="quarry"] {
+  @include buildingBase;
+  transform: rotateZ(323deg) rotateY(62deg) rotate3d(8, -9, -5, 11deg);
+  width: 220px;
+  top: -57px;
+  left: -77px;
+}
+[data-res-type="Clay"] {
+  [data-image-type="quarry"] {
+    top: -49px;
+    left: -67px;
+  }
+}
+[data-res-type="Limestone"] {
+  [data-image-type="quarry"] {
+    top: -49px;
+    left: -67px;
+  }
+}
+[data-image-type="rubberTreePlantation"] {
+  @include buildingBase;
+  transform: rotateZ(323deg) rotateY(63deg) rotate3d(8, -11, -5, 11deg);
+  width: 133px;
+  top: -26px;
+  left: -33px;
+}
+[data-building-type="rubberTreePlantation"][data-main-tile="true"]:after {
+  @include buildingShadow(-36px, 28px, 72px, 70px); //bottom, left, width, height
+}
+//ORE PROCESSING
+[data-image-type="oreProcessing"] {
+  @include buildingBase;
+  transform: rotateZ(323deg) rotateY(63deg) rotate3d(8, -11, -5, 11deg);
+  width: 245px;
+  top: -128px;
+  left: -127px;
+}
+[data-building-type="oreProcessing"][data-main-tile="true"]:after {
+  @include buildingShadow(-36px, 28px, 92px, 106px); //bottom, left, width, height
+}
+
+[data-image-type="foundry"] {
+  @include buildingBase;
+  transform: rotateZ(323deg) rotateY(62deg) rotate3d(8, -11, -5, 11deg);
+  width: 471px;
+  top: -173px;
+  left: -215px;
+}
+[data-building-type="foundry"][data-main-tile="true"]:after {
+  @include buildingShadow(-90px, 60px, 162px, 146px); //bottom, left, width, height
+}
+[data-image-type="powerPlant"] {
+  @include buildingBase;
+  transform: rotateZ(323deg) rotateY(62deg) rotate3d(8, -11, -5, 11deg);
+  width: 456px;
+  top: -106px;
+  left: -134px;
+}
+[data-building-type="powerPlant"][data-main-tile="true"]:after {
+  @include buildingShadow(-148px, 90px, 182px, 186px); //bottom, left, width, height
+}
+[data-image-type="concretePlant"] {
+  @include buildingBase;
+  transform: rotateZ(323deg) rotateY(62deg) rotate3d(8, -11, -5, 11deg);
+  width: 516px;
+  top: -145px;
+  left: -189px;
+}
+[data-building-type="concretePlant"][data-main-tile="true"]:after {
+  @include buildingShadow(-128px, 90px, 212px, 186px); //bottom, left, width, height
+}
+[data-image-type="brickFactory"] {
+  @include buildingBase;
+  transform: rotateZ(323deg) rotateY(65deg) rotate3d(8, -11, -5, 12deg);
+  width: 366px;
+  top: -131px;
+  left: -160px;
+}
+[data-building-type="brickFactory"][data-main-tile="true"]:after {
+  @include buildingShadow(-60px, 50px, 132px, 126px); //bottom, left, width, height
+}
+[data-image-type="smallFoundry"] {
+  @include buildingBase;
+  transform: rotateZ(323deg) rotateY(65deg) rotate3d(8, -11, -5, 12deg);
+  width: 305px;
+  top: -127px;
+  left: -130px;
+}
+[data-building-type="smallFoundry"][data-main-tile="true"]:after {
+  @include buildingShadow(-36px, 48px, 100px, 110px); //bottom, left, width, height
+}
+[data-image-type="crushingPlant"] {
+  @include buildingBase;
+  transform: rotateZ(323deg) rotateY(65deg) rotate3d(8, -11, -5, 12deg);
+  width: 291px;
+  top: -89px;
+  left: -116px;
+}
+[data-building-type="crushingPlant"][data-main-tile="true"]:after {
+  @include buildingShadow(-26px, 28px, 42px, 46px); //bottom, left, width, height
+}
+[data-building-category="conveyor"][data-main-tile="true"]:after {
+  @include buildingShadow(0px, 15px, 35px, 36px); //bottom, left, width, height
+}
+
+[data-image-type="cementPlant"] {
+  @include buildingBase;
+  transform: rotateZ(323deg) rotateY(65deg) rotate3d(8, -11, -5, 11deg);
+  width: 339px;
+  top: -125px;
+  left: -147px;
+}
+[data-building-type="cementPlant"][data-main-tile="true"]:after {
+  @include buildingShadow(-63px, 49px, 132px, 126px); //bottom, left, width, height
+}
+[data-image-type="oilRefinery"] {
+  @include buildingBase;
+  width: 501px;
+  top: -124px;
+  left: -173px;
+}
+[data-building-type="oilRefinery"][data-main-tile="true"]:after {
+  @include buildingShadow(-66px, 59px, 132px, 126px); //bottom, left, width, height
+}
+[data-image-type="glassFactory"] {
+  @include buildingBase;
+  transform: rotateZ(323deg) rotateY(64deg) rotate3d(8, -11, -5, 12deg);
+  width: 399px;
+  top: -135px;
+  left: -131px;
+}
+[data-building-type="glassFactory"][data-main-tile="true"]:after {
+  @include buildingShadow(-70px, 85px, 202px, 126px); //bottom, left, width, height
+}
+
+[data-image-type="smallAssembly"] {
+  @include buildingBase;
+  transform: rotateZ(323deg) rotateY(64deg) rotate3d(8, -11, -5, 12deg);
+  width: 373px;
+  top: -81px;
+  left: -135px;
+}
+[data-building-type="smallAssembly"][data-main-tile="true"]:after {
+  @include buildingShadow(-113px, 59px, 132px, 176px); //bottom, left, width, height
+}
+[data-image-type="assembly"] {
+  @include buildingBase;
+  transform: rotateZ(323deg) rotateY(64deg) rotate3d(8, -11, -5, 12deg);
+  width: 491px;
+  top: -115px;
+  left: -195px;
+}
+[data-building-type="assembly"][data-main-tile="true"]:after {
+  @include buildingShadow(-163px, 59px, 132px, 216px); //bottom, left, width, height
+}
+[data-image-type="steelMill"] {
+  @include buildingBase;
+  transform: rotateZ(323deg) rotateY(64deg) rotate3d(8, -11, -5, 12deg);
+  width: 464px;
+  top: -107px;
+  left: -212px;
+}
+[data-building-type="steelMill"][data-main-tile="true"]:after {
+  @include buildingShadow(-203px, 49px, 132px, 256px); //bottom, left, width, height
+}
+[data-image-type="mediumStorage"] {
+  @include buildingBase;
+  transform: rotateZ(322deg) rotateY(60deg) rotate3d(16, -12, -5, 11deg);
+  width: 236px;
+  top: -75px;
+  left: -96px;
+}
+[data-building-type="mediumStorage"][data-main-tile="true"]:after {
+  @include buildingShadow(-36px, 35px, 80px, 83px); //bottom, left, width, height
+}
+[data-image-type="smallStorage"] {
+  @include buildingBase;
+  transform: rotateZ(323deg) rotateY(62deg) rotate3d(8, -11, -5, 11deg);
+  width: 213px;
+  top: -54px;
+  left: -68px;
+}
+
+[data-building-type="smallStorage"][data-main-tile="true"]:after {
+  @include buildingShadow(-36px, 35px, 80px, 83px); //bottom, left, width, height
+}
+[data-image-type="garage"] {
+  @include buildingBase;
+  transform: rotateZ(322deg) rotateY(60deg) rotate3d(16, -12, -5, 11deg);
+  width: 169px;
+  top: -34px;
+  left: -55px;
+}
+
+[data-building-type="garage"][data-main-tile="true"]:after {
+  @include buildingShadow(-36px, 35px, 70px, 83px); //bottom, left, width, height
+}
+[data-image-type="sawmill"] {
+  @include buildingBase;
+  transform: rotateZ(322deg) rotateY(60deg) rotate3d(16, -12, -5, 11deg);
+  width: 204px;
+  top: -52px;
+  left: -68px;
+}
+
+[data-building-type="sawmill"][data-main-tile="true"]:after {
+  @include buildingShadow(-36px, 35px, 100px, 89px); //bottom, left, width, height
+}
+[data-image-type="lumbermill"] {
+  @include buildingBase;
+  transform: rotateZ(323deg) rotateY(62deg) rotate3d(8, -11, -5, 11deg);
+  width: 130px;
+  top: -27px;
+  left: -57px;
+}
+
+[data-building-type="lumbermill"][data-main-tile="true"]:after {
+  @include buildingShadow(-40px, 25px, 30px, 80px); //bottom, left, width, height
+}
+[data-image-type="waterPump"] {
+  @include buildingBase;
+  transform: rotateZ(324deg) rotateY(62deg) rotate3d(8, -11, -5, 11deg);
+  width: 85px;
+  top: -25px;
+  left: -34px;
+  z-index: 99;
+  background-image: none !important;
+}
+[data-image-type="windTurbine"] {
+  @include buildingBase;
+  transform: rotateZ(323deg) rotateY(62deg) rotate3d(8, -11, -5, 11deg);
+  width: 130px;
+  top: -63px;
+  left: -77px;
+}
+[data-building-type="windTurbine"][data-main-tile="true"]:after {
+  @include buildingShadow(0px, 20px, 10px, 43px); //bottom, left, width, height
+}
+[data-image-type="tradingTerminal"] {
+  @include buildingBase;
+  transform: rotateZ(322deg) rotateY(61deg) rotate3d(8, -10, -6, 9deg);
+  width: 452px;
+  top: -63px;
+  left: -165px;
+}
+[data-building-type="tradingTerminal"][data-main-tile="true"]:before {
+  @include buildingShadow(-196px, 50px, 120px, 235px); //bottom, left, width, height
+}
+.ghostImg {
+  position: relative;
+  img {
+    @include buildingBase;
+    opacity: 60%;
+    z-index: 10000;
+  }
+}
+
+[data-image-type="gravelRoad"],
+[data-image-type="concreteRoad"] {
+  @include buildingBase;
+  transform: rotateZ(321deg) rotateY(62deg) rotate3d(6, -11, -5, 10deg);
+  width: 105px;
+  top: -24px;
+  left: -33px;
+}
+[data-underground-type="pipe"] {
+  position: relative;
+}
+
+.possibleConnectWith .clickArea {
+  position: relative;
+  z-index: 1;
+}
+.noEvents {
+  pointer-events: none;
+}
+
+.transperentBuilding {
+  opacity: 60%;
+}
+
+[data-type="building"] {
+  position: relative;
+}
+.structure {
+  position: relative;
+}
+.clickArea {
+  position: relative;
+  // pointer-events: all;
+  z-index: 300;
+}
+[data-direction="right"],
+[data-direction="down"] {
+  [data-image-type="cargoStation"] {
+    @include buildingBase;
+    transform: rotateZ(322deg) rotateY(62deg) rotate3d(8, -11, -5, 11deg);
+    width: 122px;
+    top: -40px;
+    left: -51px;
+  }
+}
+[data-image-type="cargoStation"] {
+  @include buildingBase;
+  transform: rotateZ(322deg) rotateY(62deg) rotate3d(8, -11, -5, 11deg);
+  width: 111px;
+  top: -31px;
+  left: -40px;
+}

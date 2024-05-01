@@ -1,0 +1,196 @@
+.darkTip {
+  background-color: var(--midDarkGray) !important;
+  padding: 2px;
+}
+[role="tooltip"] {
+  display: none;
+  background-color: var(--midDarkGray);
+  padding: 2px 4px;
+  color: white;
+  border-radius: 4px;
+  font-size: 13px;
+  flex-direction: column;
+  min-width: 90px;
+}
+.tool-menu__modal {
+  [role="tooltip"] {
+    background-color: var(--gray);
+    min-width: 250px;
+    max-width: 390px;
+
+    padding: 0;
+    p {
+      padding: 10px;
+      font-size: 14px;
+      background-color: var(--midDarkGray);
+      text-wrap: pretty;
+      img {
+        width: 11px;
+      }
+    }
+    .resAmountPerMin {
+      font-size: 16px;
+    }
+    p:last-of-type {
+      text-align: center;
+      padding: 5px;
+    }
+    .timeBlock {
+      display: flex;
+      position: relative;
+      justify-content: center;
+      align-items: center;
+
+      .timeImage {
+        width: 15px;
+        height: 15px;
+      }
+      .resTime {
+        padding: 3px;
+      }
+    }
+
+    .resourcesBlock {
+      display: flex;
+      flex-direction: column;
+
+      align-items: center;
+      justify-content: center;
+
+      .resourseBlock {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto;
+        height: 45px;
+      }
+      .timeBlock {
+        display: flex;
+        width: 100%;
+      }
+      .resImage {
+        width: 45px;
+        max-height: 45px;
+        padding: 3px 0;
+      }
+      .resName {
+        font-size: 14px;
+        min-width: 75px;
+      }
+    }
+    [data-energy-icon] {
+      width: 18px;
+    }
+    .energyAmount {
+      font-size: 14px;
+    }
+
+    .costsBlock {
+      display: flex;
+      background-color: var(--gray);
+      width: 100%;
+      max-width: 250px;
+      margin: 0 auto;
+      padding: 5px 0;
+      div {
+        display: flex;
+        position: relative;
+        margin: 0 auto;
+      }
+      .resImage {
+        max-width: 40px;
+      }
+      .resAmount {
+        font-size: 13px;
+        position: absolute;
+        bottom: 0;
+        right: -3px;
+      }
+    }
+    .waterAndEnergyBlock {
+      display: flex;
+      gap: 5px;
+
+      align-items: center;
+      padding: 2px 15px;
+
+      background-color: var(--midDarkGray);
+      img {
+        height: 21px;
+      }
+    }
+    .recipesTipBlock {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto;
+      gap: 5px;
+      background-color: var(--gray);
+      padding: 3px 0;
+      // width: 100%;
+      .recipe {
+        &__items {
+          display: flex;
+          align-items: center;
+          margin: 0 auto;
+          position: relative;
+          padding: 0 15px;
+          width: 100%;
+          height: 45px;
+        }
+
+        &__materials {
+          display: flex;
+          gap: 5px;
+        }
+
+        &__item {
+          position: relative;
+        }
+
+        &__arrow {
+          position: absolute;
+          top: 25px;
+          left: 50%;
+          transform: translateX(-50%);
+          width: 35px;
+        }
+
+        &__timeBlock {
+          display: flex;
+          position: relative;
+          padding: 5px;
+          align-items: center;
+          margin-bottom: auto;
+
+          .timeImage {
+            padding-left: 2px;
+            width: 15px;
+            height: 15px;
+          }
+          .resTime {
+            padding: 3px;
+          }
+        }
+
+        &__product {
+          display: flex;
+        }
+        &__itemImage {
+          width: 45px;
+        }
+        &__itemAmount {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}
+
+[role="tooltip"][data-show] {
+  display: flex;
+}

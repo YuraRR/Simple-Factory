@@ -1,0 +1,139 @@
+@mixin natureFeature {
+  transform: rotateZ(323deg) rotateY(62deg) rotate3d(8, -11, -5, 11deg);
+  border: none !important;
+  position: absolute;
+  user-select: none;
+  pointer-events: none;
+  z-index: 100;
+}
+[data-ore-type="Iron Ore"] {
+  background-image: url(../../img/ores/iron_ore.png);
+}
+[data-ore-type="Copper Ore"] {
+  background-image: url(../../img/ores/copper_ore.png);
+}
+[data-ore-type="Coal Ore"] {
+  background-image: url(../../img/ores/coal_ore.png);
+}
+[data-ore-type="Quartz Ore"] {
+  background-image: url(../../img/ores/quartz.webp);
+}
+
+.deepOreGround {
+  background-image: url(../../img/textures/stone.png);
+}
+[data-ground-type="grass"] {
+  background-image: url(../../img/textures/grass.png);
+  outline: 1px solid #1dbc4d36;
+}
+[data-ground-type="grass2"] {
+  background-image: url(../../img/textures/grass2.png);
+  outline: 1px solid #1dbc4d36;
+}
+[data-ground-type="water"] {
+  background-image: url(../../img/animations/water.gif);
+  outline: none;
+}
+[data-ground-type="gravel"] {
+  background-image: url(../../img/textures/gravel.png);
+  outline: none;
+}
+[data-ground-type="sand"] {
+  background-image: url(../../img/textures/sand.jpg);
+  outline: none;
+}
+[data-ground-type="clay"] {
+  background-image: url(../../img/textures/clay.png);
+  outline: none;
+}
+[data-ground-type="limestone"] {
+  background-image: url(../../img/textures/limestone.png);
+  outline: none;
+}
+[data-ground-type="stone"] {
+  background-image: url(../../img/textures/stone.png);
+  outline: none;
+}
+
+[data-sub-ground-type="forest0"] {
+  background-image: url(../../img/textures/forest0.png);
+}
+
+[data-sub-ground-type="forest1"] {
+  background-image: url(../../img/textures/forest1.png);
+}
+[data-sub-ground-type="forest2"] {
+  background-image: url(../../img/textures/forest2.png);
+}
+
+[data-sub-ground-type="flowers0"] {
+  background-image: url(../../img/textures/flowers0.png);
+}
+[data-sub-ground-type="flowers1"] {
+  background-image: url(../../img/textures/flowers1.png);
+}
+[data-sub-ground-type="flowers2"] {
+  background-image: url(../../img/textures/flowers2.png);
+}
+[data-features-type="limeStoneRock"] {
+  position: relative;
+  [data-image-type="natureFeature"] {
+    @include natureFeature();
+    width: 200px;
+    top: -59px;
+    left: -75px;
+  }
+}
+[data-features-type="limeStoneRock"][data-main-tile="true"]:after {
+  @include buildingShadow(-30px, 28px, 72px, 78px); //bottom, left, width, height
+}
+[data-features-type="tree"] {
+  position: relative;
+  [data-image-type="natureFeature"] {
+    @include natureFeature();
+    width: 120px;
+    top: -47px;
+    left: -63px;
+  }
+}
+
+[data-features-type="rock"] {
+  position: relative;
+  [data-image-type="natureFeature"] {
+    @include natureFeature();
+    width: 60px;
+    top: -4px;
+    left: -12px;
+  }
+}
+[data-features-type="bush"] {
+  position: relative;
+  [data-image-type="natureFeature"] {
+    @include natureFeature();
+    width: 80px;
+    top: -15px;
+    left: -25px;
+  }
+}
+[data-features-type="reed"] {
+  position: relative;
+  [data-image-type="natureFeature"] {
+    @include natureFeature();
+    width: 72px;
+    top: -16px;
+    left: -21px;
+  }
+}
+
+//Shadows
+
+[data-features-type="tree"]:after {
+  @include buildingShadow(-5px, 12px, 60px, 60px); //bottom, left, width, height
+}
+[data-features-type="rock"]:after,
+[data-features-type="reed"]:after {
+  @include buildingShadow(5px, 14px, 20px, 20px); //bottom, left, width, height
+}
+[data-features-type="bush"]:after {
+  @include buildingShadow(5px, 14px, 26px, 25px); //bottom, left, width, height
+}
