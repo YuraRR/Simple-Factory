@@ -104,6 +104,7 @@ class Truck extends Building {
     switch (importBldData.buildingCategory) {
       case "in1Out1":
       case "in1Out2":
+      case "In":
         routeAvailable =
           importBldData.firstMatName === exportStItem || exportStData.connectedTo == "tradingTerminal";
         break;

@@ -13,6 +13,13 @@
   width: 100px;
   height: 150px;
 }
+.oreProcessingSmoke2 {
+  @include smokeBase();
+  top: -133px;
+  right: 73px;
+  width: 130px;
+  height: 120px;
+}
 .smelterSmoke {
   @include smokeBase();
   top: -290px;
@@ -84,8 +91,16 @@
 }
 .crushingPlantSmoke {
   @include smokeBase();
-  filter: brightness(0.9) blur(0.6px) opacity(0.3);
-  top: 30px;
+  filter: brightness(0.9) blur(0.6px) opacity(0.45);
+  top: 40px;
+  right: -15px;
+  width: 70px;
+  height: 30px;
+}
+.crushingPlantSmoke2 {
+  @include smokeBase();
+  filter: brightness(0.9) blur(0.6px) opacity(0.45);
+  top: 65px;
   right: 0px;
   width: 70px;
   height: 30px;

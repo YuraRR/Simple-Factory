@@ -109,6 +109,13 @@
     left: -48px;
   }
 }
+[data-direction="right"] {
+  [data-image-type="connector"] {
+    top: -41px;
+    left: -48px;
+  }
+}
+
 [data-direction="right"],
 [data-direction="left"] {
   position: relative;
@@ -134,8 +141,8 @@
 }
 
 [data-conveyor-type="RightUpCorner"] {
-  width: 122px;
-  top: -33px;
+  width: 123px;
+  top: -34px;
   left: -41px;
 }
 

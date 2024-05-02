@@ -72,7 +72,6 @@ function deleteAllInTile(currentTile, isDeleteItem) {
       totalEnergy = parseFloat(totalEnergy) - currentTile.dataset.energyProduction;
       updateEnergy();
     }
-    console.log(currentTile);
     allTilesToDelete.forEach((tile) => {
       if (
         (tile.dataset.buildingType &&
@@ -80,7 +79,6 @@ function deleteAllInTile(currentTile, isDeleteItem) {
           tile.dataset.buildingType != "tradingTerminal") ||
         tile.dataset.groundItem
       ) {
-        console.log(tile);
         const imgElement = tile.querySelector("img");
         const divElement = tile.querySelector("div");
         clearInterval(tile.dataset.intervalId);
@@ -135,6 +133,7 @@ function transperentBuildingsRemove() {
 }
 //UNDERGROUND
 function showUnderground() {
+  const allTrees = document.querySelectorAll(`[data-image-type="natureFeature"`);
   !undergroundOpened && currentTool != "pipe" && escapeButton();
   gridContainer.classList.toggle("containerOpacity");
   const allPipes = gridContainer.querySelectorAll(`[data-image-type="pipe"]`);

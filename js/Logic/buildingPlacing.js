@@ -448,7 +448,15 @@ function startBuildingMethods(tile) {
 
     currentTool !== "quarry" && this.createBuildingImage(zIndexTile);
 
-    const clickArea = currentTool != "pipe" ? this.createClickArea(xSize, zSize) : "";
+    const clickArea =
+      currentTool != "pipe" &&
+      currentTool != "conveyor" &&
+      currentTool != "connector" &&
+      currentTool != "splitter" &&
+      currentTool != "gravelRoad" &&
+      currentTool != "concreteRoad"
+        ? this.createClickArea(xSize, zSize)
+        : "";
 
     this.processing && this.processing(clickArea);
     this.addItemToStorage && this.addItemToStorage(clickArea);

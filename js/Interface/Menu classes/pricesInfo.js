@@ -18,13 +18,6 @@ function createPricesMenu() {
 
   pricesMenu.querySelector(".close-button").onclick = () => pricesMenu.classList.add("hidden");
 
-  // setTimeout(() => {
-  //   document.querySelector(`[data-building-type="tradingTerminal"] .clickArea`).onclick = () => {
-  //     pricesMenu.classList.remove("hidden");
-  //     allOpenedMenu.push(pricesMenu);
-  //   };
-  // }, 500);
-
   dragElement(pricesMenu.id);
   moneyBlockButton.addEventListener("click", () => {
     pricesMenu.classList.toggle("hidden");

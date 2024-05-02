@@ -446,13 +446,17 @@ function demolitionEvent() {
         const totalSteps = 10; // Количество шагов анимации
         const progressIncrement = progressBarWidth / totalSteps;
 
-        let destructionTime = 60;
-        if (event.target.dataset.buildingCategory == "conveyor") {
+        let destructionTime;
+        if (
+          event.target.dataset.buildingCategory == "conveyor" ||
+          event.target.dataset.buildingType == "gravelRoad" ||
+          event.target.dataset.buildingType == "concreteRoad"
+        ) {
           destructionTime = 30;
-        } else if (event.target.classList.contains("clickArea")) {
-          destructionTime = 100;
+        } else {
+          destructionTime = 60;
         }
-
+        console.log(destructionTime);
         progressBarInterval = setInterval(() => {
           progress += progressIncrement;
           progressBar.style.width = progress + "px";

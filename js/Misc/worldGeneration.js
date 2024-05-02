@@ -89,7 +89,7 @@ class Generator {
             const bottomTile = this.findBottomTile(i, j);
             const leftTile = this.findLeftTile(i, j);
             if (
-              (targetTile.dataset.groundType == "grass" || targetTile.dataset.groundType == "stone") &&
+              targetTile.dataset.groundType == "grass" &&
               ((topTile && topTile.dataset.groundType == neighbourType) ||
                 (rightTile && rightTile.dataset.groundType == neighbourType) ||
                 (bottomTile && bottomTile.dataset.groundType == neighbourType) ||
@@ -316,6 +316,12 @@ function spawnTerminal() {
   newBuilding.createBuildingImage(buildingTiles[5]);
   newBuilding.createClickArea(6, 3);
   cell.firstChild.style.zIndex = "1";
+
+  const pricesMenu = document.querySelector(".pricesInfo-menu");
+  document.querySelector(`[data-building-type="tradingTerminal"] .clickArea`).onclick = () => {
+    pricesMenu.classList.remove("hidden");
+    allOpenedMenu.push(pricesMenu);
+  };
 }
 
 function randomId() {
@@ -345,30 +351,6 @@ function spawnObj(objClass, amount) {
     findEmptyTile();
   }
 }
-function makeSmoothSand() {
-  const allSandTiles = document.querySelectorAll(`[data-ground-type="sand"]`);
-  allSandTiles.forEach((sandTile) => {
-    const neighborsTiles = findNeighbors(sandTile);
-    const conditions = [
-      { tiles: ["water", "water", "sand", "sand"], image: "halfSandDownLeft.png" },
-      { tiles: ["water", "sand", "sand", "water"], image: "halfSandRightDown.png" },
-      { tiles: ["sand", "water", "water", "sand"], image: "halfSandLeftUp.png" },
-      { tiles: ["sand", "sand", "water", "water"], image: "halfSandUpRight.png" },
-      { tiles: ["sand", "water", "water", "water"], image: "halfSandUp.png" },
-      { tiles: ["water", "sand", "water", "water"], image: "halfSandRight.png" },
-      { tiles: ["water", "water", "sand", "water"], image: "halfSandDown.png" },
-      { tiles: ["water", "water", "water", "sand"], image: "halfSandLeft.png" },
-    ];
-
-    for (const condition of conditions) {
-      const match = condition.tiles.every((type, index) => neighborsTiles[index].dataset.groundType === type);
-      if (match) {
-        sandTile.style.backgroundImage = `url(../../img/textures/${condition.image})`;
-        break;
-      }
-    }
-  });
-}
 function generateWorld() {
   spawnTerminal();
   spawnObj(Water, 1);
@@ -382,5 +364,4 @@ function generateWorld() {
   spawnObj(Copper, 1);
   spawnObj(Coal, 1);
   spawnObj(StoneRock, 10);
-  makeSmoothSand();
 }

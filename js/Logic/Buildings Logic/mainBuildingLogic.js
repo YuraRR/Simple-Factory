@@ -208,7 +208,7 @@ class Building {
     function assemblying() {
       console.log(processItemStarted, 2);
       createSmoke(tile);
-      // createSmoke(tile, true);
+      createSmoke(tile, true);
       processItemStarted = true;
       let progressBarAnimation = moveProgressBar(menu, materials.time, createListToCompare);
       if (progressBarAnimation.width == 0) {

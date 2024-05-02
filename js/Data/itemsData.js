@@ -76,7 +76,7 @@ const allItems = [
     name: "Refined Coal",
     type: "refinedOre",
     producedIn: "oreProcessing",
-    processingIn: ["foundry", "oilRefinery", "chemicalPlant"],
+    processingIn: ["foundry", "oilRefinery", "chemicalPlant", "powerPlant"],
     consumptionFor: ["Molten Iron", "Molten Copper", "Energy", "Oil", "Rubber"],
     materials: {
       res1Name: "Coal Ore",

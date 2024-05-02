@@ -312,6 +312,7 @@ class Conveyor extends DynamicBuildings {
             switch (factoryData.buildingCategory) {
               case "in1Out1":
               case "in1Out2":
+              case "In":
                 importConnectorAvailable = factoryData.firstMatName === resName;
                 break;
               case "in2Out1":

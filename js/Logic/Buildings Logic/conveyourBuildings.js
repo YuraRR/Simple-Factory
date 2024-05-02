@@ -70,17 +70,30 @@ class Connector extends Conveyor {
     this.tile.onclick = () => setOutputItem(this.tile);
     this.tile.dataset.connectorType =
       "export" && previousMainTile && previousMainTile.dataset.semiFinishedType ? setOutputItem(this.tile) : "";
-    this.tile.dataset.intervalId = setInterval(() => {
+    setInterval(() => {
       if (
         buildingsCatList.includes(previousTile.dataset.buildingCategory) &&
         buildingsCatList.includes(nextTile.dataset.buildingCategory)
       ) {
+        if (this.tile.dataset.connectorType == "export" || this.tile.dataset.connectorType == "import") {
+          clearInterval(this.tile.dataset.intervalId);
+          this.tile.dataset.intervalId = setInterval(exportItemFromBld.bind(this), 500);
+        }
+
         this.tile.dataset.connectorType = "mixed";
         changeConnImage("mix", this.tileData.direction);
       } else if (buildingsCatList.includes(previousTile.dataset.buildingCategory)) {
+        if (this.tile.dataset.connectorType == "mixed" || this.tile.dataset.connectorType == "import") {
+          clearInterval(this.tile.dataset.intervalId);
+          this.tile.dataset.intervalId = setInterval(exportItemFromBld.bind(this), 500);
+        }
         this.tile.dataset.connectorType = "export";
         changeConnImage("exp", this.tileData.direction);
       } else if (buildingsCatList.includes(nextTile.dataset.buildingCategory)) {
+        if (this.tile.dataset.connectorType == "export" || this.tile.dataset.connectorType == "mixed") {
+          clearInterval(this.tile.dataset.intervalId);
+          this.tile.dataset.intervalId = setInterval(exportItemFromBld.bind(this), 500);
+        }
         this.tile.dataset.connectorType = "import";
         changeConnImage("imp", this.tileData.direction);
       }
@@ -93,45 +106,40 @@ class Connector extends Conveyor {
         };
         connectorImage.src = imageSrc[dir];
       }
-
-      function checkOutput(factoryData, connectorData) {
-        switch (connectorData.connectorFilter) {
-          case factoryData.itemTypeOutput1:
-            return "itemAmountOutput1";
-          case factoryData.itemTypeOutput2:
-            return "itemAmountOutput2";
-          case factoryData.itemTypeOutput3:
-            return "itemAmountOutput3";
-        }
-      }
-      const mainFactoryTile = findMainTile(previousTile);
-      const currentOutputAmount =
-        mainFactoryTile &&
-        (mainFactoryTile.dataset.buildingType == "foundry" ||
-          mainFactoryTile.dataset.buildingType == "smallFoundry" ||
-          mainFactoryTile.dataset.buildingType == "oilRefinery")
-          ? checkOutput(mainFactoryTile.dataset, this.tileData)
-          : "itemAmountOutput1";
-
-      if (mainFactoryTile && mainFactoryTile.dataset[currentOutputAmount] > 0 && this.tileData.itemType == "") {
-        if (mainFactoryTile.dataset.buildingCategory != "storage") {
-          this.moveItem(mainFactoryTile, this.tile, this.tileData.connectorFilter);
-          mainFactoryTile.dataset[currentOutputAmount]--;
-        } else {
-          this.moveItem(mainFactoryTile, this.tile);
-          mainFactoryTile.dataset[currentOutputAmount]--;
-        }
-
-        // if (
-        //   nextMainTile &&
-        //   nextMainTile.dataset.buildingCategory == "storage" &&
-        //   nextMainTile.dataset.itemAmountOutput1 < nextMainTile.dataset.storageCapacity
-        // ) {
-        //   this.moveItem(mainFactoryTile, this.tile);
-        //   mainFactoryTile.dataset.itemAmountOutput1--;
-        // }
-      }
     }, 500);
+    function checkOutput(factoryData, connectorData) {
+      switch (connectorData.connectorFilter) {
+        case factoryData.itemTypeOutput1:
+          return "itemAmountOutput1";
+        case factoryData.itemTypeOutput2:
+          return "itemAmountOutput2";
+        case factoryData.itemTypeOutput3:
+          return "itemAmountOutput3";
+      }
+    }
+
+    function exportItemFromBld() {
+      const mainFactoryTile = findMainTile(previousTile);
+      if (!mainFactoryTile) return;
+
+      const buildingType = mainFactoryTile.dataset.buildingType;
+      const isFoundry =
+        buildingType == "foundry" || buildingType == "smallFoundry" || buildingType == "oilRefinery";
+      const currentOutputAmount = isFoundry
+        ? checkOutput(mainFactoryTile.dataset, this.tileData)
+        : "itemAmountOutput1";
+
+      if (
+        mainFactoryTile.dataset[currentOutputAmount] > 0 &&
+        this.tileData.itemType == "" &&
+        (nextTile.dataset.buildingCategory == "conveyor" || nextTile.dataset.type == "building")
+      ) {
+        const isStorage = mainFactoryTile.dataset.buildingCategory == "storage";
+        this.moveItem(mainFactoryTile, this.tile, isStorage ? undefined : this.tileData.connectorFilter);
+        mainFactoryTile.dataset[currentOutputAmount]--;
+      }
+    }
+    this.tile.dataset.intervalId = setInterval(exportItemFromBld.bind(this), 500);
   }
 }
 

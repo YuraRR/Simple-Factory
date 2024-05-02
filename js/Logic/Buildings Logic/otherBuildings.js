@@ -61,9 +61,9 @@ class PowerPlant extends Building {
     );
 
     const recipeObj = allItems.find((recipe) => recipe.producedIn === this.name);
-    this.itemProcessingOneMaterial(this.tile, menu, recipeObj);
+    this.itemProcessingMaterial(this.tile, menu, recipeObj);
 
-    this.tileData.itemType = recipeObj.materials.res1Name;
+    this.tileData.firstMatName = recipeObj.materials.res1Name;
     this.tileData.itemTypeOutput1 = recipeObj.name;
     this.tile.dataset.energyProduction = 4;
   }
