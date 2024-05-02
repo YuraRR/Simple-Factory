@@ -1,13 +1,9 @@
 {
   "dependencies": {
-    "@neodrag/vanilla": "^2.0.3",
     "notyf": "^3.10.0"
   },
   "devDependencies": {
     "prettier-html": "^0.0.2"
   },
-  "main": "index.js",
-  "scripts": {
-    "start": "electron ."
-  }
+  "main": "index.js"
 }
