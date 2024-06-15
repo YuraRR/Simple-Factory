@@ -1,8 +1,11 @@
 // KEYBINDS
 let hoveredElement;
-
+const infoMenu = document.querySelector(".info-menu");
+const infoTitle = document.querySelector(".info-menu__title");
+const infoList = document.querySelector(".info-menu__list");
 function handleMouseOver(event) {
   hoveredElement = event.target;
+  displayInfo();
 }
 gridContainer.addEventListener("mouseover", handleMouseOver);
 document.addEventListener("keydown", (event) => {
@@ -14,21 +17,24 @@ document.addEventListener("keydown", (event) => {
       break;
     case "KeyU":
       const undergroundButton = document.getElementById("undergroundButton");
-      undergroundButton.classList.toggle("buttonActive");
       showUnderground();
+      undergroundButton.classList.toggle("buttonActive");
+
       break;
     case "KeyT":
       const transparentButton = document.getElementById("transparentButton");
       transparentButton.classList.toggle("buttonActive");
       transperentBuildingsShow();
+
       break;
     case "KeyM":
-      money += 5000;
+      showMoneyChange(5000, "plus");
       break;
-    case "KeyD":
+    case "KeyF":
       if (currentTool == "demolition") {
         escapeButton();
       } else {
+        escapeButton();
         const demolitionButton = document.getElementById("demolitionButton");
         demolitionButton.classList.toggle("buttonActive");
         currentTool = demolitionButton.classList.contains("buttonActive") ? "demolition" : "";
@@ -42,6 +48,7 @@ document.addEventListener("keydown", (event) => {
       break;
     case "KeyP":
       !isPaused ? (isPaused = true) : (isPaused = false);
+      console.log("pause");
       break;
     case "KeyL":
       // localStorage.setItem("toGenerate", "false");
@@ -87,7 +94,6 @@ function escapeButton() {
   hideRoutes();
   fillingMode && backFilling();
   undergroundOpened && showUnderground();
-  transperentBuildingsRemove();
   if (allOpenedMenu.length > 0) {
     const lastMenu = allOpenedMenu.pop();
     lastMenu.classList.add("hidden");
@@ -117,4 +123,12 @@ function escapeButton() {
   costsBlocks.style.display = "none";
 
   document.querySelectorAll(".unlockBld").forEach((btn) => btn.classList.add("hidden"));
+
+  document.querySelector(".selectConnectorItemBlock").classList.add("hidden");
+
+  const visTruckList = interfaceСont.querySelector(`.routesInfo-menu__trucksList.visible`);
+  visTruckList && visTruckList.classList.remove("visible");
+
+  clearInterval(costIntervalUpdate);
+  blockCameraMove = false;
 }

@@ -1,18 +1,21 @@
 @import url(https://fonts.googleapis.com/css?family=Roboto:300,regular,500,700,900);
+@import url(https://fonts.googleapis.com/css?family=Lato:100,200,300,regular,500,600,700,800,900);
 @import "./gameObjects/grid";
-@import "./gameObjects/building.scss";
-@import "./gameObjects/conveyors.scss";
-@import "./interface/tips.scss";
-@import "./gameObjects/natureFeatures.scss";
-@import "./gameObjects/ghosts.scss";
-@import "./interface/mainInterface.scss";
-@import "./interface/menu.scss";
-@import "./gameObjects/transport.scss";
-@import "./gameObjects/animations.scss";
+@import "./gameObjects/building";
+@import "./gameObjects/conveyors";
+@import "./interface/tips";
+@import "./gameObjects/natureFeatures";
+@import "./gameObjects/ghosts";
+@import "./interface/mainInterface";
+@import "./interface/menu";
+@import "./gameObjects/transport";
+@import "./gameObjects/animations";
 @import "./interface/buttons.scss";
-@import "./interface/cargoStationMenu.scss";
+@import "./interface/cargoStationMenu";
 @import "./interface/routesInfoMenu";
+@import "./interface/mainMenu";
 :root {
+  --darkBlack: #151515;
   --black: #222222;
   --midDarkGray: #333333;
   --midGray: #424141;
@@ -20,6 +23,7 @@
   --gray: #4e4d4d;
   --midLightGray: #5c5c5c;
   --lightGray: #6b6b6b;
+  --darkWhite: #a4a3a3;
   --white: #ccc;
   --lightWhite: #e0e0e0;
 
@@ -35,9 +39,13 @@
 
   --transRed: rgba(255, 0, 0, 0.308);
   --transGreen: #7ac02b64;
-  --transGray: #656464d7;
-  --transDarkGray: #3b3b3bdd;
+  --transGray: #5c5b5bc8;
+  --transDarkGray: #4a4949a6;
   --transXXDarkGray: #3b3b3ba7;
+  --transXXXDarkGray: #2929294f;
+  --transXXLightGray: #8b888892;
+  --transBlack: #1b1a1a71;
+  --transMidLightGray: #6968689d;
 
   --radio-border-color: #8b8c89;
   --radio-checked-color: #ff9800;
@@ -48,8 +56,8 @@
   padding: 0;
   margin: 0;
   user-select: none;
-  font-family: "Roboto";
-  font-weight: 400;
+  font-family: "Lato";
+  font-weight: 600;
 
   &::-webkit-scrollbar {
     width: 8px;
@@ -68,6 +76,7 @@
     color: var(--white);
   }
 }
+
 button,
 input {
   cursor: pointer;
@@ -82,6 +91,9 @@ body {
 }
 .hidden {
   display: none !important;
+}
+.noActive {
+  pointer-events: none;
 }
 .hiddenPseudo::after {
   display: none;

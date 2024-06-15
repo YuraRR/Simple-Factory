@@ -1,0 +1,108 @@
+.mainMenu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 9999;
+  pointer-events: all;
+  &__logo {
+    position: absolute;
+    z-index: 99999;
+    top: 10%;
+    left: 23%;
+    transform: translate(-50%, -50%);
+    width: 900px;
+    box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.5);
+    border-radius: 30px 0 30px 0;
+    animation: sway 18s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite alternate;
+  }
+  &__bg {
+    width: 100%;
+  }
+  &__buttons {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 99999;
+    gap: 10px;
+    button {
+      background-color: unset;
+      color: var(--white);
+      font-size: 22px;
+      border: none;
+      font-weight: 500px;
+      background-color: var(--black);
+      border-radius: 10px 0 10px 0;
+      padding: 10px 25px;
+      width: 200px;
+      &:hover {
+        font-size: 23px;
+        background-color: var(--darkBlack);
+        transition: 0.3s ease-in-out;
+      }
+    }
+  }
+  #telegramLink {
+    background-image: url(/img/buttonIcons/telegram.png);
+    width: 50px;
+    height: 50px;
+    background-size: contain;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    transition: 0.2s ease-in-out;
+    &:hover {
+      width: 53px;
+      height: 53px;
+    }
+  }
+}
+
+.optionsMenu,
+.creditsMenu {
+  display: flex;
+  background-color: var(--midDarkGray);
+  flex-direction: column;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: all;
+  z-index: 99999;
+  padding-bottom: 100px;
+  width: 400px;
+
+  h3 {
+    margin-bottom: 20px;
+  }
+  &__volumeBlock {
+    display: flex;
+    width: 83%;
+    justify-content: end;
+    gap: 20px;
+  }
+
+  &__musicVolume {
+  }
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding: 0 40px 80px;
+    div {
+      display: flex;
+      span {
+        width: 100%;
+      }
+      :last-child {
+        color: var(--darkWhite);
+        text-align: end;
+      }
+    }
+  }
+}

@@ -19,8 +19,12 @@ let undergroundOpened = false;
 let fillingMode = false;
 let foundryType;
 let conveyorIntervalId;
-let cheatMode = true;
+let cheatMode = false;
 let isPaused = false;
+let costIntervalUpdate;
+let routeCreationObj;
+let soundsVolume;
+
 const interfaceСont = document.querySelector("#interface-container");
 //MONEY
 let money = 5000;
@@ -29,6 +33,8 @@ let trucksTotal = 0;
 let trucksAvailable = 0;
 let routeId = 1;
 let allRoutesList = [];
+let allBuildingsList = [];
+let stationsList = [];
 
 const lockedFeatures = [
   {
@@ -49,6 +55,7 @@ const buildingCategories = {
   conveyor: ["conveyor", "connector", "splitter", "undergroundConveyor"],
   storage: ["mediumStorage", "smallStorage"],
   energy: ["powerPlant", "windTurbine"],
+  transportation: ["gravelRoad", "concreteRoad", "garage", "cargoStation"],
 };
 const structuresList = [
   {
@@ -86,7 +93,7 @@ const structuresList = [
       },
       recipe4: {
         material: "Molten Copper",
-        product: "Copper Sheets",
+        product: "Copper Plates",
       },
       recipe5: {
         material: "Molten Copper",
@@ -115,19 +122,19 @@ const structuresList = [
     factoryName: "smallFoundry",
     recipesList: {
       recipe1: {
-        material: "Molten Copper",
-        product: "Copper Sheets",
+        material: "Molten Copper(impure)",
+        product: "Copper Plates",
       },
       recipe2: {
-        material: "Molten Copper",
+        material: "Molten Copper(impure)",
         product: "Copper Coil",
       },
       recipe3: {
-        material: "Molten Iron",
+        material: "Molten Iron(impure)",
         product: "Iron Pipes",
       },
       recipe4: {
-        material: "Molten Iron",
+        material: "Molten Iron(impure)",
         product: "Iron Gears",
       },
     },

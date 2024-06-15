@@ -2,7 +2,7 @@
   background-color: rgba(0, 0, 0, 0) !important;
   background-size: cover;
   border: none !important;
-  transform: rotateZ(322deg) rotateY(60deg) rotate3d(16, -12, -5, 11deg);
+  transform: rotateZ(323deg) rotateY(64deg) rotate3d(8, -11, -5, 12deg);
   position: absolute;
   pointer-events: none;
   &:hover {
@@ -28,7 +28,6 @@
 }
 
 [data-image-type="mineshaft"] {
-  transform: rotateZ(323deg) rotateY(62deg) rotate3d(8, -9, -5, 11deg);
   @include buildingBase;
   width: 200px;
   top: -90px;
@@ -36,7 +35,6 @@
 }
 [data-image-type="quarry"] {
   @include buildingBase;
-  transform: rotateZ(323deg) rotateY(62deg) rotate3d(8, -9, -5, 11deg);
   width: 220px;
   top: -57px;
   left: -77px;
@@ -55,7 +53,6 @@
 }
 [data-image-type="rubberTreePlantation"] {
   @include buildingBase;
-  transform: rotateZ(323deg) rotateY(63deg) rotate3d(8, -11, -5, 11deg);
   width: 133px;
   top: -26px;
   left: -33px;
@@ -66,7 +63,6 @@
 //ORE PROCESSING
 [data-image-type="oreProcessing"] {
   @include buildingBase;
-  transform: rotateZ(323deg) rotateY(63deg) rotate3d(8, -11, -5, 11deg);
   width: 245px;
   top: -128px;
   left: -127px;
@@ -77,37 +73,42 @@
 
 [data-image-type="foundry"] {
   @include buildingBase;
-  transform: rotateZ(323deg) rotateY(62deg) rotate3d(8, -11, -5, 11deg);
-  width: 471px;
-  top: -173px;
-  left: -215px;
+  width: 488px;
+  top: -184px;
+  left: -228px;
 }
 [data-building-type="foundry"][data-main-tile="true"]:after {
   @include buildingShadow(-90px, 60px, 162px, 146px); //bottom, left, width, height
 }
 [data-image-type="powerPlant"] {
   @include buildingBase;
-  transform: rotateZ(323deg) rotateY(62deg) rotate3d(8, -11, -5, 11deg);
-  width: 456px;
-  top: -106px;
-  left: -134px;
+  width: 478px;
+  top: -119px;
+  left: -146px;
 }
 [data-building-type="powerPlant"][data-main-tile="true"]:after {
   @include buildingShadow(-148px, 90px, 182px, 186px); //bottom, left, width, height
 }
 [data-image-type="concretePlant"] {
   @include buildingBase;
-  transform: rotateZ(323deg) rotateY(62deg) rotate3d(8, -11, -5, 11deg);
-  width: 516px;
-  top: -145px;
-  left: -189px;
+  width: 532px;
+  top: -151px;
+  left: -198px;
 }
 [data-building-type="concretePlant"][data-main-tile="true"]:after {
   @include buildingShadow(-128px, 90px, 212px, 186px); //bottom, left, width, height
 }
+[data-image-type="carFactory"] {
+  @include buildingBase;
+  width: 591px;
+  top: -146px;
+  left: -196px;
+}
+[data-building-type="carFactory"][data-main-tile="true"]:after {
+  @include buildingShadow(-115px, 95px, 262px, 186px); //bottom, left, width, height
+}
 [data-image-type="brickFactory"] {
   @include buildingBase;
-  transform: rotateZ(323deg) rotateY(65deg) rotate3d(8, -11, -5, 12deg);
   width: 366px;
   top: -131px;
   left: -160px;
@@ -117,7 +118,6 @@
 }
 [data-image-type="smallFoundry"] {
   @include buildingBase;
-  transform: rotateZ(323deg) rotateY(65deg) rotate3d(8, -11, -5, 12deg);
   width: 305px;
   top: -127px;
   left: -130px;
@@ -127,10 +127,9 @@
 }
 [data-image-type="crushingPlant"] {
   @include buildingBase;
-  transform: rotateZ(323deg) rotateY(65deg) rotate3d(8, -11, -5, 12deg);
-  width: 291px;
-  top: -89px;
-  left: -116px;
+  width: 305px;
+  top: -98px;
+  left: -125px;
 }
 [data-building-type="crushingPlant"][data-main-tile="true"]:after {
   @include buildingShadow(-26px, 28px, 42px, 46px); //bottom, left, width, height
@@ -141,7 +140,6 @@
 
 [data-image-type="cementPlant"] {
   @include buildingBase;
-  transform: rotateZ(323deg) rotateY(65deg) rotate3d(8, -11, -5, 11deg);
   width: 339px;
   top: -125px;
   left: -147px;
@@ -151,19 +149,27 @@
 }
 [data-image-type="oilRefinery"] {
   @include buildingBase;
-  width: 501px;
-  top: -124px;
-  left: -173px;
+  width: 529px;
+  top: -142px;
+  left: -187px;
 }
 [data-building-type="oilRefinery"][data-main-tile="true"]:after {
   @include buildingShadow(-66px, 59px, 132px, 126px); //bottom, left, width, height
 }
+[data-image-type="chemicalPlant"] {
+  @include buildingBase;
+  width: 406px;
+  top: -125px;
+  left: -161px;
+}
+[data-building-type="chemicalPlant"][data-main-tile="true"]:after {
+  @include buildingShadow(-66px, 59px, 132px, 126px); //bottom, left, width, height
+}
 [data-image-type="glassFactory"] {
   @include buildingBase;
-  transform: rotateZ(323deg) rotateY(64deg) rotate3d(8, -11, -5, 12deg);
-  width: 399px;
-  top: -135px;
-  left: -131px;
+  width: 397px;
+  top: -134px;
+  left: -128px;
 }
 [data-building-type="glassFactory"][data-main-tile="true"]:after {
   @include buildingShadow(-70px, 85px, 202px, 126px); //bottom, left, width, height
@@ -171,7 +177,6 @@
 
 [data-image-type="smallAssembly"] {
   @include buildingBase;
-  transform: rotateZ(323deg) rotateY(64deg) rotate3d(8, -11, -5, 12deg);
   width: 373px;
   top: -81px;
   left: -135px;
@@ -181,10 +186,9 @@
 }
 [data-image-type="assembly"] {
   @include buildingBase;
-  transform: rotateZ(323deg) rotateY(64deg) rotate3d(8, -11, -5, 12deg);
-  width: 491px;
-  top: -115px;
-  left: -195px;
+  width: 514px;
+  top: -125px;
+  left: -210px;
 }
 [data-building-type="assembly"][data-main-tile="true"]:after {
   @include buildingShadow(-163px, 59px, 132px, 216px); //bottom, left, width, height
@@ -201,7 +205,6 @@
 }
 [data-image-type="mediumStorage"] {
   @include buildingBase;
-  transform: rotateZ(322deg) rotateY(60deg) rotate3d(16, -12, -5, 11deg);
   width: 236px;
   top: -75px;
   left: -96px;
@@ -211,10 +214,9 @@
 }
 [data-image-type="smallStorage"] {
   @include buildingBase;
-  transform: rotateZ(323deg) rotateY(62deg) rotate3d(8, -11, -5, 11deg);
-  width: 213px;
-  top: -54px;
-  left: -68px;
+  width: 217px;
+  top: -55px;
+  left: -72px;
 }
 
 [data-building-type="smallStorage"][data-main-tile="true"]:after {
@@ -222,7 +224,6 @@
 }
 [data-image-type="garage"] {
   @include buildingBase;
-  transform: rotateZ(322deg) rotateY(60deg) rotate3d(16, -12, -5, 11deg);
   width: 169px;
   top: -34px;
   left: -55px;
@@ -233,7 +234,6 @@
 }
 [data-image-type="sawmill"] {
   @include buildingBase;
-  transform: rotateZ(322deg) rotateY(60deg) rotate3d(16, -12, -5, 11deg);
   width: 204px;
   top: -52px;
   left: -68px;
@@ -244,7 +244,6 @@
 }
 [data-image-type="lumbermill"] {
   @include buildingBase;
-  transform: rotateZ(323deg) rotateY(62deg) rotate3d(8, -11, -5, 11deg);
   width: 130px;
   top: -27px;
   left: -57px;
@@ -255,16 +254,12 @@
 }
 [data-image-type="waterPump"] {
   @include buildingBase;
-  transform: rotateZ(324deg) rotateY(62deg) rotate3d(8, -11, -5, 11deg);
   width: 85px;
   top: -25px;
   left: -34px;
-  z-index: 99;
-  background-image: none !important;
 }
 [data-image-type="windTurbine"] {
   @include buildingBase;
-  transform: rotateZ(323deg) rotateY(62deg) rotate3d(8, -11, -5, 11deg);
   width: 130px;
   top: -63px;
   left: -77px;
@@ -274,12 +269,11 @@
 }
 [data-image-type="tradingTerminal"] {
   @include buildingBase;
-  transform: rotateZ(322deg) rotateY(61deg) rotate3d(8, -10, -6, 9deg);
   width: 452px;
-  top: -63px;
+  top: -64px;
   left: -165px;
 }
-[data-building-type="tradingTerminal"][data-main-tile="true"]:before {
+[data-building-type="tradingTerminal"][data-main-tile="true"]:not([data-features-type]):before {
   @include buildingShadow(-196px, 50px, 120px, 235px); //bottom, left, width, height
 }
 .ghostImg {
@@ -298,6 +292,9 @@
   width: 105px;
   top: -24px;
   left: -33px;
+}
+[data-building-type="gravelRoad"] {
+  font-size: 12px;
 }
 [data-underground-type="pipe"] {
   position: relative;
@@ -342,4 +339,24 @@
   width: 111px;
   top: -31px;
   left: -40px;
+}
+
+.bldIndicatorsBlock {
+  display: flex;
+  position: absolute;
+  transform: rotateZ(322deg) rotateY(62deg) rotate3d(8, -11, -5, 11deg);
+  width: 100px;
+  z-index: 999;
+  top: -60px;
+  right: 5px;
+  gap: 5px;
+  pointer-events: none;
+  img {
+    border: 1px solid var(--black);
+    border-radius: 10px 0 10px 0;
+    padding: 4px;
+    background-color: var(--transRed);
+    width: 28px;
+    animation: flash 1s infinite;
+  }
 }

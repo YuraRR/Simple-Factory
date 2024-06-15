@@ -7,14 +7,15 @@ const allBuildings = [
     zSize: 1,
     cost: {
       Bricks: 20,
-      "Mechanical Parts": 10,
       Planks: 40,
+      "Mechanical Parts": 10,
+      "Steel Beams": 12,
     },
     energyConsumption: 0.5,
     isWaterNeeded: false,
     resources: ["Iron Ore", "Copper Ore", "Coal Ore"],
     description: `Provides resources like Iron, Copper, Coal`,
-    unlockPrice: 400,
+    unlockPrice: 800,
   },
   {
     name: "quarry",
@@ -30,7 +31,7 @@ const allBuildings = [
     isWaterNeeded: false,
     resources: ["Sand", "Stone", "Clay", "Limestone"],
     description: `Produces material depending on the resource on the tile`,
-    unlockPrice: 300,
+    unlockPrice: 600,
   },
   {
     name: "waterPump",
@@ -38,15 +39,15 @@ const allBuildings = [
     xSize: 1,
     zSize: 1,
     cost: {
-      "Concrete Block": 10,
+      Bricks: 10,
       "Mechanical Parts": 5,
       "Iron Pipes": 30,
     },
-    energyConsumption: 0.3,
+    energyConsumption: 0,
     isWaterNeeded: false,
     resources: ["Water"],
     description: `Pumping water. Use pipes to connect pump with buildings`,
-    unlockPrice: 300,
+    unlockPrice: 600,
   },
   {
     name: "rubberTreePlantation",
@@ -60,7 +61,7 @@ const allBuildings = [
     energyConsumption: 0,
     isWaterNeeded: false,
     description: `Produces latex if the plantation is located on forest tiles `,
-    unlockPrice: 500,
+    unlockPrice: 700,
   },
   {
     name: "lumbermill",
@@ -69,12 +70,13 @@ const allBuildings = [
     zSize: 1,
     cost: {
       Wood: 20,
+      Planks: 10,
     },
     resources: ["Wood"],
     energyConsumption: 0,
     isWaterNeeded: false,
     description: `Produces wood from forests. Cut down tree in radius every 60s `,
-    unlockPrice: 200,
+    unlockPrice: 500,
   },
   // 1 MATERIAL FACTORIES
   {
@@ -83,17 +85,17 @@ const allBuildings = [
     xSize: 2,
     zSize: 2,
     cost: {
-      "Concrete Block": 30,
       Bricks: 40,
+      "Mechanical Parts": 10,
       "Steel Beams": 25,
       Glass: 10,
       "Iron Pipes": 10,
     },
     energyConsumption: 0.8,
     isWaterNeeded: true,
-    resources: ["Refined Iron", "Refined Copper", "Refined Coal"],
+    resources: ["Refined Iron", "Refined Copper", "Refined Coal", "Sulfur"],
     description: `Refines ores before smelting`,
-    unlockPrice: 700,
+    unlockPrice: 1000,
   },
   {
     name: "crushingPlant",
@@ -102,14 +104,14 @@ const allBuildings = [
     zSize: 3,
     cost: {
       Gravel: 20,
-      "Steel Beams": 25,
-      "Mechanical Parts": 20,
+      "Steel Beams": 12,
+      "Mechanical Parts": 12,
     },
     energyConsumption: 0.7,
     isWaterNeeded: false,
     resources: ["Crushed Limestone", "Gravel", "Crushed Iron", "Crushed Copper"],
     description: `Crushing big stones to smaller`,
-    unlockPrice: 500,
+    unlockPrice: 800,
   },
   {
     name: "brickFactory",
@@ -126,7 +128,7 @@ const allBuildings = [
     isWaterNeeded: true,
     resources: ["Bricks"],
     description: `Produces Bricks from Clay`,
-    unlockPrice: 800,
+    unlockPrice: 1200,
   },
   {
     name: "sawmill",
@@ -134,6 +136,7 @@ const allBuildings = [
     xSize: 2,
     zSize: 2,
     cost: {
+      Gravel: 20,
       Planks: 30,
       "Mechanical Parts": 15,
     },
@@ -141,7 +144,7 @@ const allBuildings = [
     isWaterNeeded: false,
     resources: ["Planks"],
     description: `Produces Planks from Wood`,
-    unlockPrice: 400,
+    unlockPrice: 800,
   },
   {
     name: "steelMill",
@@ -159,7 +162,7 @@ const allBuildings = [
     isWaterNeeded: true,
     resources: ["Molten Steel"],
     description: `Produces Steel Beams, Steel Bolts and Steel Plates from Iron Feedstock`,
-    unlockPrice: 1500,
+    unlockPrice: 2000,
   },
 
   // 2 MATERIAL FACTORIES
@@ -176,7 +179,7 @@ const allBuildings = [
       "Iron Pipes": 10,
     },
     energyConsumption: 1,
-    isWaterNeeded: true,
+    isWaterNeeded: false,
     resources: ["Cement"],
     description: `Produces Cement from Crushed Limestone and Clay`,
     unlockPrice: 1800,
@@ -188,7 +191,6 @@ const allBuildings = [
     zSize: 5,
     cost: {
       "Concrete Block": 40,
-      Bricks: 30,
       "Steel Beams": 30,
       Glass: 20,
       "Iron Pipes": 15,
@@ -206,17 +208,16 @@ const allBuildings = [
     xSize: 4,
     zSize: 3,
     cost: {
-      "Concrete Block": 40,
       Bricks: 30,
-      "Steel Beams": 30,
+      "Mechanical Parts": 20,
+      "Steel Beams": 20,
       Glass: 20,
-      "Iron Pipes": 15,
     },
     energyConsumption: 0.8,
     isWaterNeeded: false,
     resources: ["Mechanical Parts(copper)", "Mechanical Parts", "Electronic Parts"],
     description: `Produces different things from other things`,
-    unlockPrice: 2000,
+    unlockPrice: 1600,
   },
   {
     name: "smallFoundry",
@@ -231,9 +232,9 @@ const allBuildings = [
     },
     energyConsumption: 0.8,
     isWaterNeeded: true,
-    resources: ["Molten Iron", "Molten Copper"],
-    description: `Produces Iron Pipes, Iron Gears and Iron Feedstock from Refined Iron, Coal and Crushed Limestone`,
-    unlockPrice: 900,
+    resources: ["Molten Iron(impure)", "Molten Copper(impure)"],
+    description: `Produces Iron and Copper products`,
+    unlockPrice: 1500,
   },
   {
     name: "oilRefinery",
@@ -244,31 +245,32 @@ const allBuildings = [
       "Concrete Block": 40,
       "Steel Beams": 30,
       "Iron Pipes": 50,
-      "Steel Plates": 20,
+      "Steel Plates": 25,
+      "Mechanical Parts": 30,
     },
     energyConsumption: 1.5,
     isWaterNeeded: false,
     resources: ["Oil"],
     description: `Produces Rubber and Plastic from Oil`,
-    unlockPrice: 2000,
+    unlockPrice: 2500,
   },
   {
     name: "chemicalPlant",
     type: "petrochemical",
-    xSize: 3,
-    zSize: 3,
+    xSize: 4,
+    zSize: 4,
     cost: {
       "Concrete Block": 50,
-      Bricks: 60,
       "Steel Beams": 50,
       Glass: 15,
       "Iron Pipes": 25,
+      "Mechanical Parts": 20,
     },
     energyConsumption: 0.9,
     isWaterNeeded: true,
-    resources: ["Rubber"],
-    description: `Produces Rubber from Latex`,
-    unlockPrice: 1000,
+    resources: ["Rubber(natural)", "Explosives"],
+    description: `Produces Rubber or Explosives`,
+    unlockPrice: 1400,
   },
   // 3 MATERIAL FACTORIES
   {
@@ -286,7 +288,7 @@ const allBuildings = [
     energyConsumption: 3,
     isWaterNeeded: true,
     resources: ["Molten Iron", "Molten Copper"],
-    description: `Produces Iron Pipes, Iron Gears and Iron Feedstock from Refined Iron, Coal and Crushed Limestone`,
+    description: `Produces Iron and Copper products. Iron Feedstock is needed for Steel`,
     unlockPrice: 3500,
   },
   {
@@ -296,10 +298,10 @@ const allBuildings = [
     zSize: 4,
     cost: {
       "Concrete Block": 50,
-      Bricks: 60,
+      "Mechanical Parts": 35,
       "Steel Beams": 50,
-      Glass: 15,
-      "Iron Pipes": 25,
+      Glass: 20,
+      "Electronic Parts": 25,
     },
     energyConsumption: 2,
     isWaterNeeded: false,
@@ -314,16 +316,16 @@ const allBuildings = [
     zSize: 5,
     cost: {
       "Concrete Block": 50,
-      Bricks: 60,
+      "Mechanical Parts": 20,
       "Steel Beams": 50,
       Glass: 15,
       "Iron Pipes": 25,
     },
     energyConsumption: 1,
-    isWaterNeeded: false,
+    isWaterNeeded: true,
     resources: ["Concrete Block"],
     description: `Produces Concrete Blocks from Cement, Sand and Gravel`,
-    unlockPrice: 1500,
+    unlockPrice: 2200,
   },
   {
     name: "carFactory",
@@ -339,8 +341,8 @@ const allBuildings = [
     },
     energyConsumption: 5,
     isWaterNeeded: true,
-    resources: ["Car", "Truck"],
-    description: `Produces Cars or Trucks from Engine, Chassis and Car Body`,
+    resources: ["Car"],
+    description: `Produces Cars from Engine, Chassis and Car Body`,
     unlockPrice: 5000,
   },
 
@@ -351,11 +353,11 @@ const allBuildings = [
     xSize: 2,
     zSize: 2,
     cost: {
-      Planks: 10,
-      Gravel: 10,
+      Planks: 20,
+      Gravel: 20,
     },
     resources: [""],
-    description: `Store small amount of one item`,
+    description: `Store small amount (75) of one item`,
     unlockPrice: 0,
   },
   {
@@ -365,12 +367,12 @@ const allBuildings = [
     zSize: 2,
     cost: {
       Bricks: 50,
-      Planks: 20,
-      Gravel: 10,
+      Planks: 30,
+      Gravel: 20,
       "Steel Plates": 15,
     },
-    description: `Store medium amount of one item`,
-    unlockPrice: 500,
+    description: `Store medium amount (200) of one item`,
+    unlockPrice: 1200,
   },
   //TRANSPORTATION
   {
@@ -391,7 +393,7 @@ const allBuildings = [
     description: `Moves items between factories. 
     First you need to place Connector direction from the building, after place Conveyors in in the right direction.
     Rotating by "R" button`,
-    unlockPrice: 300,
+    unlockPrice: 600,
   },
 
   {
@@ -401,7 +403,7 @@ const allBuildings = [
     zSize: 1,
     cost: {
       "Mechanical Parts": 3,
-      "Concrete Block": 4,
+      Bricks: 4,
     },
     imageSrc: {
       0: "/img/conveyors/connectorTop-exp.png",
@@ -430,8 +432,8 @@ const allBuildings = [
       2: "/img/conveyors/splitterDown.png",
       3: "/img/conveyors/splitterLeft.png",
     },
-    description: `Used to evenly split items from conveyors in 3 directions`,
-    unlockPrice: 400,
+    description: `Used to evenly split items from conveyors in 3 directions. Orange side is used to input items.`,
+    unlockPrice: 600,
   },
   {
     name: "undergroundConveyor",
@@ -451,7 +453,7 @@ const allBuildings = [
     },
     description: `Moves items under the ground. To correct work need to place entrance and exit over highlighted tiles. 
     Max length is 4 tiles from the entrance `,
-    unlockPrice: 400,
+    unlockPrice: 600,
   },
   {
     name: "pipe",
@@ -468,7 +470,7 @@ const allBuildings = [
       3: "/img/pipes/pipe-horizontal.png",
     },
     description: `Pipes are used to connect buildings to water. Need to start pipeline from the Water Pump`,
-    unlockPrice: 150,
+    unlockPrice: 300,
   },
   {
     name: "gravelRoad",
@@ -492,7 +494,7 @@ const allBuildings = [
     },
     description: `Faster version of Gravel Road. Used to connect Cargo Stations with each others. 
     You can place several at once by holding "Shift" before the "Left click".`,
-    unlockPrice: 500,
+    unlockPrice: 1200,
   },
   {
     name: "cargoStation",
@@ -504,10 +506,7 @@ const allBuildings = [
       Planks: 15,
     },
     description: `Used to delivery resources to others Cargo Stations. 
-    Can be placed only near buildings. The station should be placed towards the building. 
-    First need to choose mode of working "Export" or "Import", and pick the resource type.
-    After in a list of other stations need to choose right station to export or import items.
-    Further buy a truck and set it to the route.`,
+    Can be placed only near buildings. The station should be placed towards the building.`,
     imageSrc: {
       0: "/img/buildings/cargoStationUp.webp",
       1: "/img/buildings/cargoStationRight.webp",
@@ -526,7 +525,7 @@ const allBuildings = [
       Gravel: 20,
       Planks: 25,
     },
-    description: `Used to buy trucks.`,
+    description: `Used to buy trucks. Can store up to 5 trucks`,
     unlockPrice: 0,
   },
   {
@@ -554,7 +553,7 @@ const allBuildings = [
       "Iron Pipes": 40,
       "Mechanical Parts": 15,
     },
-    unlockPrice: 2000,
+    unlockPrice: 2500,
   },
   {
     name: "windTurbine",
@@ -565,10 +564,10 @@ const allBuildings = [
     description: `Wind Turbine is spinning and giving energy. Gives 2.5 mW <img src="/img/resourcesIcons/energy.png"></img> permanent.`,
     cost: {
       Gravel: 10,
-      "Steel Beams": 20,
-      "Mechanical Parts": 20,
+      "Steel Beams": 14,
+      "Mechanical Parts": 14,
     },
-    unlockPrice: 400,
+    unlockPrice: 800,
   },
   //MISC
   {
@@ -581,22 +580,46 @@ const allBuildings = [
   },
 ];
 const buildingResources = {
-  "Concrete Block": 0,
-  Bricks: 0,
-  "Steel Beams": 0,
-  Glass: 0,
-  "Iron Pipes": 0,
-  Planks: 0,
   Wood: 0,
+  Planks: 0,
   Stone: 0,
-  Rubber: 0,
   Gravel: 0,
+  Bricks: 0,
+  Glass: 0,
   "Mechanical Parts": 0,
+  Cement: 0,
+  Rubber: 0,
+  "Concrete Block": 0,
+  "Steel Beams": 0,
+  "Steel Plates": 0,
+  "Steel Bolts": 0,
+  "Iron Pipes": 0,
   "Iron Gears": 0,
+  "Iron Feedstock": 0,
+  Explosives: 0,
+  "Copper Plates": 0,
+  "Copper Coil": 0,
+  Plastic: 0,
+  "Electronic Parts": 0,
 };
 
 const storageResources = [];
-
+function createStorageResources() {
+  const buildingResourcesMenu = document.querySelector(".resources-menu");
+  for (const item in buildingResources) {
+    const { name, imageSrc } = findItemObjInList(item);
+    const materialHTML = `
+    <div class="resBlock hidden" >
+      <img src="${imageSrc}" class="resImage" id="${name}"/>
+      <span class="resAmount" data-res="${name}">0</span>
+      <div id="${name}Tip" role="tooltip">${name}</div>
+    </div>`;
+    deltaTimeout(() => setTipes(`${name}`), 1000);
+    buildingResourcesMenu.insertAdjacentHTML("beforeend", materialHTML);
+  }
+  for (let i = 0; i <= 3; i++) buildingResourcesMenu.children[i].classList.remove("hidden");
+}
+createStorageResources();
 function updateStorageResources() {
   for (const key in buildingResources) {
     if (Object.hasOwnProperty.call(buildingResources, key)) {
@@ -606,10 +629,9 @@ function updateStorageResources() {
 
       buildingResources[key] = totalItemAmount;
       const resElem = document.querySelector(`[data-res="${key}"]`);
+      totalItemAmount > 0 ? resElem.parentElement.classList.remove("hidden") : "";
       resElem ? (resElem.textContent = totalItemAmount) : "";
     }
   }
 }
-setInterval(() => {
-  updateStorageResources();
-}, 5000);
+setInterval(() => updateStorageResources(), 5000);

@@ -2,57 +2,251 @@
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 100px;
-  background-color: var(--darkGray);
+  bottom: 55px;
+  background-color: var(--transDarkGray);
   pointer-events: all;
-  width: 700px;
-  height: 300px;
+  width: 820px;
+  height: 400px;
   box-shadow: 5px 5px 15px 0px rgba(0, 0, 0, 0.5);
+
   &__block {
     display: flex;
+    position: relative;
     justify-content: space-around;
     height: 100%;
+    background-color: var(--transBlack);
   }
   &__routesList {
     display: flex;
     flex-direction: column;
-    width: 500px;
+    width: 100%;
+    gap: 6px;
+    margin-bottom: 60px;
+    position: relative;
+    // overflow: auto;
   }
 
   &__route {
     display: flex;
     flex-direction: column;
-    background-color: var(--gray);
-
-    img {
-      width: 35px;
-    }
+  }
+  &__arrowRight {
+    height: 20px;
+  }
+  &__itemImg {
+    width: 30px;
   }
   &__info {
     display: flex;
+
     align-items: center;
-    padding: 5px;
-    gap: 5px;
+    padding: 5px 10px;
+    gap: 10px;
+    background-color: var(--transXXXDarkGray);
   }
   &__id {
-    width: 20px;
     text-align: center;
     color: var(--black);
+    padding: 6px;
   }
-  &__itemName {
-    margin-left: auto;
+  &__item {
+    display: flex;
+    align-items: center;
+    padding: 3px 6px;
+    cursor: pointer;
+    &:hover {
+      background-color: var(--transBlack);
+    }
   }
-  &__itemImg {
-  }
+  &__itemSelect {
+    display: grid;
+    grid-template-columns: repeat(6, auto);
+    grid-template-rows: auto auto auto;
+    padding: 8px 13px;
+    background-color: var(--black);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: -5px;
+    align-self: center;
+    z-index: 999;
+    overflow-y: auto;
 
+    overflow-x: hidden;
+    max-height: 260px;
+    gap: 5px;
+
+    .importItem {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 70px;
+
+      text-align: center;
+    }
+    button {
+      width: 90%;
+      background-color: var(--transGray);
+      border-radius: 10px 0;
+    }
+    span {
+      font-size: 12px;
+      max-width: 65px;
+    }
+    img {
+      height: 50px;
+    }
+  }
+  &__buttons {
+    display: flex;
+    flex-direction: column;
+    margin-left: auto;
+    gap: 4px;
+
+    #accept {
+      background-image: url(../../img/buttonIcons/check.png);
+    }
+    #decline {
+      background-image: url(../../img/buttonIcons/cross.png);
+    }
+
+    button {
+      width: 25px;
+      height: 25px;
+      background-size: contain;
+      background-color: var(--lightGray);
+    }
+  }
+  &__stations {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  &__station {
+    width: 200px;
+    padding: 5px;
+    cursor: pointer;
+    background-color: var(--transDarkGray);
+    color: var(--white);
+    border-radius: unset;
+    option {
+      background-color: var(--darkGray);
+      padding: 4px;
+    }
+  }
+  &__createRoute-btn {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -52px;
+    margin: 0 auto;
+    margin-top: 5px;
+    background-image: url(../../img/buttonIcons/plus.png);
+    background-size: contain;
+    border: 5px solid var(--lightGray);
+    background-color: var(--lightGray);
+    border-radius: 10px 0;
+  }
+  &__arrow {
+    position: absolute;
+    right: 50px;
+    background-image: url(/img/buttonIcons/truckIcon.png);
+    background-size: cover;
+    background-color: transparent;
+    border: none;
+    height: 30px;
+    width: 30px;
+
+    transform: translateX(-50%);
+    cursor: pointer;
+    filter: brightness(80%);
+  }
   &__trucksList {
     display: flex;
     flex-direction: column;
+    position: absolute;
+    overflow: auto;
+    width: 240px;
+    background-color: var(--darkGray);
+    right: -240px;
+    top: 40px;
+    z-index: 2;
+    padding-top: 0px;
+    opacity: 0;
+    gap: 3px;
+    pointer-events: none;
+  }
+
+  &__trucksList.visible {
+    pointer-events: all;
+    overflow: auto;
+    height: 200px;
+    opacity: 1;
+    transition: max-height 0.35s ease-in, opacity 0.35s ease-in;
+  }
+  #addTruck {
+    display: flex;
+    padding: 4px 0;
+    background-color: transparent;
+    border: none;
+    background-color: var(--transBlack);
+    width: 100%;
+    justify-content: center;
+    text-transform: uppercase;
+    align-items: center;
+    gap: 10px;
+    color: var(--white);
+    font-size: 16px;
+    img {
+      width: 18px;
+    }
+    &:hover {
+      background-color: var(--black);
+    }
+  }
+  &__quantityText {
+    text-align: center;
+    background-color: var(--transBlack);
+  }
+  &__quantityBlock {
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: space-around;
+    padding: 5px 10px;
+    button {
+      background-color: transparent;
+      background-size: contain;
+      border: none;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+
+    .minusBtn {
+      background-image: url(/img/buttonIcons/whiteMinus.png);
+    }
+    .plusBtn {
+      background-image: url(/img/buttonIcons/whitePlus.png);
+    }
+    #isInfinite {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  &__quantity {
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+    width: 30px;
   }
   &__truck {
     display: flex;
     width: 100%;
-    background-color: var(--lightGray);
+    background-color: var(--transXXDarkGray);
   }
   &__truck-info {
     display: flex;
@@ -60,42 +254,57 @@
     gap: 10px;
     padding: 0 7px;
     width: 100%;
+    background-color: var(--transDarkGray);
+    img {
+      width: 30px;
+    }
   }
   &__stationsList {
-    background-color: var(--gray);
     display: flex;
     flex-direction: column;
     pointer-events: all;
-    gap: 10px;
+    gap: 5px;
     width: 200px;
   }
   &__stationBlock {
-    background-color: var(--lightGray);
     padding: 5px 10px;
+    margin: 0 5px;
+    background-color: var(--transGray);
     &:hover {
       background-color: var(--black);
     }
   }
+  &__truckButtons {
+    button {
+      background-size: contain;
+      width: 18px;
+      height: 18px;
+      background-color: unset;
+      border: none;
+      background-repeat: no-repeat;
+    }
+  }
   &__deleteButton {
-    background-image: url(/img/buttonIcons/whiteMinus.png);
-    background-size: contain;
-    width: 20px;
-    height: 20px;
-    background-color: unset;
-    border: none;
-    margin-left: auto;
-    padding-right: 3px;
+    background-image: url(/img/buttonIcons/remove.png);
+  }
+  &__copyButton {
+    background-image: url(/img/buttonIcons/copy.png);
   }
   .noRoutes,
   .noStations {
-    background-color: var(--gray);
     width: 100%;
     text-align: center;
-  }
-  .noStations {
-    background-color: var(--lightGray);
+    padding: 4px 0;
+    background-color: var(--transBlack);
   }
   .redBg {
     background-color: var(--transRed);
   }
+}
+
+[data-active-select] {
+  background-color: var(--transBlack);
+}
+[data-active-route] {
+  background-color: var(--transGreen);
 }

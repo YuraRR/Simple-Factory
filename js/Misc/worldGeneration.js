@@ -16,7 +16,8 @@ class Generator {
         tile.dataset.groundType == origNeighbourType ||
         tile.dataset.groundType == groundType) &&
       !tile.dataset.featuresType &&
-      !tile.dataset.buildingType
+      !tile.dataset.buildingType &&
+      tile.dataset.type == "empty"
     ) {
       const img = document.createElement("img");
       img.src = `./img/features/${featureVariant}.webp`;
@@ -33,7 +34,7 @@ class Generator {
   generateMultiply(min, probability, tileType, featureType, featureVariants) {
     let counter = 0;
     const queue = [{ x: this.x, y: this.z }];
-
+    const allTiles = [];
     while (queue.length > 0) {
       const currentTile = queue.shift();
 
@@ -57,6 +58,7 @@ class Generator {
             tile.dataset.subGroundType = tileType + Math.floor(Math.random() * 2);
           }
           counter++;
+          allTiles.push(tile);
         }
       };
 
@@ -71,6 +73,16 @@ class Generator {
       // Применение смещений
       expandTile(randomDX, 0); // Горизонтальное смещение
       expandTile(0, randomDY); // Вертикальное смещение
+    }
+    if (tileType == "forest") {
+      const forestTile = randomArrayElem(allTiles);
+      console.log(forestTile);
+      playAmbientSound(forestTile, "birds");
+    }
+    if (tileType == "water") {
+      const waterTile = randomArrayElem(allTiles);
+      playAmbientSound(waterTile, "lake");
+      console.log(waterTile);
     }
   }
 
@@ -130,7 +142,7 @@ class Water extends Generator {
     if (tile.dataset.groundType == "grass") {
       tile.dataset.groundType = "water";
       tile.dataset.type = "water";
-      this.generateMultiply(12, 0.35, "water");
+      this.generateMultiply(20, 0.6, "water");
     }
   }
 }
@@ -144,15 +156,6 @@ class Tree extends Generator {
     const treesList = ["pine", "oak", "mixedTrees"];
     this.generateOne("tree", treesList, "", "", ground);
   }
-  // TREE CHOPING
-
-  // img.addEventListener("dblclick", () => {
-  //   const sound = new Audio("/sounds/test.m4a");
-  //   sound.play();
-  //   img.remove();
-  //   delete treeCell.dataset.featuresType;
-  //   woodAmount += 3;
-  // });
 }
 
 class Forest extends Generator {
@@ -180,8 +183,17 @@ class Sand extends Generator {
     this.generateAround("water", "sand", 2, "reed", decorList, 0.15);
     const tiles = gridContainer.querySelectorAll(`[data-ground-type="sand"]`);
     tiles.forEach((tile) => {
-      tile.dataset.resType = "Sand";
-      tile.dataset.sandType = "solid";
+      const neighborsTiles = findNeighbors(tile);
+
+      const matchedCells = neighborsTiles.filter((cell) => cell.dataset.type == "water");
+
+      if (matchedCells.length >= 3) {
+        tile.dataset.type = "water";
+        tile.dataset.groundType = "water";
+        tile.dataset.subGroundType = "water1";
+      } else {
+        tile.dataset.resType = "Sand";
+      }
     });
     this.generateAround("sand", "grass2", 1, "", [], "");
   }
@@ -216,6 +228,7 @@ class Limestone extends Generator {
       this.generateOne("limeStoneRock", limestoneRocks, rockTiles[0], "", "limestone");
       this.tilesOccupation(2, 2);
     }
+
     rockTiles.forEach((tile) => {
       const neighborsTiles = findNeighbors(tile);
       neighborsTiles.forEach((tile) => {
@@ -235,9 +248,15 @@ class Stone extends Generator {
     this.z = z;
   }
   spawn() {
-    this.generateMultiply(3, 0.1, "stone");
+    this.generateMultiply(15, 0.7, "stone");
     const tiles = gridContainer.querySelectorAll(`[data-ground-type="stone"]`);
-    tiles.forEach((tile) => (tile.dataset.resType = "Stone"));
+    const rocksList = ["stone1", "stone2"];
+
+    tiles.forEach((tile) => {
+      tile.dataset.resType = "Stone";
+      const randomNum = Math.floor(Math.random() * 9);
+      randomNum == 0 ? this.generateOne("rock", rocksList, tile, "", "stone") : "";
+    });
   }
 }
 class Ore extends Generator {
@@ -283,11 +302,11 @@ class Coal extends Ore {
     super(x, z, "Coal Ore");
   }
 }
-// class Quartz extends Ore {
-//   constructor(x, z) {
-//     super(x, z, "Quartz Ore");
-//   }
-// }
+class Sulfur extends Ore {
+  constructor(x, z) {
+    super(x, z, "Sulfur Ore");
+  }
+}
 class StoneRock extends Generator {
   constructor(x, z) {
     super();
@@ -297,6 +316,30 @@ class StoneRock extends Generator {
   spawn() {
     const rocksList = ["stone1", "stone2"];
     this.generateOne("rock", rocksList);
+  }
+}
+class BigStoneRock extends Generator {
+  constructor(x, z) {
+    super();
+    this.x = x;
+    this.z = z;
+  }
+  spawn() {
+    const stoneTiles = document.querySelectorAll('[data-ground-type="stone"');
+    const tile = randomArrayElem(stoneTiles);
+    const [x, z] = findXZpos(tile);
+    this.x = x;
+    this.z = z;
+    const rockTiles = this.tilesOccupation(2, 2);
+    if (
+      rockTiles.length == 4 &&
+      rockTiles.every((tile) => !tile.dataset.featuresType && tile.dataset.groundType == "stone")
+    ) {
+      this.generateOne("bigStoneRock", ["bigStoneRock1"], rockTiles[0], "", "stone");
+      this.tilesOccupation(2, 2);
+    } else {
+      spawnObj(BigStoneRock, 1);
+    }
   }
 }
 function spawnTerminal() {
@@ -311,6 +354,7 @@ function spawnTerminal() {
   cell.dataset.buildingId = 0;
   cell.dataset.mainTile = "true";
   cell.dataset.buildingCategory = "terminal";
+  cell.dataset.idByType = 1;
 
   const buildingTiles = newBuilding.tilesOccupation(6, 3);
   newBuilding.createBuildingImage(buildingTiles[5]);
@@ -327,16 +371,17 @@ function spawnTerminal() {
 function randomId() {
   return Math.floor(Math.random() * gridSize);
 }
-function randomArrayElem(array) {
-  const randomIndex = Math.floor(Math.random() * array.length);
-  if (typeof array[randomIndex] === "object") {
-    if (array[randomIndex].dataset.featuresType === undefined) {
-      return array[randomIndex];
-    } else {
-      return randomArrayElem(array);
-    }
+function randomArrayElem(nodeList) {
+  const array = Array.from(nodeList);
+
+  const filteredArray = array.filter(
+    (item) => typeof item !== "object" || item.dataset.featuresType === undefined
+  );
+  if (filteredArray.length > 0) {
+    const randomIndex = Math.floor(Math.random() * filteredArray.length);
+    return filteredArray[randomIndex];
   } else {
-    return array[randomIndex];
+    return null;
   }
 }
 
@@ -346,7 +391,9 @@ function spawnObj(objClass, amount) {
       const x = randomId();
       const z = randomId();
       const randomTile = document.getElementById(`${x}.${z}`);
-      randomTile.dataset.type == "empty" ? new objClass(x, z).spawn() : findEmptyTile();
+      randomTile.dataset.groundType == "grass" && randomTile.dataset.type == "empty"
+        ? new objClass(x, z).spawn()
+        : findEmptyTile();
     }
     findEmptyTile();
   }
@@ -355,13 +402,16 @@ function generateWorld() {
   spawnTerminal();
   spawnObj(Water, 1);
   spawnObj(Sand, 1);
+  spawnObj(Forest, 2);
   spawnObj(Clay, 2);
   spawnObj(Limestone, 1);
-  spawnObj(Stone, 1);
-  spawnObj(Forest, 2);
+  spawnObj(Stone, 3);
   spawnObj(Tree, 5);
   spawnObj(Iron, 2);
   spawnObj(Copper, 1);
-  spawnObj(Coal, 1);
+  spawnObj(Coal, 2);
+  spawnObj(Sulfur, 1);
   spawnObj(StoneRock, 10);
+  spawnObj(BigStoneRock, 6);
+  sounds.wind.play();
 }

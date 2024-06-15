@@ -115,11 +115,11 @@ class DynamicBuildings extends Building {
       return conditions;
     }
 
-    const oppositeDirections = {
-      up: ["DownCross", "DownRightCorner", "DownLeftCorner", "Down"],
-      right: ["LeftCross", "LeftDownCorner", "LeftUpCorner", "Left"],
-      down: ["UpCross", "UpRightCorner", "UpLeftCorner", "Up"],
-      left: ["RightCross", "RightDownCorner", "RightUpCorner", "Right"],
+    const directions = {
+      up: ["UpCross", "RightUpCorner", "LeftUpCorner", "Up"],
+      right: ["RightCross", "DownRightCorner", "UpRightCorner", "Right"],
+      down: ["DownCross", "RightDownCorner", "LeftDownCorner", "Down"],
+      left: ["LeftCross", "DownLeftCorner", "UpLeftCorner", "Left"],
     };
 
     setObjType(neighborsObjects.currentObj);
@@ -127,9 +127,9 @@ class DynamicBuildings extends Building {
       neighborsTiles.forEach((tile) => tile.dataset.undergroundType === "pipe" && setObjType(tile));
     } else if (currentTool == "conveyor") {
       const tile = findTargetTileByDirection(neighborsObjects.currentObj, false);
-      tile.dataset.buildingCategory == "conveyor" ? setObjType(tile) : "";
+      tile.dataset.buildingType == "conveyor" ? setObjType(tile) : "";
     }
-    function setObjType(obj, isNeighbour) {
+    function setObjType(obj) {
       for (const [type, condition] of Object.entries(placementConditions(obj))) {
         if (!condition) continue;
 
@@ -142,20 +142,21 @@ class DynamicBuildings extends Building {
             }
             break;
           case "conveyor":
-            function findKeyByValue(value) {
-              for (const key in oppositeDirections) if (oppositeDirections[key].includes(value)) return key;
-              return null;
+            const conveyorImg = obj.querySelector(
+              '[data-image-type="conveyor"], [data-image-type="connector"]:not([data-ghost-img="true"])'
+            );
+            function findKeyByValue(obj, value) {
+              return Object.keys(obj).find((key) => obj[key].includes(value));
             }
-            const key = findKeyByValue(type);
-            if (obj.dataset.direction != key) {
-              const conveyorImg = obj.querySelector(
-                '[data-image-type="conveyor"], [data-image-type="connector"]:not([data-ghost-img="true"])'
-              );
 
+            const direction = findKeyByValue(directions, type);
+
+            if (obj.dataset.direction == direction) {
               conveyorImg.dataset.conveyorType = type;
               conveyorImg.src = `/img/conveyors/conveyor-${type}.gif`;
-              break;
             }
+
+            break;
         }
 
         break;
@@ -181,7 +182,6 @@ class Conveyor extends DynamicBuildings {
     this.tileData.direction = directionInfo;
   }
   moveItem(factoryTile, nextTile, resName = factoryTile.dataset.itemTypeOutput1) {
-    console.log(resName);
     const possibleTypes = ["conveyor", "splitter", "undergroundConveyor"];
     function createResImage(tile) {
       const img = document.createElement("img");
@@ -204,15 +204,15 @@ class Conveyor extends DynamicBuildings {
         const mainFactoryTile = findTargetTileByDirection(currentTile, true);
         const factoryData = mainFactoryTile.dataset;
         if (factoryData.buildingCategory != "storage") {
-          if (factoryData.firstMatName == resName) {
-            factoryData.firstMatAmount++;
-            factoryData.firstMatName = resName;
-          } else if (factoryData.secondMatName == resName) {
-            factoryData.secondMatAmount++;
-            factoryData.secondMatName = resName;
-          } else if (factoryData.thirdMatName == resName) {
-            factoryData.thirdMatAmount++;
-            factoryData.thirdMatName = resName;
+          if (factoryData.materialName1 == resName) {
+            factoryData.materialAmount1++;
+            factoryData.materialName1 = resName;
+          } else if (factoryData.materialName2 == resName) {
+            factoryData.materialAmount2++;
+            factoryData.materialName2 = resName;
+          } else if (factoryData.materialName3 == resName) {
+            factoryData.materialAmount3++;
+            factoryData.materialName3 = resName;
           }
         } else if (
           factoryData.buildingCategory == "storage" &&
@@ -313,19 +313,21 @@ class Conveyor extends DynamicBuildings {
               case "in1Out1":
               case "in1Out2":
               case "In":
-                importConnectorAvailable = factoryData.firstMatName === resName;
+                importConnectorAvailable =
+                  factoryData.materialName1 === resName && factoryData.materialAmount1 < 50;
                 break;
               case "in2Out1":
               case "in2Out2":
                 importConnectorAvailable =
-                  factoryData.firstMatName === resName || factoryData.secondMatName === resName;
+                  (factoryData.materialName1 === resName && factoryData.materialAmount1 < 50) ||
+                  (factoryData.materialName2 === resName && factoryData.materialAmount2 < 50);
                 break;
               case "in3Out1":
               case "in3Out3":
                 importConnectorAvailable =
-                  factoryData.firstMatName === resName ||
-                  factoryData.secondMatName === resName ||
-                  factoryData.thirdMatName === resName;
+                  (factoryData.materialName1 === resName && factoryData.materialAmount1 < 50) ||
+                  (factoryData.materialName2 === resName && factoryData.materialAmount2 < 50) ||
+                  (factoryData.materialName3 === resName && factoryData.materialAmount3 < 50);
                 break;
               case "storage":
                 importConnectorAvailable =
@@ -351,17 +353,17 @@ class Conveyor extends DynamicBuildings {
               resImage.classList.add("fade-in");
               resImage.style[property] = currentStyle + offset + "px";
               const [x, z] = findXZpos(nextTile);
-              resImage.style.zIndex = x + z + 1;
+              resImage.style.zIndex = x + z + 3;
               if (nextTileData.buildingType == "connector" || nextTileData.buildingType == "splitter") {
                 resImage.classList.remove("fade-in");
                 resImage.classList.add("fade-out");
               }
 
-              setTimeout(() => {
+              deltaTimeout(() => {
                 moveStep(nextTile, resImage);
               }, 750);
 
-              setTimeout(() => {
+              deltaTimeout(() => {
                 currentTileData.itemType = "";
                 currentTileData.itemId = "";
               }, 100);

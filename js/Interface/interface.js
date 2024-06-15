@@ -25,7 +25,7 @@ function addBuildingsToMenu() {
     </button>
     <img class="lockImage" src="/img/buttonIcons/lock.png" draggable="false" />
     <div class="unlockBld hidden">
-      <button class="tool-menu__unlockBtn">Unlock <span class="green">${buildingInfo.unlockPrice} $</span></button>
+      <button class="tool-menu__unlockBtn">Unlock <span class="green">$${buildingInfo.unlockPrice}</span></button>
       <button class="tool-menu__cancelBtn">Cancel</button>
     </div>
     <span>${formatString(bld.name)}</span>
@@ -47,14 +47,12 @@ function addBuildingsToMenu() {
     unlockBtn.onclick = () => {
       if (money >= buildingInfo.unlockPrice) {
         removeLocked();
-        money -= +buildingInfo.unlockPrice;
-        updateMoney();
-        moneySound();
+        showMoneyChange(buildingInfo.unlockPrice, "minus");
       } else {
         unlockBtn.classList.add("shake");
-        setTimeout(() => unlockBtn.classList.remove("shake"), 500);
+        deltaTimeout(() => unlockBtn.classList.remove("shake"), 500);
         errorSound();
-        notyf.error("Not enough money! Go find a job");
+        notyf.error("Not enough money!");
       }
     };
     function removeLocked() {
@@ -85,13 +83,14 @@ function recipeTipBlock(bld, buildingInfo) {
   buildingInfo.resources.forEach((resName) => {
     const tipResource = document.createElement("div");
     const resInfo = findItemObjInList(resName);
-    const itemMaterials = bld.name == resInfo.producedIn ? resInfo.materials : resInfo.materials2;
-    const resTime = itemMaterials.time === 0 ? "∞" : 60 * (1000 / itemMaterials.time);
+    const itemMaterials = resInfo.materials;
+
     let materialList = [];
     for (let i = 1; i <= 3; i++) {
       const itemName = itemMaterials[`res${i}Name`];
       itemName && materialList.push(findItemObjInList(itemName));
     }
+
     product = findItemObjInList(resInfo.name);
 
     tipResource.classList.add("recipe__items");
@@ -101,9 +100,7 @@ function recipeTipBlock(bld, buildingInfo) {
       </div>
  
       <div class="recipe__timeBlock">
-          <span class="resAmountPerMin">${resTime} / </span>
-          <span class="resTime">60</span>
-          <img src="/img/buttonIcons/whiteClock.png" class="timeImage" draggable="false" />
+          <span class="resAmountPerMin">60 <img src="/img/buttonIcons/whiteClock.png" class="timeImage"/></span>
           <img class="recipe__arrow" src="img/buttonIcons/arrow.png" />
       </div>
       <div class="recipe__product">
@@ -111,23 +108,33 @@ function recipeTipBlock(bld, buildingInfo) {
       </div>`;
     const allMaterials = tipResource.querySelector(".recipe__materials");
     for (let i = 0; i < materialList.length; i++) {
+      const resPerMin = (60000 / itemMaterials.time) * itemMaterials[`res${i + 1}Amount`];
       const materialHTML = `
       <div class="recipe__item">
         <img src="${materialList[i].imageSrc}" class="recipe__itemImage" title="${materialList[i].name}"/>
-        <span class="recipe__itemAmount">${itemMaterials[`res${i + 1}Amount`]}</span>
+        <span class="recipe__itemAmount">${resPerMin}</span>
       </div>
     `;
 
       allMaterials.insertAdjacentHTML("beforeend", materialHTML);
     }
     const allProducts = tipResource.querySelector(".recipe__product");
+    let resPerMin = (60000 / itemMaterials.time) * itemMaterials.prodAmount;
     if (resInfo.type == "semiFinished") {
-      const productsList = Object.values(allItems).filter((item) => item.materials.res1Name == resInfo.name);
+      let productsList = Object.values(allItems).filter(
+        (item) =>
+          item.materials.res1Name == resInfo.name ||
+          (buildingInfo.name == "smallFoundry" && item.materials.res1Name == resInfo.itemName)
+      );
+      if (buildingInfo.name == "smallFoundry" && resInfo.name == "Molten Iron(impure)") {
+        productsList.splice(0, 1);
+      }
       productsList.forEach((item) => {
+        let resPerMin = (60000 / item.materials.time) * item.materials.prodAmount;
         const productHTML = `
         <div class="recipe__item">
           <img src="${item.imageSrc}" class="recipe__itemImage" title="${item.name}"/>
-          <span class="recipe__itemAmount">${item.materials.prodAmount}</span>
+          <span class="recipe__itemAmount">${resPerMin}</span>
         </div>`;
 
         allProducts.insertAdjacentHTML("beforeend", productHTML);
@@ -136,7 +143,7 @@ function recipeTipBlock(bld, buildingInfo) {
       const productHTML = `
       <div class="recipe__item">
         <img src="${resInfo.imageSrc}" class = "recipe__itemImage"/>
-        <span class = "recipe__itemAmount">${itemMaterials.prodAmount}</span>
+        <span class = "recipe__itemAmount">${resPerMin}</span>
       </div>`;
 
       allProducts.insertAdjacentHTML("beforeend", productHTML);
@@ -177,7 +184,7 @@ function addEnergyAndWaterIcons(tip, buildingInfo) {
   if (buildingInfo.energyConsumption) {
     const energyHTML = `
     <img src="img/resourcesIcons/energy.png" data-energy-icon/>
-    <span class="energyAmount">${buildingInfo.energyConsumption} kW</span>`;
+    <span class="energyAmount">${buildingInfo.energyConsumption} mW</span>`;
     waterAndEnergyBlock.insertAdjacentHTML("beforeend", energyHTML);
   }
 }
@@ -193,7 +200,7 @@ function pricesTipBlock(bld, buildingInfo) {
       const resAmount = buildingInfo.cost[key];
       const resName = [key];
       const tipCost = document.createElement("div");
-      const resImage = allItems.find((item) => item.name == resName).imageSrc;
+      const resImage = findItemObjInList(resName).imageSrc;
       tipCost.innerHTML = `
       <img src="${resImage}" class="resImage" draggable="false" title="${resName}"/>
       <span class="resAmount">${resAmount}</span>
@@ -209,10 +216,18 @@ function activeToolCategory() {
   const toolButtons = document.querySelectorAll(".tool-menu__btn");
   const menuModal = document.querySelector(".tool-menu__modal");
   const closeBtn = menuModal.querySelector(".close-button");
+  const pricesInfo = document.querySelector(".pricesInfo-menu");
+  const routesInfo = document.querySelector(".routesInfo-menu");
+  const filterConn = document.querySelector(".selectConnectorItemBlock");
+  const modeButtons = document.querySelectorAll(".tool-menu__mode-btn");
 
   categoryButtons.forEach((btn) => {
     setTipes(btn.id);
     btn.addEventListener("click", () => {
+      pricesInfo.classList.add("hidden");
+      routesInfo.classList.add("hidden");
+      filterConn.classList.add("hidden");
+
       categoryButtons.forEach((btn) => btn.classList.remove("buttonActive"));
       document.querySelectorAll(".unlockBld").forEach((btn) => btn.classList.add("hidden"));
       btn.classList.add("buttonActive");
@@ -232,15 +247,14 @@ function activeToolCategory() {
         btn.parentElement.querySelector(".unlockBld").classList.remove("hidden");
         return;
       }
+
       modeButtons.forEach((btn) => btn.classList.remove("buttonActive"));
       currentTool = btn.id;
       removeButtonActive(toolButtons, btn);
       createEventListener(currentTool);
       currentTool == "pipe" && !undergroundOpened ? showUnderground() : null;
       currentTool != "pipe" && undergroundOpened ? showUnderground() : null;
-      currentTool == "conveyor" || currentTool == "connector" || currentTool == "splitter"
-        ? transperentBuildingsShow()
-        : transperentBuildingsRemove();
+
       if (currentTool == "undergroundConveyor") {
         const possibleTiles = document.querySelectorAll(`[data-possible-connect-with`);
         possibleTiles.forEach((tile) => tile.classList.add("possibleTile"));
@@ -259,10 +273,14 @@ function activeToolCategory() {
 }
 
 function createEventListener(currentTool) {
+  allOpenedMenu.forEach((e) => e.classList.add("hidden"));
   resetTool();
   gridContainer.removeEventListener("click", demolitionFunc);
   gridContainer.addEventListener("click", buildingCreating[currentTool]);
+
+  clearInterval(costIntervalUpdate);
   showBuildingCost();
+  costIntervalUpdate = setInterval(() => showBuildingCost(), 500);
   ghostRotating();
 }
 
@@ -296,14 +314,13 @@ function moveProgressBar(menu, time, callback) {
       animationId = requestAnimationFrame(frame);
     } else {
       progressBar.style.width = "0%";
-      callback(); // Вызываем обратную функцию после завершения анимации
+      callback();
     }
   }
 
   let startTimestamp;
   animationId = requestAnimationFrame(frame);
 
-  // Возвращаем объект с функцией для остановки анимации
   return {
     stop: function () {
       cancelAnimationFrame(animationId);
@@ -315,25 +332,45 @@ function moveProgressBar(menu, time, callback) {
 
 // MODES MENU
 
-const demolitionButton = document.getElementById("demolitionButton");
-const undergroundButton = document.getElementById("undergroundButton");
-const transparentButton = document.getElementById("transparentButton");
-const backFillButton = document.getElementById("backfillingButton");
-const modeButtons = document.querySelectorAll(".tool-menu__mode-btn");
-modeButtons.forEach((btn) => {
-  setTipes(btn.id);
-  btn.addEventListener("click", () => btn.classList.toggle("buttonActive"));
-});
-demolitionButton.addEventListener("click", () => {
-  currentTool = demolitionButton.classList.contains("buttonActive") ? "demolition" : "";
-  demolitionEvent();
-  ghostRotating();
-});
+function modesButtons() {
+  const demolitionButton = document.getElementById("demolitionButton");
+  const undergroundButton = document.getElementById("undergroundButton");
+  const transparentButton = document.getElementById("transparentButton");
+  const backFillButton = document.getElementById("backfillingButton");
+  const settingsButton = document.getElementById("settingsButton");
+  const modeButtons = document.querySelectorAll(".tool-menu__mode-btn");
+  modeButtons.forEach((btn) => {
+    setTipes(btn.id);
+    btn.addEventListener("click", () => {
+      btn.id != "undergroundButton" && btn.classList.toggle("buttonActive");
+    });
+  });
+  demolitionButton.addEventListener("click", () => {
+    if (currentTool == "demolition") {
+      escapeButton();
+    } else {
+      escapeButton();
+      const demolitionButton = document.getElementById("demolitionButton");
+      demolitionButton.classList.toggle("buttonActive");
+      currentTool = demolitionButton.classList.contains("buttonActive") ? "demolition" : "";
+      demolitionEvent();
+      ghostRotating();
+    }
+  });
 
-undergroundButton.addEventListener("click", () => showUnderground());
-transparentButton.addEventListener("click", () => transperentBuildingsShow());
-backFillButton.addEventListener("click", () => backFilling());
-
+  undergroundButton.addEventListener("click", () => {
+    showUnderground();
+    undergroundButton.classList.toggle("buttonActive");
+  });
+  transparentButton.addEventListener("click", () => transperentBuildingsShow());
+  backFillButton.addEventListener("click", () => backFilling());
+  settingsButton.addEventListener("click", () => {
+    const settingsMenu = document.querySelector(".optionsMenu");
+    blockCameraMove = blockCameraMove ? false : true;
+    settingsMenu.classList.toggle("hidden");
+  });
+}
+modesButtons();
 function dragElement(id) {
   console.log(id);
   const position = { x: 0, y: 0 };
@@ -404,22 +441,32 @@ const notyf = new Notyf({
   duration: 3000,
   position: {
     x: "right",
-    y: "bottom",
+    y: "top",
   },
   types: [
     {
       type: "warning",
+      className: "warning",
       background: "#ec942c",
       icon: {
         className: "material-icons",
         tagName: "i",
         text: "warning",
       },
+      duration: 6000,
+    },
+    {
+      type: "smallNotyf",
+      className: "smallNotyf",
+      duration: 8000,
+      dismissible: true,
+      position: { x: "right", y: "top" },
     },
     {
       type: "error",
-      background: "indianred",
-      duration: 2000,
+      className: "error",
+      background: "#E5554E",
+      duration: 5000,
       dismissible: true,
     },
   ],
@@ -450,13 +497,15 @@ function demolitionEvent() {
         if (
           event.target.dataset.buildingCategory == "conveyor" ||
           event.target.dataset.buildingType == "gravelRoad" ||
-          event.target.dataset.buildingType == "concreteRoad"
+          event.target.dataset.buildingType == "concreteRoad" ||
+          event.target.dataset.buildingType == "gravelRoad"
         ) {
           destructionTime = 30;
+        } else if (event.target.dataset.featuresType) {
+          destructionTime = 50;
         } else {
           destructionTime = 60;
         }
-        console.log(destructionTime);
         progressBarInterval = setInterval(() => {
           progress += progressIncrement;
           progressBar.style.width = progress + "px";
@@ -490,11 +539,16 @@ document.addEventListener("contextmenu", function (event) {
 });
 
 function showBuildingCost() {
+  if (!currentTool && currentTool != "demolition") return;
+
   const costsBlocks = document.querySelector(".buildingCostBlock");
   const costObj = findBldObjInList(currentTool).cost;
   costsBlocks.innerHTML = "";
   for (const key in costObj) {
     if (Object.hasOwnProperty.call(costObj, key)) {
+      if (!key) return costsBlocks.classList.add("hidden");
+      else costsBlocks.classList.remove("hidden");
+
       const itemAmount = costObj[key];
       const itemImageSrc = findItemObjInList(key).imageSrc;
       const storageItemAmount = buildingResources[key] || 0;
@@ -512,3 +566,32 @@ function showBuildingCost() {
   }
   currentTool == "" ? (costsBlocks.style.display = "none") : (costsBlocks.style.display = "flex"); // Показать элемент
 }
+function showMoneyChange(value, type) {
+  const moneyChangeBlock = document.querySelector(".moneyChangeBlock");
+  const moneyChangeSpan = document.createElement("span");
+  moneyChangeSpan.classList.add("moneyChange");
+
+  if (type == "minus") {
+    moneyChangeSpan.classList.add("red");
+    money -= value;
+  } else {
+    moneyChangeSpan.classList.add("green");
+    money += value;
+  }
+  +money;
+
+  const formattedString = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 0,
+  }).format(value);
+  moneyChangeSpan.textContent = formattedString;
+  moneyChangeSpan.classList.add("moneyAnim");
+
+  moneySound();
+  updateMoney();
+
+  moneyChangeBlock.appendChild(moneyChangeSpan);
+  deltaTimeout(() => moneyChangeSpan.remove(), 3000);
+}
+// window.addEventListener("beforeunload", (event) => event.preventDefault());

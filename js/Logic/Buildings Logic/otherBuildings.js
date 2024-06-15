@@ -7,7 +7,7 @@ class Storage extends Building {
     this.buildingId = tile.dataset.buildingId;
   }
   addItemToStorage(clickArea) {
-    this.createMenu(StorageBuildingsMenu, this.name, buildingsMenuId[`${this.name}MenuId`]++, clickArea);
+    this.createMenu("storage", this.name, buildingsMenuId[`${this.name}MenuId`]++, clickArea);
     this.tileData = this.tile.dataset;
     this.tileData.itemAmountOutput1 = 0;
     this.tileData.storageCapacity = this.capacity;
@@ -20,20 +20,12 @@ class Storage extends Building {
     storageResources.push(storageObj);
     this.updateGlobalAmount();
   }
-  updateGlobalAmount() {
-    const storageObj = storageResources.find((storage) => storage.id == this.tile.dataset.buildingId);
-    setInterval(() => {
-      storageObj.resName = this.tile.dataset.itemTypeOutput1;
-      storageObj.resAmount = +this.tile.dataset.itemAmountOutput1;
-      updateStorageResources();
-    }, 1000);
-  }
 }
 class SmallStorage extends Storage {
   constructor(tile, id) {
     super(tile, id);
     this.name = "smallStorage";
-    this.capacity = 50;
+    this.capacity = 75;
     this.tile = tile;
   }
 }
@@ -45,7 +37,6 @@ class PowerPlant extends Building {
   }
   processing(clickArea) {
     this.tileData = this.tile.dataset;
-    this.tileData.productionTime = this.productionTime;
     if (!this.tileData.itemAmount) {
       this.tileData.firstMatAmount = 0;
       this.tileData.itemAmountOutput1 = 0;
@@ -53,19 +44,14 @@ class PowerPlant extends Building {
     this.tileData.energyInNetwork = "false";
     this.tileData.buildingState = "Idle";
 
-    const menu = this.createMenu(
-      OneMatProcessingMenu,
-      this.name,
-      buildingsMenuId[`${this.name}MenuId`]++,
-      clickArea
-    );
+    const menu = this.createMenu(1, this.name, buildingsMenuId[`${this.name}MenuId`]++, clickArea, this);
 
     const recipeObj = allItems.find((recipe) => recipe.producedIn === this.name);
     this.itemProcessingMaterial(this.tile, menu, recipeObj);
 
     this.tileData.firstMatName = recipeObj.materials.res1Name;
     this.tileData.itemTypeOutput1 = recipeObj.name;
-    this.tile.dataset.energyProduction = 4;
+    this.tile.dataset.energyProduction = 100;
   }
 }
 class WindTurbine extends Building {
@@ -81,5 +67,6 @@ class WindTurbine extends Building {
     energyAmountSpan.textContent = `${totalEnergy} mW`;
     totalEnergy = +totalEnergy;
     this.tile.dataset.energyProduction = 2.5;
+    buildingsMenuId["windTurbineMenuId"]++;
   }
 }

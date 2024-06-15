@@ -1,0 +1,13 @@
+.idea
+.editorconfig
+tsconfig.json
+vite.config.ts
+vite.config.iife.ts
+
+.github/*
+*.local
+
+.eslintrc.cjs
+.eslintignore
+.prettierrc.json
+.prettierignore

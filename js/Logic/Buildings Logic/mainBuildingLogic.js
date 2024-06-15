@@ -31,18 +31,29 @@ class Building {
         break;
       }
     }
-
+    allBuildingsList.push(this.tile);
     handleMouseLeave();
 
     if (this.name != "pipe") {
       building.dataset.buildingId = buildingId++;
       building.dataset.buildingType = this.name;
       const buildingInfo = findBldObjInList(this.tileData.buildingType);
-
       if (buildingInfo.energyConsumption) {
         const energyConsumption = buildingInfo.energyConsumption;
         energyConsumption ? (this.tileData.energyConsumption = buildingInfo.energyConsumption) : "";
+        addIndicators(this.tile);
       }
+    }
+
+    function addIndicators(tile) {
+      const htmlContent = `          
+      <div class="bldIndicatorsBlock">
+        <img src="img/resourcesIcons/water.png" class = "waterImage ${!isWaterNeeded ? "hidden" : ""}"/>
+        <img src="img/resourcesIcons/energy.png" class = "energyImage ${
+          totalEnergy >= buildingObj.energyConsumption ? "hidden" : ""
+        }"/>
+      </div>`;
+      tile.insertAdjacentHTML("beforeend", htmlContent);
     }
   }
   createBuildingImage(lastTile = this.tile) {
@@ -63,10 +74,20 @@ class Building {
 
     const [x, z] = findXZpos(lastTile);
     this.tile.appendChild(img);
-    img.style.zIndex = x + z;
+    const buildingZindex = this.tileData.buildingCategory != "transportation" ? 1 : 0;
+    img.style.zIndex = x + z + buildingZindex;
     return img;
   }
-
+  updateGlobalAmount() {
+    const storageObj = storageResources.find((storage) => storage.id == this.tile.dataset.buildingId);
+    observeDatasetChange(this.tile, "item-amount-output1", update.bind(this));
+    observeDatasetChange(this.tile, "item-type-output1", update.bind(this));
+    function update() {
+      storageObj.resName = this.tile.dataset.itemTypeOutput1;
+      storageObj.resAmount = +this.tile.dataset.itemAmountOutput1;
+      updateStorageResources();
+    }
+  }
   createClickArea(xSize, zSize) {
     const clickArea = document.createElement("div");
     clickArea.style.height = `${xSize * 40}px`;
@@ -86,27 +107,33 @@ class Building {
     tileData.itemTypeOutput1 = name;
     let progressBarAnimation;
     let processItemStarted = false;
-
+    const isEnergyNeeded = tileData.energyConsumption;
     //Set images
     menu.querySelector(".productImage").src = imageSrc;
 
     //Process loop
     function spawnItem() {
-      if (!isPaused) {
-        if (!processItemStarted && tileData.itemAmountOutput1 < maxCapacity) {
-          processItemStarted = true;
-          progressBarAnimation = moveProgressBar(menu, materials.time, spawnItem);
-          if (progressBarAnimation.width == 0) {
-            setTimeout(() => {
-              const itemValue = String(parseFloat(tileData.itemAmountOutput1) + materials.prodAmount);
-              tileData.itemAmountOutput1 = itemValue;
-              itemAmountSpan.textContent = itemValue;
-              itemNameSpan.textContent = tileData.itemTypeOutput1;
-              processItemStarted = false;
-            }, materials.time);
-          } else {
-            progressBarAnimation.stop();
-          }
+      if (isPaused) return;
+      if (
+        !processItemStarted &&
+        tileData.itemAmountOutput1 < maxCapacity &&
+        (!isEnergyNeeded || (isEnergyNeeded && totalEnergy >= +tileData.energyConsumption))
+      ) {
+        processItemStarted = true;
+        progressBarAnimation = moveProgressBar(menu, materials.time, spawnItem);
+        if (progressBarAnimation.width == 0) {
+          deltaTimeout(() => {
+            const itemValue = String(
+              parseFloat(tileData.itemAmountOutput1) + materials.prodAmount * tileData.itemsMultiplier
+            );
+            tileData.itemAmountOutput1 = itemValue;
+            itemAmountSpan.textContent = itemValue;
+            itemNameSpan.textContent = tileData.itemTypeOutput1;
+            processItemStarted = false;
+            displayInfo();
+          }, materials.time);
+        } else {
+          progressBarAnimation.stop();
         }
       }
     }
@@ -137,7 +164,7 @@ class Building {
           materialAmountSpan.textContent = tileData.semiFinishedAmount;
           const productSpan = menu.parentElement.previousElementSibling.querySelector(".productAmount");
           productSpan.textContent = tileData.semiFinishedAmount;
-          setTimeout(() => {
+          deltaTimeout(() => {
             let outputAmount, outputType;
             for (let i = 1; i <= 3; i++) {
               if (!tileData[`itemTypeOutput${i}`] || tileData[`itemTypeOutput${i}`] == name) {
@@ -149,7 +176,8 @@ class Building {
             tileData[outputAmount] = String(parseFloat(tileData[outputAmount]) + materials.prodAmount);
             tileData[outputType] = name;
             productAmountSpan.textContent = tileData[outputAmount];
-
+            const itemProdObj = itemsProduced.find((item) => item.name == name);
+            itemProdObj.totalAmount += materials.prodAmount;
             processItemStarted = false;
           }, materials.time);
         } else {
@@ -162,13 +190,16 @@ class Building {
   }
 
   itemProcessingMaterial(tile, menu, recipeObj) {
-    let { name, producedIn } = recipeObj;
+    let { name } = recipeObj;
     const tileData = tile.dataset;
-    let processItemStarted = false;
-    const materials = tileData.buildingType == producedIn ? recipeObj.materials : recipeObj.materials2;
-    recipeObj.type == "altRecipe" ? (name = recipeObj.itemName) : "";
-    // Создаем интервал и вызываем createListToCompare
-    !processItemStarted && setInterval(createListToCompare, materials.time / 10);
+    tileData.processItemStarted = "false";
+    const materials = recipeObj.materials;
+    recipeObj.isAltRecipe == true ? (name = recipeObj.itemName) : "";
+    console.log(name);
+    if (tileData.processItemStarted == "false") {
+      console.log(1);
+      tileData.intervalId = setInterval(createListToCompare, materials.time / 10);
+    }
 
     function createListToCompare() {
       const materialsList = ["res1Name", "res2Name", "res3Name"];
@@ -184,9 +215,9 @@ class Building {
       }, []);
 
       const items = [
-        { name: tileData.firstMatName, amount: +tileData.firstMatAmount },
-        { name: tileData.secondMatName, amount: +tileData.secondMatAmount },
-        { name: tileData.thirdMatName, amount: +tileData.thirdMatAmount },
+        { name: tileData.materialName1, amount: +tileData.materialAmount1, num: 1, type: "materialAmount1" },
+        { name: tileData.materialName2, amount: +tileData.materialAmount2, num: 2, type: "materialAmount2" },
+        { name: tileData.materialName3, amount: +tileData.materialAmount3, num: 3, type: "materialAmount3" },
       ];
       const allItemsMatch = itemList.every((item) =>
         items.some((i) => i.name === item.name && i.amount >= item.amount)
@@ -194,37 +225,52 @@ class Building {
 
       const isWaterNeeded = tileData.waterRequired;
       const isEnergyNeeded = tileData.energyConsumption;
-
+      const isEnoughSpace = +tile.dataset.itemAmountOutput1 + materials.prodAmount <= 50;
       if (
         allItemsMatch &&
-        !processItemStarted &&
+        tileData.processItemStarted == "false" &&
+        isEnoughSpace &&
         (!isWaterNeeded || (isWaterNeeded && tileData.fluidType == "water")) &&
         (!isEnergyNeeded || (isEnergyNeeded && totalEnergy >= +tileData.energyConsumption))
       ) {
-        assemblying();
+        assemblying(items);
       }
     }
 
-    function assemblying() {
-      console.log(processItemStarted, 2);
+    function assemblying(items) {
+      tileData.processItemStarted = "true";
+
+      playAmbientSound(tile, "factory");
       createSmoke(tile);
       createSmoke(tile, true);
-      processItemStarted = true;
+      energyUsing(tile, "on");
+
       let progressBarAnimation = moveProgressBar(menu, materials.time, createListToCompare);
       if (progressBarAnimation.width == 0) {
+        for (const item in items) {
+          const itemData = items[item];
+          tileData[itemData.type] -= materials[`res${itemData.num}Amount`];
+        }
+
         setTimeout(() => {
-          if (findItemObjInList(name).type == "semiFinished") {
-            const semiFinishedAmount = String(parseFloat(tileData.semiFinishedAmount) + materials.prodAmount);
+          console.log(name);
+          if (findItemObjInList(name).type == "semiFinished" && tileData.semiFinishedType == name) {
+            const semiFinishedAmount = +tileData.semiFinishedAmount + materials.prodAmount;
             tileData.semiFinishedAmount = semiFinishedAmount;
             tileData.semiFinishedType = name;
             const allMaterialAmounts = menu.parentElement.querySelectorAll(".factoryStructures .materialAmount");
             allMaterialAmounts.forEach((span) => (span.textContent = semiFinishedAmount));
-          } else {
+          } else if (tileData.itemTypeOutput1 == name) {
             tileData.itemAmountOutput1 = +tileData.itemAmountOutput1 + materials.prodAmount;
             tileData.itemTypeOutput1 = name;
+            const itemProdObj = itemsProduced.find((item) => item.name == name);
+            itemProdObj.totalAmount += materials.prodAmount;
           }
 
-          processItemStarted = false;
+          tileData.processItemStarted = "false";
+          deleteSmoke(tile);
+          energyUsing(tile, "off");
+          displayInfo();
         }, materials.time);
       } else {
         progressBarAnimation.stop();
@@ -233,13 +279,33 @@ class Building {
   }
 
   //MENU CREATION
-  createMenu(className, menuData, idName, clickArea, buildingData) {
+  createMenu(matAmount, menuData, id, clickArea, buildingData) {
     const targetTile = this.findTargetTile();
-    const classMenu = new className(targetTile, idName);
+    let classMenu;
+    switch (matAmount) {
+      case "source":
+        classMenu = new SourceBuildingsMenu(targetTile, id, matAmount);
+        break;
+      case "storage":
+        classMenu = new StorageBuildingsMenu(targetTile, id, matAmount);
+        break;
+      case "source":
+        classMenu = new SourceBuildingsMenu(targetTile, id, matAmount);
+        break;
+      case "station":
+        classMenu = new CargoStationMenu(targetTile, id, matAmount);
+        break;
+      case "garage":
+        classMenu = new GarageMenu(targetTile, id, matAmount);
+        break;
+      default:
+        classMenu = new BuildingMenu(targetTile, id, matAmount);
+    }
+
     classMenu.menuCreation(buildingData);
 
-    const menu = document.querySelector(`[data-menu-type="${menuData}"][data-menu-id="${idName}"]`);
-
+    const menu = document.querySelector(`[data-menu-type="${menuData}"][data-menu-id="${id}"]`);
+    clickArea.parentElement.dataset.idByType = id;
     clickArea.addEventListener("click", () => {
       if (currentTool != "demolition" && !undergroundOpened) {
         playMenuOpenSound(menuData);
@@ -248,9 +314,9 @@ class Building {
         // document.addEventListener("click", cameraMoveCenter);
         classMenu.menuOpened = true;
 
-        if (menuData == "cargoStation") {
-          classMenu.forceMenuUpdate(menu, buildingData);
-        }
+        // if (menuData == "cargoStation") {
+        //   classMenu.forceMenuUpdate(menu, buildingData);
+        // }
         if (!allOpenedMenu.includes(menu)) allOpenedMenu.push(menu);
       }
     });

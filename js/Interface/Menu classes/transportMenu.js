@@ -17,6 +17,7 @@ class GarageMenu extends BuildingMenu {
     menuData.menuType = this.name;
     menuData.parentTileId = this.tile.id;
     this.tile.dataset.trucksInGarage = 0;
+    this.tile.dataset.totalTrucksInGarage = 0;
     menu.classList.add("garageMenu", "hidden");
     menu.id = `Garage${this.id}`;
     menuData.menuType = this.name;
@@ -25,7 +26,7 @@ class GarageMenu extends BuildingMenu {
     <div class="garageMenu__truckList"></div>
     <div class="garageMenu__buttons">
       <ul>
-        <li>Price: 1000$ </li>
+        <li>Price: $1000 </li>
         <li>Speed: 85 tiles/m</li>
         <li>Capacity: 8</li>
       </ul>
@@ -42,21 +43,20 @@ class GarageMenu extends BuildingMenu {
     this.closeButton(menu);
     this.menu = menu;
     this.menuButtons(menu);
-    console.log(menu);
     return menu;
   }
 
   menuButtons(menu) {
     const trucksAvailableText = menu.querySelector(".trucks__available");
     menu.querySelector(".buyTruck").onclick = () => {
-      if (+this.tile.dataset.trucksInGarage > 4) return notyf.error("Garage is full!");
-      if (money < 300) return notyf.error("No money!");
-      money -= 300;
-      updateMoney();
+      if (+this.tile.dataset.totalTrucksInGarage > 4) return notyf.error("Garage is full!");
+      if (money < 1000) return notyf.error("No money!");
+      showMoneyChange(1000, "minus");
       trucksAvailable++, trucksTotal++;
       this.tile.dataset.trucksInGarage++;
+      this.tile.dataset.totalTrucksInGarage++;
       updateTrucksAmountInfo(trucksAvailableText);
-      updateTrucksInGarage(menu, this.tile);
+      updateTrucksInGarage(menu, this.tile, "plus");
     };
   }
 }
@@ -83,12 +83,14 @@ class TruckMenu {
     });
   }
   menuCreation() {
-    setTimeout(() => {
+    deltaTimeout(() => {
       this.route = allRoutesList.find((routeObj) => routeObj.id == this.exportStation.dataset.routeId);
       const routeSpan = menu.querySelector(".truckMenu__routeName");
       routeSpan.style.backgroundColor = this.route.color;
-    }, 200);
+    }, 500);
 
+    const itemInfo = findItemObjInList(this.itemName);
+    const itemImg = itemInfo.imageSrc;
     const container = document.querySelector("#menu-container");
     const menu = document.createElement("div");
     menu.classList.add("truckMenu", "hidden");
@@ -96,9 +98,8 @@ class TruckMenu {
     const menuContent = `
     <h3 class="truckMenu__truckName">Truck ${this.id}</h3>
     <div class="truckMenu__resBlock">
-      <img class="truckMenu__resImg" src="/img/resourcesIcons/${this.itemName}.png" />
+      <img class="truckMenu__resImg" src="${itemImg}" />
       <span class="truckMenu__resName">${this.itemName}</span>
-      <span class="truckMenu__resAmount">${this.itemAmount}/8</span>
     </div>
     <span class="truckMenu__routeName">
     Cargo Station ${this.exportStationId} — Cargo Station ${this.importStationId}</span>
@@ -118,9 +119,10 @@ class TruckMenu {
   }
   updateMenu(itemName) {
     this.itemName = itemName;
+    const itemInfo = findItemObjInList(this.itemName);
     const itemImg = this.menu.querySelector(".truckMenu__resImg");
     const itemNameText = this.menu.querySelector(".truckMenu__resName");
-    itemImg.src = `/img/resourcesIcons/${this.itemName}.png`;
+    itemImg.src = itemInfo.imageSrc;
     itemNameText.textContent = this.itemName;
   }
   removeTruck(truckBlock) {
@@ -131,11 +133,6 @@ class TruckMenu {
     });
   }
 }
-function updateTrucksAmountInfo(trucksText) {
-  const totalTrucksAmount = document.querySelector(".totalTrucksAmount");
-  totalTrucksAmount.textContent = `${trucksAvailable}/${trucksTotal}`;
-  trucksText && (trucksText.textContent = `Trucks available —  ${trucksAvailable}/${trucksTotal}`);
-}
 
 function updateTrucksInGarage(menu, tile, type) {
   if (!menu) {
@@ -144,12 +141,19 @@ function updateTrucksInGarage(menu, tile, type) {
     for (let i = 0; i < allGarageMenu.length; i++) {
       menu = allGarageMenu[i];
       tile = document.getElementById(menu.dataset.parentTileId);
-      tile.dataset.trucksInGarage =
-        type === "minus"
-          ? Math.max(0, tile.dataset.trucksInGarage - 1)
-          : Math.min(5, parseInt(tile.dataset.trucksInGarage || 0) + 1);
-      // Проверяем условие и прерываем цикл, если оно выполнено
-      if (tile.dataset.trucksInGarage === "0" || tile.dataset.trucksInGarage === "5") {
+      console.log(tile);
+      let trucksInGarage = parseInt(tile.dataset.trucksInGarage) || 0;
+
+      if (type === "minus" && trucksInGarage > 0) {
+        trucksInGarage--;
+        tile.dataset.trucksInGarage = trucksInGarage;
+        trucksAvailable--;
+        break;
+      } else if (type === "plus" && trucksInGarage < 5) {
+        trucksInGarage++;
+        tile.dataset.trucksInGarage = trucksInGarage;
+        truckIdCounter--;
+        trucksAvailable++;
         break;
       }
     }
@@ -159,9 +163,27 @@ function updateTrucksInGarage(menu, tile, type) {
   trucksList.innerHTML = "";
   for (let i = 0; i < tile.dataset.trucksInGarage; i++) {
     const htmlContent = `
-    <div class="garageMenu__truck">
+    <div class="garageMenu__truck" data-truck-id-garage="${i}">
       <img class="truck-image__img" src="/img/transport/truckDown.png" >
+      <button class="garageMenu__setToRoute"></button>
+      <div class="garageMenu__routeSelect hidden"></div>
     </div>`;
     trucksList.insertAdjacentHTML("beforeend", htmlContent);
+
+    const truckBlock = trucksList.querySelector(`[data-truck-id-garage="${i}"]`);
+
+    truckBlock.querySelector(`.garageMenu__setToRoute`).onclick = () => {
+      truckBlock.querySelector(".garageMenu__routeSelect").classList.remove("hidden");
+      const routeSelect = truckBlock.querySelector(".garageMenu__routeSelect");
+      routeSelect.innerHTML = "";
+      allRoutesList.forEach((route) => {
+        const routeSpan = document.createElement("span");
+        routeSpan.textContent = `Line ${route.id}`;
+        routeSpan.classList.add("garageMenu__route");
+        routeSpan.style.backgroundColor = route.color;
+        routeSpan.onclick = () => startRoute(route);
+        routeSelect.appendChild(routeSpan);
+      });
+    };
   }
 }

@@ -34,12 +34,54 @@
   width: 100px;
   height: 150px;
 }
+.cementPlantSmoke2 {
+  @include smokeBase();
+  top: -195px;
+  right: 70px;
+  width: 100px;
+  height: 150px;
+}
 .brickFactorySmoke {
   @include smokeBase();
   top: -180px;
   right: 62px;
   width: 120px;
   height: 130px;
+}
+.brickFactorySmoke2 {
+  @include smokeBase();
+  top: -150px;
+  right: 62px;
+  width: 80px;
+  height: 100px;
+}
+.glassFactorySmoke {
+  @include smokeBase();
+  top: -125px;
+  right: 67px;
+  width: 80px;
+  height: 100px;
+}
+.glassFactorySmoke2 {
+  @include smokeBase();
+  top: -125px;
+  right: 77px;
+  width: 80px;
+  height: 100px;
+}
+.chemicalPlantSmoke {
+  @include smokeBase();
+  top: -170px;
+  right: 72px;
+  width: 80px;
+  height: 100px;
+}
+.chemicalPlantSmoke2 {
+  @include smokeBase();
+  top: -160px;
+  right: 72px;
+  width: 80px;
+  height: 100px;
 }
 .foundrySmoke {
   @include smokeBase();
@@ -69,7 +111,7 @@
   @include smokeBase();
   filter: brightness(0.2) blur(0.6px) opacity(0.9);
   top: -193px;
-  right: 40px;
+  right: 60px;
   width: 100px;
   height: 150px;
 }
@@ -111,11 +153,13 @@
 }
 .sawmillSmoke {
   @include smokeBase();
-
   top: -65px;
   right: 33px;
   width: 35px;
   height: 60px;
+}
+.sawmillSmoke2 {
+  display: none;
 }
 #demolProgressBar {
   position: fixed;
@@ -127,16 +171,17 @@
   max-width: 100px;
   z-index: 9999; /* Помещаем прогресс-бар поверх других элементов */
   transition: width 0.1s ease-out; /* Плавное изменение ширины */
+  border: 2px solid var(--gray);
 }
 @keyframes wave-animation {
   0% {
-    border-color: #ffd700; /* Желтый */
+    box-shadow: 0 0 0 1px #ffd700; /* Желтый */
   }
   50% {
-    border-color: #ffa500; /* Оранжевый */
+    box-shadow: 0 0 0 4px #ffa500; /* Оранжевый */
   }
   100% {
-    border-color: #ffd700; /* Желтый */
+    box-shadow: 0 0 0 1px #ffd700; /* Желтый */
   }
 }
 
@@ -203,7 +248,112 @@
     border-color: transparent;
   }
 }
-
+@keyframes flash {
+  20% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 .yellowBorderAnim {
   animation: yellowBorder 0.5s ease-in-out infinite;
+}
+.moneyAnim {
+  animation: moneyAnim 3s linear;
+}
+@keyframes moneyAnim {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-10px);
+  }
+  75% {
+    opacity: 0.8;
+    transform: translateY(-15px);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+@keyframes sway {
+  0% {
+    transform: rotateZ(-1deg) scale(1);
+  }
+  10% {
+    transform: rotateZ(1deg) scale(1.02);
+  }
+  20% {
+    transform: rotateZ(-1deg) scale(1);
+  }
+  30% {
+    transform: rotateZ(-2deg) scale(1.04);
+  }
+  40% {
+    transform: rotateZ(-1deg) scale(1);
+  }
+  50% {
+    transform: rotateZ(1deg) scale(1.02);
+  }
+  60% {
+    transform: rotateZ(-1deg) scale(1);
+  }
+  70% {
+    transform: rotateZ(-2deg) scale(1.04);
+  }
+  80% {
+    transform: rotateZ(-1deg) scale(1);
+  }
+  90% {
+    transform: rotateZ(1deg) scale(1.02);
+  }
+  100% {
+    transform: rotateZ(-1deg) scale(1);
+  }
+}
+@keyframes rotateIn {
+  from {
+    transform: rotateX(0deg);
+  }
+  to {
+    transform: rotateX(180deg);
+  }
+}
+
+@keyframes rotateOut {
+  from {
+    transform: rotateX(180deg);
+  }
+  to {
+    transform: rotateX(0deg);
+  }
+}
+
+.rotate-in {
+  animation: rotateIn 0.3s forwards;
+}
+
+.rotate-out {
+  animation: rotateOut 0.3s forwards;
+}
+
+@keyframes littleScale {
+  0% {
+    scale: 1;
+  }
+  50% {
+    scale: 1.2;
+  }
+  100% {
+    scale: 1;
+  }
+}
+.littleScale {
+  animation: littleScale 0.5s ease-in-out;
 }

@@ -1,6 +1,8 @@
 {
   "dependencies": {
-    "notyf": "^3.10.0"
+    "nice-select2": "^2.2.0",
+    "notyf": "^3.10.0",
+    "ux-select": "^2.2.0"
   },
   "devDependencies": {
     "prettier-html": "^0.0.2"

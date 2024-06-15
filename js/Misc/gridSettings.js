@@ -2,9 +2,10 @@ const gridContainer = document.querySelector(".grid-container");
 const limitContainer = document.querySelector("#limit-container");
 const gridSize = 50;
 let CELLS;
+let scale = 1;
 // Создание сетки игры
 const fragment = document.createDocumentFragment();
-const mainMenu = document.querySelector(".mainMenu-container");
+const mainMenu = document.querySelector(".mainMenu");
 function startGame() {
   mainMenu.classList.add("hidden");
   for (let i = 0; i < gridSize; i++) {
@@ -23,7 +24,6 @@ function startGame() {
   gridContainer.appendChild(fragment);
   gridContainer.style.gridTemplateColumns = `repeat(${gridSize}, 40px)`;
   gridContainer.style.gridTemplateRows = `repeat(${gridSize}, 40px)`;
-  let scale = 1;
   let offsetX = 0;
   let offsetY = 0;
   let animationFrameId;
@@ -46,10 +46,8 @@ function startGame() {
     const scaleFactor = 1.3; // Множитель масштаба
 
     if (delta > 0) {
-      // Прокрутка вверх
       scale *= scaleFactor;
     } else {
-      // Прокрутка вниз
       scale /= scaleFactor;
     }
 
@@ -101,3 +99,9 @@ function startGame() {
   CELLS = document.querySelectorAll(".grid-cell");
   generateWorld();
 }
+
+window.addEventListener("load", function () {
+  document.getElementById("startGame").addEventListener("click", () => {
+    startGame();
+  });
+});

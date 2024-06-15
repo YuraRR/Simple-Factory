@@ -4,32 +4,35 @@
 }
 [role="tooltip"] {
   display: none;
-  background-color: var(--midDarkGray);
+  background-color: var(--transBlack);
   padding: 2px 4px;
   color: white;
   border-radius: 4px;
   font-size: 13px;
   flex-direction: column;
-  min-width: 90px;
+  min-width: 60px;
+  text-align: center;
 }
 .tool-menu__modal {
   [role="tooltip"] {
-    background-color: var(--gray);
+    background-color: var(--transDarkGray);
     min-width: 250px;
-    max-width: 390px;
-
+    max-width: 410px;
+    text-align: unset;
     padding: 0;
+    box-shadow: 5px 5px 15px 0px rgba(0, 0, 0, 0.5);
     p {
       padding: 10px;
       font-size: 14px;
-      background-color: var(--midDarkGray);
+
       text-wrap: pretty;
       img {
         width: 11px;
       }
     }
     .resAmountPerMin {
-      font-size: 16px;
+      width: 55px;
+      font-size: 14px;
     }
     p:last-of-type {
       text-align: center;
@@ -42,11 +45,11 @@
       align-items: center;
 
       .timeImage {
-        width: 15px;
-        height: 15px;
+        width: 12px;
+        height: 12px;
       }
       .resTime {
-        padding: 3px;
+        padding: 3px 6px 0 0;
       }
     }
 
@@ -64,9 +67,18 @@
         margin: 0 auto;
         height: 45px;
       }
+      .resAmountPerMin {
+        width: unset;
+      }
       .timeBlock {
         display: flex;
-        width: 100%;
+        position: relative;
+        justify-content: center;
+        align-items: center;
+
+        .resTime {
+          padding: 4px 2px 0 0;
+        }
       }
       .resImage {
         width: 45px;
@@ -87,34 +99,34 @@
 
     .costsBlock {
       display: flex;
-      background-color: var(--gray);
+      height: 30px;
       width: 100%;
-      max-width: 250px;
       margin: 0 auto;
       padding: 5px 0;
+      background-color: var(--transBlack);
       div {
         display: flex;
         position: relative;
         margin: 0 auto;
       }
       .resImage {
-        max-width: 40px;
+        width: 30px;
+        height: auto;
       }
       .resAmount {
         font-size: 13px;
         position: absolute;
         bottom: 0;
-        right: -3px;
+        right: -7px;
       }
     }
     .waterAndEnergyBlock {
       display: flex;
       gap: 5px;
-
+      background-color: var(--transBlack);
       align-items: center;
       padding: 2px 15px;
 
-      background-color: var(--midDarkGray);
       img {
         height: 21px;
       }
@@ -124,19 +136,19 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      margin: 0 auto;
+
       gap: 5px;
-      background-color: var(--gray);
+      background-color: var(--transXXXDarkGray);
       padding: 3px 0;
       // width: 100%;
       .recipe {
         &__items {
           display: flex;
           align-items: center;
-          margin: 0 auto;
+          justify-content: start;
           position: relative;
-          padding: 0 15px;
-          width: 100%;
+          padding: 2px 15px;
+
           height: 45px;
         }
 
@@ -163,14 +175,15 @@
           padding: 5px;
           align-items: center;
           margin-bottom: auto;
-
           .timeImage {
-            padding-left: 2px;
-            width: 15px;
-            height: 15px;
+            width: 12px;
+            height: 12px;
           }
           .resTime {
-            padding: 3px;
+            font-size: 16px;
+            position: absolute;
+            bottom: -54px;
+            right: 30px;
           }
         }
 
@@ -179,18 +192,55 @@
         }
         &__itemImage {
           width: 45px;
+          max-height: 42px;
         }
         &__itemAmount {
           position: absolute;
-          right: 0;
-          bottom: 0;
+          right: -6px;
+          bottom: -3px;
           font-size: 14px;
         }
       }
+    }
+    p:last-of-type {
+      background-color: var(--transBlack);
     }
   }
 }
 
 [role="tooltip"][data-show] {
   display: flex;
+}
+.smallNotyf {
+  background-color: var(--transXXLightGray);
+  border-radius: 8px;
+  padding: 0px;
+  font-family: "Roboto";
+  box-shadow: none !important;
+  margin: 3px !important;
+  width: 350px !important;
+  max-width: 100% !important;
+  .notyf__wrapper {
+    padding: 5px 10px 5px 5px !important;
+  }
+}
+.error {
+  width: 350px !important;
+  max-width: 100% !important;
+  .notyf__ripple {
+    height: 50em;
+    width: 50em;
+  }
+}
+.notyf__toast {
+  margin: 3px !important;
+  .notyf__wrapper {
+    padding: 5px 10px 5px 5px !important;
+  }
+}
+
+#foundryTip {
+  .recipesTipBlock {
+    align-items: unset;
+  }
 }

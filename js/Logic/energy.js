@@ -1,6 +1,7 @@
 function energyUsing(tile, action) {
   const buildingInfo = findBldObjInList(tile.dataset.buildingType);
   const energyConsumption = buildingInfo.energyConsumption;
+  console.log("use");
   switch (action) {
     case "on":
       //Power Plant
@@ -11,10 +12,9 @@ function energyUsing(tile, action) {
         tile.dataset.energyInNetwork = "true";
       }
       //Buildings
-      if (tile.dataset.energyConsumption == "false") {
+      if (tile.dataset.energyConsumption) {
         totalEnergy -= +energyConsumption;
         updateEnergy();
-        tile.dataset.energyConsumption = "true";
       }
       break;
 
@@ -26,12 +26,11 @@ function energyUsing(tile, action) {
         tile.dataset.energyInNetwork = "false";
       }
       //Buildings
-      if (tile.dataset.energyConsumption == "true") {
-        console.log("stop");
-        totalEnergy += +energyConsumption;
-        updateEnergy();
-        tile.dataset.energyConsumption = "false";
-      }
+
+      console.log("stop");
+      totalEnergy += +energyConsumption;
+      updateEnergy();
+
       break;
   }
 }

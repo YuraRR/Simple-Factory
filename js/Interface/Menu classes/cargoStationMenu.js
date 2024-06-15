@@ -21,62 +21,11 @@ class CargoStationMenu extends BuildingMenu {
     this.defaultItem = item;
     menu.innerHTML = `
         <h2>${this.title} ${this.id} (${this.tileData.connectedTo})</h2>
-        <h3>Choose mode</h3>
-        <div class="cargoStationMenu__mode">
-          <div class ="cargoStationMenu__button">
-            <button class="stationExport">
-              <img src="/img/buttonIcons/exportSmall.png" />
-            </button>
-            <span>Export</span>
-            <div class="exportSelect hidden"> </div>
-          </div>
-          <div class ="cargoStationMenu__button">
-            <button class="stationImport">
-              <img src="/img/buttonIcons/importSmall.png" />
-            </button>
-            <span>Import</span>
-            <div class="importSelect hidden"> </div>
-          </div>
-          
+        <div class="cargoStationMenu__item">
+          <img class="itemImg" src="./img/resourcesIcons/noItem.webp" />
+          <span class="itemAmount">0</span>
+          <h3 class="itemName">Empty</h3>
         </div>
-        <div class="cargoStationMenu__deliveryType">
-  
-          <input type="radio" id="unlimitedDelivery" name="deliveryType${this.id}" disabled/>
-          <label for="unlimitedDelivery">Unlimited Delivery</label>
-          <img class="lockedImg" src="/img/buttonIcons/locked.png" />
-          <input type="radio" id="limitedDelivery" name="deliveryType${this.id}" checked />
-          <label for="limitedDelivery">Limited Delivery</label>
-  
-          
-          <div class="cargoStationMenu__quantityBlock">
-            <button class="minusBtn"></button>
-            <span class="cargoStationMenu__quantity">8</span>
-            <button class="plusBtn"></button>
-          </div>
-  
-        </div>
-          <h3>Create route</h3>
-          <div class="cargoStationMenu__routes">
-            <span class="cargoStationMenu__noStations">Wrong Station mode or no accessible stations</span>
-          </div>
-          <div class="cargoStationMenu__routeInfo">
-            <span class="cargoStationMenu__routeInfo-span">Route not selected</span>
-          </div>
-          <div class="cargoStationMenu__trucks">
-            <div class="trucks__amount">
-              <div class="trucks__buttons">
-                <button class="addTruck"></button>
-                <button class="deleteTruck"></button>
-                </div>
-                <span class="trucks__current">Trucks on current route —  0/4</span>
-              </div>
-             
-              <div class="cargoStationMenu__item">
-                <img class="itemImg" src="./img/resourcesIcons/noItem.webp" />
-                <span class="itemAmount">0</span>
-                <h3 class="itemName">Empty</h3>
-              </div>
-          </div>
       <button class="close-button close-button-black"></button>`;
 
     menu.dataset.cargoStationId = this.id;
@@ -86,16 +35,16 @@ class CargoStationMenu extends BuildingMenu {
       image.draggable = false;
     });
     container.appendChild(menu);
-    this.menuButtons(menu, item);
-    this.menuUpdate(menu, item);
+    // this.menuButtons(menu, item);
+    // this.menuUpdate(menu, item);
     this.closeButton(menu);
-    this.createRouteBlock(menu);
-    this.updateRoutesList();
+    // this.createRouteBlock(menu);
+    // this.updateRoutesList();
 
     dragElement(menu.id);
   }
   menuUpdate(menu, defaultItem) {
-    setInterval(() => this.forceMenuUpdate(menu, defaultItem), 1000);
+    setInterval(() => this.forceMenuUpdate(menu, defaultItem), 500);
     this.selectImportMaterial(menu, defaultItem);
     this.selectExportMaterial(menu, defaultItem);
   }
@@ -105,31 +54,40 @@ class CargoStationMenu extends BuildingMenu {
     const itemName = menu.querySelector(".itemName");
     const unlimitedDelivery = menu.querySelector("#unlimitedDelivery");
     const lockedImg = menu.querySelector(".lockedImg");
+    const totalMoney = menu.querySelector(".cargoStationMenu__totalMoney");
 
     let item;
     const stationObj = defaultItem.stationObj;
-    const selectedExportItem = this.tileData.cargoStationItem;
-    if (this.tileData.cargoStationType == "Export" && this.tileData.connectedTo != "tradingTerminal") {
-      item = stationObj.updateData(defaultItem.mainFactoryTile, "export", selectedExportItem);
-    } else if (this.tileData.cargoStationType == "Export" && this.tileData.connectedTo == "tradingTerminal") {
-      item = stationObj.updateData(defaultItem.mainFactoryTile, "export", selectedExportItem);
-    } else {
-      item = stationObj.updateData(defaultItem.mainFactoryTile, "import", selectedExportItem);
-    }
 
-    itemName.textContent = item.name || "Empty";
-    itemAmount.textContent = item.amount || 0;
-    itemImg.src = item.imgSrc || "./img/resourcesIcons/noItem.webp";
-    if (this.tileData.connectedTo != "tradingTerminal") {
-      this.tileData.cargoStationItem = item.name;
-    } else {
-      itemName.textContent == "Empty" ? (itemName.textContent = "Not chosen") : "";
-    }
+    // const selectedExportItem = this.tileData.cargoStationItem;
+    // if (this.tileData.cargoStationType == "Export" && this.tileData.connectedTo != "tradingTerminal") {
+    //   item = stationObj.updateData(defaultItem.mainFactoryTile, "export", selectedExportItem);
+    // } else if (this.tileData.cargoStationType == "Export" && this.tileData.connectedTo == "tradingTerminal") {
+    //   item = stationObj.updateData(defaultItem.mainFactoryTile, "export", selectedExportItem);
+    // } else {
+    //   item = stationObj.updateData(defaultItem.mainFactoryTile, "import", selectedExportItem);
+    // }
+    // const currentPrice = this.tile.dataset.cargoStationType == "Export" ? item.sellPrice : item.buyPrice;
+    // totalMoney.classList.remove("green", "red");
+    // this.tile.dataset.cargoStationType == "Export"
+    //   ? totalMoney.classList.add("green")
+    //   : totalMoney.classList.add("red");
+    // totalMoney.textContent = `$${currentPrice * this.deliveriesNum}`;
 
-    if (lockedImg && lockedFeatures.find((task) => task.name === "Unlimited Delivery").state) {
-      unlimitedDelivery.disabled = false;
-      lockedImg.remove();
-    }
+    // itemName.textContent = item.name || "Empty";
+    // itemAmount.textContent = item.amount || 0;
+
+    // itemImg.src = item.imgSrc || "./img/resourcesIcons/noItem.webp";
+    // if (this.tileData.connectedTo != "tradingTerminal") {
+    //   this.tileData.cargoStationItem = item.name;
+    // } else {
+    //   itemName.textContent == "Empty" ? (itemName.textContent = "Not chosen") : "";
+    // }
+
+    // if (lockedImg && lockedFeatures.find((task) => task.name === "Unlimited Delivery").state) {
+    //   unlimitedDelivery.disabled = false;
+    //   lockedImg.remove();
+    // }
     //Route visual
     // if (menu.style.display != "none" && !this.tile.classList.contains("pointRoute")) {
     //   const routeObj = allRoutesList.find((routeObj) => routeObj.id == this.tile.dataset.routeId);
@@ -150,26 +108,25 @@ class CargoStationMenu extends BuildingMenu {
     const unlimitedDelivery = menu.querySelector("#unlimitedDelivery");
     const limitedDelivery = menu.querySelector("#limitedDelivery");
 
-    let deliveriesNum = 8;
+    this.deliveriesNum = 8;
     let trucksOnRoute = 0;
-    let maxTrucksOnRoute = 4;
 
     unlimitedDelivery.onclick = () => {
       deliveriesAmount.textContent = "Ꝏ";
-      deliveriesNum = 9999;
+      this.deliveriesNum = 9999;
     };
     limitedDelivery.onclick = () => {
       deliveriesAmount.textContent = 8;
-      deliveriesNum = 8;
+      this.deliveriesNum = 8;
     };
     menu.querySelector(".plusBtn").onclick = () => {
-      deliveriesNum == 9999 ? (deliveriesNum = 8) : "";
-      deliveriesAmount.textContent = deliveriesNum += 8;
+      this.deliveriesNum == 9999 ? (this.deliveriesNum = 8) : "";
+      this.deliveriesNum < 128 && (deliveriesAmount.textContent = this.deliveriesNum += 8);
       limitedDelivery.checked = true;
     };
     menu.querySelector(".minusBtn").onclick = () => {
-      deliveriesNum == 9999 ? (deliveriesNum = 8) : "";
-      deliveriesAmount.textContent = deliveriesNum > 8 ? (deliveriesNum -= 8) : 8;
+      this.deliveriesNum == 9999 ? (this.deliveriesNum = 8) : "";
+      deliveriesAmount.textContent = this.deliveriesNum > 8 ? (this.deliveriesNum -= 8) : 8;
       limitedDelivery.checked = true;
     };
 
@@ -179,7 +136,7 @@ class CargoStationMenu extends BuildingMenu {
       //ERROR Second station not selected!
       if (!isStationSelected) return notyf.error("Second station not selected!");
 
-      if (trucksOnRoute != maxTrucksOnRoute && trucksAvailable > 0) {
+      if (trucksAvailable > 0) {
         this.selectStation(menu);
         const truckObj = new Truck(this.tile);
         const startMethods = startBuildingMethods.bind(truckObj, this.tile);
@@ -188,12 +145,12 @@ class CargoStationMenu extends BuildingMenu {
         //ERROR Stations are not connected by roads!
         if (!route) return notyf.error("Stations are not connected by roads!");
 
-        const isRouteValid = truckObj.createRouteDirections(route, deliveriesNum / 8);
+        const isRouteValid = truckObj.createRouteDirections(route, this.deliveriesNum / 8);
         console.log(isRouteValid);
         const firstStation = route[0];
         const lastStation = route[route.length - 1];
         if (isRouteValid) {
-          trucksAvailable--, trucksOnRoute++;
+          trucksOnRoute++;
           updateTrucksAmountInfo(trucksCurrentText);
           this.updateRoutesList();
 
@@ -224,7 +181,7 @@ class CargoStationMenu extends BuildingMenu {
           secondStationText.textContent = `Route not selected`;
         }
       } else {
-        return notyf.error("No trucks available or route limit exceeded");
+        return notyf.error("No trucks available!");
       }
     };
     menu.querySelector(".deleteTruck").onclick = () => {
@@ -316,7 +273,7 @@ class CargoStationMenu extends BuildingMenu {
   }
   updateRoutesList() {
     const allStationsMenu = document.querySelectorAll(".cargoStationMenu");
-    setTimeout(() => {
+    deltaTimeout(() => {
       allStationsMenu.forEach((menu) => this.createRouteBlock(menu));
     }, 1000);
   }
@@ -355,7 +312,6 @@ class CargoStationMenu extends BuildingMenu {
   selectImportMaterial(menu, { mainFactoryTile, stationTile }) {
     const buildingName = mainFactoryTile.dataset.buildingType;
     const importSelect = menu.querySelector(".importSelect");
-    console.log(buildingName);
 
     let items = allItems.filter((item) => {
       const processingInArray = Array.isArray(item.processingIn) ? item.processingIn : [item.processingIn];
@@ -371,7 +327,7 @@ class CargoStationMenu extends BuildingMenu {
     if (mainFactoryTile.dataset.buildingCategory == "storage" && mainFactoryTile.dataset.itemTypeOutput1) {
       items = allItems.filter((item) => item.name == mainFactoryTile.dataset.itemTypeOutput1);
     }
-
+    items = items.filter((item) => item.isAltRecipe != true);
     items.forEach((item) => {
       if (item.isMovable != false) {
         const itemBlock = document.createElement("div");
@@ -406,8 +362,10 @@ class CargoStationMenu extends BuildingMenu {
     );
     if (mainFactoryTile.dataset.buildingType == "tradingTerminal") items = allItems;
     if (mainFactoryTile.dataset.buildingCategory == "storage")
-      items = allItems.filter((item) => item.name == mainFactoryTile.dataset.itemTypeOutput1);
-
+      items = allItems.filter(
+        (item) => item.name == mainFactoryTile.dataset.itemTypeOutput1 && item.isAltRecipe != true
+      );
+    items = items.filter((item) => item.isAltRecipe != true);
     items.forEach((item) => {
       if (item.isMovable != false) {
         const itemBlock = document.createElement("div");

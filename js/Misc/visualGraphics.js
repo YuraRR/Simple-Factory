@@ -29,7 +29,7 @@ const createSmokeImage = () => {
 
 function deleteSmoke(tile) {
   const smokeImg = tile.querySelector(`[data-visual-type='smoke']`);
-  smokeImg.remove();
+  smokeImg && smokeImg.remove();
   const smokeImg2 = tile.querySelector(`[data-visual-type='smoke2']`);
   smokeImg2 && smokeImg2.remove();
   tile.dataset.buildingState = "Idle";

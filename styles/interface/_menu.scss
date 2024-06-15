@@ -7,7 +7,7 @@
   bottom: 0;
   border: 2px solid transparent;
   border-radius: 10px 0 10px 0;
-  animation: wave-animation 4s linear infinite;
+  animation: wave-animation 4s ease-in-out infinite;
   pointer-events: none;
 }
 .close-button {
@@ -60,18 +60,20 @@ h3 {
 .storageBldMenu,
 .sourceBldMenu {
   display: flex;
-  position: relative;
-  right: -130px;
-  top: 20px;
+  position: absolute;
+  left: 34%;
+
+  top: 7%;
   flex-direction: column;
   background-color: var(--gray);
-  min-width: 400px;
-  max-width: 580px;
-  max-height: 520px;
+  min-width: 504px;
+  max-width: 756px;
+  min-height: 320px;
   pointer-events: all;
   box-shadow: 5px 5px 15px 0px rgba(0, 0, 0, 0.5);
 
   &__items {
+    position: relative;
     align-items: center;
     justify-content: center;
     display: flex;
@@ -84,7 +86,14 @@ h3 {
     display: flex;
     gap: 15px;
   }
-
+  &__productivity {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    background-color: var(--black);
+    padding: 6px;
+    border-radius: 10px 0 10px 0;
+  }
   &__item {
     display: flex;
     position: relative;
@@ -95,7 +104,7 @@ h3 {
     background-color: var(--black);
     border-radius: 10px 0 10px 0;
     width: 100px;
-    padding: 2px;
+    padding: 24px 2px 2px;
     box-shadow: 5px 5px 15px 0px rgba(0, 0, 0, 0.5);
   }
   .materialImage,
@@ -103,9 +112,6 @@ h3 {
     margin: 0 auto;
     max-width: 80px;
     max-height: 67px;
-
-    border-radius: 40px;
-    background-color: transparent;
   }
   .productName {
     padding: 3px 0;
@@ -129,14 +135,16 @@ h3 {
     gap: 5px;
 
     .timeImage {
-      width: 15px;
-      height: 15px;
+      width: 10px;
+      height: 10px;
     }
   }
   &__clock {
     display: flex;
     align-items: center;
     gap: 5px;
+    .resTime {
+    }
   }
   .recipeSelect {
     display: grid;
@@ -181,7 +189,17 @@ h3 {
     border-radius: 10px 0 10px 0;
     pointer-events: all;
     &:after {
+      transition: all 0.3s ease;
       @include orangeBorder();
+    }
+    .recipeTip {
+      position: absolute;
+      padding: 6px 0;
+      width: 100%;
+      text-align: center;
+      top: 0px;
+      font-size: 15px;
+      pointer-events: none;
     }
   }
 
@@ -210,34 +228,55 @@ h3 {
     display: flex;
     position: absolute;
     left: 15px;
-    top: 27px;
+    top: 8px;
     gap: 5px;
     img {
       border: 2px solid var(--black);
       border-radius: 10px 0 10px 0;
-      padding: 4px;
+      padding: 2px;
       background-color: var(--transRed);
-      width: 16px;
+      width: 22px;
       animation: flash 1s infinite;
     }
+  }
+  .upgradeBlock {
+    display: flex;
+    align-items: center;
+    padding: 5px 30px;
+    justify-content: space-around;
+    gap: 10px;
+    &__title {
+      font-size: 18px;
+    }
 
-    @keyframes flash {
-      20% {
-        opacity: 1;
-      }
-      50% {
-        opacity: 0.1;
-      }
-      100% {
-        opacity: 1;
-      }
+    &__costBlock {
+      display: flex;
+      position: relative;
+    }
+
+    &__costText {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+    }
+
+    &__costImage {
+      width: 50px;
+    }
+
+    &__btn {
+      padding: 10px 15px;
+      background-color: var(--black);
+      color: var(--white);
+      border-radius: 10px 0 10px 0;
+      font-size: 14px;
     }
   }
 }
 .factoryStructures {
   display: flex;
   background-color: var(--midLightGray);
-  flex-direction: column;
+  justify-content: space-around;
   width: 100%;
 
   overflow-y: auto;
@@ -245,8 +284,9 @@ h3 {
 .extraRecipe {
   display: flex;
   flex-direction: column;
+  padding-bottom: 10px;
   .progressBarBlock {
-    margin: 8px auto;
+    margin: 4px auto;
   }
   .progressBar {
     height: 10px;
@@ -254,8 +294,8 @@ h3 {
 }
 .structureBlock {
   display: flex;
-  padding: 10px 0 5px;
-  gap: 10px;
+  padding: 10px;
+  gap: 7px;
   align-self: center;
 
   &__item {
@@ -265,12 +305,13 @@ h3 {
     text-align: center;
     color: #ccc;
     background-color: var(--black);
-    padding: 5px;
-
+    padding: 2px;
+    height: 64px;
+    min-width: 85px;
     border-radius: 10px 0 10px 0;
     box-shadow: 5px 5px 15px 0px rgba(0, 0, 0, 0.5);
     img {
-      width: 52px;
+      width: 42px;
       height: auto;
     }
   }
@@ -303,7 +344,7 @@ h3 {
     display: flex;
     align-items: center;
     img {
-      width: 70px;
+      width: 40px;
     }
   }
   .materialAmountPerMin,
@@ -314,5 +355,37 @@ h3 {
 }
 
 .highlightElem {
-  background-color: rgba(169, 169, 69, 0.628);
+  background-color: rgba(169, 169, 69, 0.628) !important;
+}
+.itemSelect {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  grid-template-rows: auto auto auto;
+  padding: 10px 15px;
+  background-color: var(--black);
+  position: absolute;
+  top: 100px;
+  align-self: center;
+  z-index: 999;
+  overflow: auto;
+  max-height: 382px;
+  div {
+    width: 90px;
+    padding: 0 5px;
+  }
+  button {
+    border-radius: 10px 0 10px 0;
+    width: 75px;
+    height: 75px;
+    background-color: var(--lightGray);
+  }
+  span {
+    font-size: 12px;
+  }
+  img {
+    width: 70px;
+  }
+}
+[data-menu-type="foundry"] {
+  width: 100%;
 }

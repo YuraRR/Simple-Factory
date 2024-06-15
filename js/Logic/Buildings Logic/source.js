@@ -12,15 +12,10 @@ class Mineshaft extends Building {
   extraction(clickArea) {
     this.tileData.itemAmountOutput1 ??= 0;
 
-    const menu = this.createMenu(
-      SourceBuildingsMenu,
-      this.name,
-      buildingsMenuId[`${this.name}MenuId`]++,
-      clickArea
-    );
+    const menu = this.createMenu("source", this.name, buildingsMenuId[`${this.name}MenuId`]++, clickArea);
     const recipeObj = allItems.find((recipe) => recipe.name === this.tileData.oreType);
     this.tileData.itemTypeOutput1 = recipeObj.name;
-    this.tileData.productionTime = recipeObj.processTime;
+    this.tileData.itemsMultiplier = 1;
     this.itemSpawningInSources(this.findTargetTile(), menu, recipeObj);
   }
 }
@@ -39,22 +34,21 @@ class Quarry extends Building {
     const targetTile = this.findTargetTile();
     const resType = targetTile.dataset.resType;
     targetTile.dataset.itemTypeOutput1 = resType;
+    this.tile.dataset.itemsMultiplier = 1;
     this.name = `${resType}Quarry`;
     this.createBuildingImage();
-
-    const menu = this.createMenu(SourceBuildingsMenu, "quarry", buildingsMenuId[`quarryMenuId`]++, clickArea);
+    const menu = this.createMenu("source", "quarry", buildingsMenuId[`quarryMenuId`]++, clickArea);
 
     const recipeObj = allItems.find((recipe) => recipe.name === this.tileData.resType);
     this.itemSpawningInSources(this.findTargetTile(), menu, recipeObj);
 
-    const quarryTiles = document.querySelectorAll(`[data-building-id="${targetTile.dataset.buildingId}"]`);
-    quarryTiles.forEach((tile) => {
-      const neighborsTiles = findNeighbors(tile);
-
-      neighborsTiles.forEach((tile) => {
-        if (tile.dataset.type == "empty") tile.dataset.structurePossibleFor = targetTile.dataset.buildingId;
-      });
-    });
+    // const quarryTiles = document.querySelectorAll(`[data-building-id="${targetTile.dataset.buildingId}"]`);
+    // quarryTiles.forEach((tile) => {
+    //   // const neighborsTiles = findNeighbors(tile);
+    //   // neighborsTiles.forEach((tile) => {
+    //   //   if (tile.dataset.type == "empty") tile.dataset.structurePossibleFor = targetTile.dataset.buildingId;
+    //   // });
+    // });
   }
 }
 class WaterPump extends Building {
@@ -78,15 +72,10 @@ class RubberTreePlantation extends Building {
   }
   extraction(clickArea) {
     this.tileData.itemAmountOutput1 ??= 0;
-    const menu = this.createMenu(
-      SourceBuildingsMenu,
-      this.name,
-      buildingsMenuId[`${this.name}MenuId`]++,
-      clickArea
-    );
+    const menu = this.createMenu("source", this.name, buildingsMenuId[`${this.name}MenuId`]++, clickArea);
+    this.tile.dataset.itemsMultiplier = 1;
     const recipeObj = allItems.find((recipe) => recipe.name === "Latex");
     this.tileData.itemTypeOutput1 = recipeObj.name;
-    this.tileData.productionTime = recipeObj.processTime;
     this.itemSpawningInSources(this.findTargetTile(), menu, recipeObj);
   }
 }
@@ -102,16 +91,11 @@ class Lumbermill extends Building {
   }
   extraction(clickArea) {
     this.tileData.itemAmountOutput1 ??= 0;
-    const menu = this.createMenu(
-      SourceBuildingsMenu,
-      this.name,
-      buildingsMenuId[`${this.name}MenuId`]++,
-      clickArea
-    );
+    const menu = this.createMenu("source", this.name, buildingsMenuId[`${this.name}MenuId`]++, clickArea);
     const recipeObj = allItems.find((recipe) => recipe.name === "Wood");
     this.tileData.itemTypeOutput1 = recipeObj.name;
-    this.tileData.productionTime = recipeObj.processTime;
     this.itemSpawningInSources(this.findTargetTile(), menu, recipeObj);
+    this.tile.dataset.itemsMultiplier = 1;
     let treeId = 0;
     const treeList = this.findRadius();
     if (treeList.length == 0) return;

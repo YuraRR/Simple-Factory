@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="./styles/css/mainStyles.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/notyf@3/notyf.min.css" />
+    <link rel="stylesheet" href="./node_modules/nice-select2/docs/dist/css/nice-select2.css" />
     <link rel="icon" type="image/x-icon" href="/img/favicon.png" />
     <title>Simple Factory</title>
   </head>
@@ -14,64 +15,79 @@
         <div class="grid-container"></div>
       </div>
       <div id="interface-container">
-        <div class="mainMenu-container">
-          <img src="/img//mainMenu/logo.png" alt="" />
-          <button onclick="startGame()">Start Game</button>
-          <video autoplay muted loop id="video-background">
-            <source src="/img/mainMenu/test.mp4" type="video/mp4" />
-          </video>
+        <div class="mainMenu">
+          <img class="mainMenu__logo" src="/img//mainMenu/logo.png" alt="" />
+          <div class="mainMenu__buttons">
+            <button id="startGame">Start Game</button>
+            <button id="options">Options</button>
+            <button id="credits">Credits</button>
+          </div>
+
+          <img class="mainMenu__bg" src="/img//mainMenu/bg.png" alt="" />
+          <a id="telegramLink" href="https://t.me/Halushko_Yura" target="_blank"></a>
+        </div>
+        <div class="optionsMenu hidden">
+          <h3>Options</h3>
+
+          <div class="musicPlayer">
+            <span>Music Player</span>
+            <img src="/img/buttonIcons/music.png" alt="" />
+            <button class="playMusicBtn"></button>
+            <button class="nextMusicBtn"></button>
+          </div>
+          <div class="optionsMenu__volumeBlock">
+            <label for="music-volume">Music Volume:</label>
+            <input type="range" id="music-volume" min="0" max="1" step="0.01" value="0.5" />
+          </div>
+          <div class="optionsMenu__volumeBlock">
+            <label for="sounds-volume">UI Volume:</label>
+            <input type="range" id="sounds-volume" min="0" max="1" step="0.01" value="0.5" />
+          </div>
+          <button class="close-button"></button>
+        </div>
+        <div class="creditsMenu hidden">
+          <h3>Credits</h3>
+          <div class="creditsMenu__list">
+            <div>
+              <span>Main Developer:</span>
+              <span>Yurii Halushko</span>
+            </div>
+            <div>
+              <span>Main Tester:</span>
+              <span>Dmytro Koval</span>
+            </div>
+            <div>
+              <span>Tester:</span>
+              <span>Oleksandr Lisovyi</span>
+            </div>
+            <div>
+              <span>Music:</span>
+              <span>Suno AI, Sid Acharya</span>
+            </div>
+          </div>
+
+          <button class="close-button"></button>
         </div>
         <div id="menu-container"></div>
-        <div class="resources-menu">
-          <div class="resBlock">
-            <img src="/img//resourcesIcons/planks.png" class="resImage" />
-            <span class="resAmount" data-res="Planks">0</span>
-          </div>
-          <div class="resBlock">
-            <img src="/img//resourcesIcons/gravel.png" class="resImage" />
-            <span class="resAmount" data-res="Gravel">0</span>
-          </div>
-          <div class="resBlock">
-            <img src="/img//resourcesIcons/concreteBlock.png" class="resImage" />
-            <span class="resAmount" data-res="Concrete Block">0</span>
-          </div>
-          <div class="resBlock">
-            <img src="/img//resourcesIcons/brick.png" class="resImage" />
-            <span class="resAmount" data-res="Bricks">0</span>
-          </div>
-          <div class="resBlock">
-            <img src="/img//resourcesIcons/glass.png" class="resImage" />
-            <span class="resAmount" data-res="Glass">0</span>
-          </div>
-          <div class="resBlock">
-            <img src="/img//resourcesIcons/steelBeams.png" class="resImage" />
-            <span class="resAmount" data-res="Steel Beams">0</span>
-          </div>
-          <div class="resBlock">
-            <img src="/img//resourcesIcons/ironPipes.png" class="resImage" />
-            <span class="resAmount" data-res="Iron Pipes">0</span>
-          </div>
-          <div class="resBlock">
-            <img src="/img//resourcesIcons/mechanicalParts.png" class="resImage" />
-            <span class="resAmount" data-res="Mechanical parts">0</span>
-          </div>
-        </div>
+        <div class="resources-menu"></div>
         <div class="buildingCostBlock"></div>
         <div class="selectConnectorItemBlock hidden"></div>
         <div class="tasks-menu">
           <h2 class="tasks-menu__title">Basic Materials</h2>
           <div class="tasks-menu__list"></div>
         </div>
+        <div class="info-menu">
+          <h4 class="info-menu__title">1</h4>
+          <ul class="info-menu__list"></ul>
+        </div>
         <div id="routesInfo-menu" class="routesInfo-menu hidden">
-          <h3>Routes:</h3>
+          <h3>Routes Manager</h3>
           <div class="routesInfo-menu__block">
-            <div class="routesInfo-menu__stationsList">
-              <span class="noStations">No Stations</span>
-            </div>
             <div class="routesInfo-menu__routesList">
-              <span class="noRoutes">No Routes</span>
+              <button class="routesInfo-menu__createRoute-btn" onclick="createRouteElem()"></button>
             </div>
           </div>
+
           <button class="close-button"></button>
         </div>
         <div id="pricesInfo-menu" class="pricesInfo-menu hidden">
@@ -113,7 +129,8 @@
                 <span class="totalTrucksAmount">0/0</span>
               </div>
               <div class="tool-menu__moneyBlock">
-                <span class="moneyAmount">0 $</span>
+                <span class="moneyAmount">$5000</span>
+                <div class="moneyChangeBlock"></div>
               </div>
             </div>
             <div class="tool-menu__buttons">
@@ -156,27 +173,27 @@
             </div>
             <div class="tool-menu__modes">
               <button class="tool-menu__mode-btn" id="backfillingButton">
-                <div id="backfillingButtonTip" role="tooltip">Backfilling</div>
+                <div id="backfillingButtonTip" role="tooltip">Backfilling [B]</div>
                 <img src="/img/toolButtons/backfill.png" alt="" />
               </button>
               <button class="tool-menu__mode-btn" id="demolitionButton">
-                <div id="demolitionButtonTip" role="tooltip">Demolition mode</div>
+                <div id="demolitionButtonTip" role="tooltip">Demolition mode [F]</div>
                 <img src="/img/toolButtons/demo.png" alt="" />
               </button>
               <button class="tool-menu__mode-btn" id="undergroundButton">
-                <div id="undergroundButtonTip" role="tooltip">Underground mode</div>
+                <div id="undergroundButtonTip" role="tooltip">Underground mode [U]</div>
                 <img src="/img/toolButtons/ugd.png" alt="" />
               </button>
               <button class="tool-menu__mode-btn" id="transparentButton">
-                <div id="transparentButtonTip" role="tooltip">Transparent buildings</div>
+                <div id="transparentButtonTip" role="tooltip">Transparent buildings [T]</div>
                 <img src="/img/toolButtons/trans.png" alt="" />
               </button>
             </div>
+            <button class="tool-menu__options-btn" id="settingsButton">
+              <div id="transparentButtonTip" role="tooltip">Options</div>
+              <img src="/img/buttonIcons/gear.png" />
+            </button>
           </div>
-        </div>
-        <div class="musicPlayer">
-          <img src="/img/buttonIcons/music.png" alt="" />
-          <button class="musicBtn"></button>
         </div>
       </div>
     </div>
@@ -185,15 +202,20 @@
     <script src="./js/Modules/interact.min.js"></script>
     <script src="./js/Modules/popper.js"></script>
     <script src="./js/Modules/notyf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <script src="./node_modules/nice-select2/dist/js/nice-select2.js"></script>
     <script src="./js/Misc/mixins.js"></script>
+    <script src="./js/Logic/findFunctions.js"></script>
     <script src="./js/Data/itemsData.js"></script>
     <script src="./js/Data/variables.js"></script>
+    <script src="./js/Misc/optimization.js"></script>
     <script src="./js/Data/buildingsData.js"></script>
+    <script src="./js/Data/tasks.js"></script>
     <script src="./js/Misc/gridSettings.js"></script>
     <script src="./js/Misc/visualGraphics.js"></script>
-    <script src="./js/Logic/findFunctions.js"></script>
     <script src="./js/Logic/buildingPlacing.js"></script>
     <script src="./js/Logic/energy.js"></script>
+    <script src="./js/Misc/sounds.js"></script>
 
     <script src="./js/Logic/Buildings Logic/mainBuildingLogic.js"></script>
     <script src="./js/Logic/Buildings Logic/conveyor.js"></script>
@@ -206,24 +228,21 @@
     <script src="./js/Logic/Buildings Logic/truck.js"></script>
     <script src="./js/Logic/Buildings Logic/twoMaterial.js"></script>
 
+    <script src="./js/Interface/diplayInfoMenu.js"></script>
     <script src="./js/Misc/keybinds.js"></script>
     <script src="./js/Interface/interface.js"></script>
 
     <script src="./js/Interface/mainMenu.js"></script>
     <script src="./js/Interface/Menu classes/mainMenuClass.js"></script>
-    <script src="./js/Interface/Menu classes/oneMatMenu.js"></script>
     <script src="./js/Interface/Menu classes/otherMenus.js"></script>
     <script src="./js/Interface/Menu classes/routesInfoMenu.js"></script>
     <script src="./js/Interface/Menu classes/pricesInfo.js"></script>
-    <script src="./js/Interface/Menu classes/threeMatMenu.js"></script>
     <script src="./js/Interface/Menu classes/cargoStationMenu.js"></script>
     <script src="./js/Interface/Menu classes/transportMenu.js"></script>
-    <script src="./js/Interface/Menu classes/twoMatMenu.js"></script>
 
     <script src="./js/Misc/worldGeneration.js"></script>
     <script src="./js/Mechanics/modes.js"></script>
     <script src="./js/playerActions.js"></script>
-    <script src="./js/Misc/sounds.js"></script>
-    <script src="./js/Interface/tasks.js"></script>
+    <script src="./js/Interface/tasksLogic.js"></script>
   </body>
 </html>

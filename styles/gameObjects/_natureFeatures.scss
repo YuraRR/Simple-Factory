@@ -15,8 +15,8 @@
 [data-ore-type="Coal Ore"] {
   background-image: url(../../img/ores/coal_ore.png);
 }
-[data-ore-type="Quartz Ore"] {
-  background-image: url(../../img/ores/quartz.webp);
+[data-ore-type="Sulfur Ore"] {
+  background-image: url(../../img/ores/sulfur.png);
 }
 
 .deepOreGround {
@@ -86,6 +86,18 @@
 }
 [data-features-type="limeStoneRock"][data-main-tile="true"]:after {
   @include buildingShadow(-30px, 28px, 72px, 78px); //bottom, left, width, height
+}
+[data-features-type="bigStoneRock"] {
+  position: relative;
+  [data-image-type="natureFeature"] {
+    @include natureFeature();
+    width: 110px;
+    top: -4px;
+    left: -22px;
+  }
+}
+[data-features-type="bigStoneRock"][data-main-tile="true"]:after {
+  @include buildingShadow(-22px, 32px, 45px, 35px); //bottom, left, width, height
 }
 [data-features-type="tree"] {
   position: relative;

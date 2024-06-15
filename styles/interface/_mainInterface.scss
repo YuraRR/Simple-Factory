@@ -19,14 +19,16 @@
 .resources-menu {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  height: 220px;
+  padding: 3px 10px 3px 3px;
   width: auto;
   position: absolute;
+  column-gap: 12px;
   top: 40%;
   left: 0;
   background-color: var(--transDarkGray);
   border-radius: 0 10px 10px 0;
   box-shadow: 5px 5px 15px 0px rgba(0, 0, 0, 0.5);
+  pointer-events: all;
   .resBlock {
     display: flex;
     padding: 8px;
@@ -48,25 +50,63 @@
   display: flex;
   flex-direction: column;
   position: absolute;
-  left: 10px;
-  top: 10px;
+  left: 5px;
+  top: 5px;
   pointer-events: all;
   background-color: var(--transDarkGray);
   width: 350px;
   color: var(--white);
   border-radius: 10px 0 10px 0;
   box-shadow: 5px 5px 15px 0px rgba(0, 0, 0, 0.5);
-  padding: 10px 0;
+
   h2 {
-    font-weight: 800;
-    padding-left: 10px;
-  }
-  details {
-    padding: 5px 10px;
-  }
-  p {
-    font-size: 14px;
     padding: 5px 0;
+    font-weight: 700;
+    padding-left: 10px;
+    background-color: var(--transBlack);
+    border-radius: 10px 0 0 0;
+  }
+  summary {
+    padding: 5px 10px;
+    background-color: var(--transXXXDarkGray);
+  }
+
+  p {
+    padding: 5px 5px 5px 35px;
+    font-size: 14px;
+  }
+  details:last-of-type {
+    summary {
+      border-radius: 0 0 10px 0;
+    }
+  }
+}
+.info-menu {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  right: 0;
+  bottom: 25%;
+  background-color: var(--transBlack);
+  color: var(--white);
+  font-size: 14px;
+  align-items: center;
+  min-width: 140px;
+  min-height: 50px;
+
+  li {
+    list-style: none;
+    padding: 0 15px;
+  }
+  &__title {
+    background-color: var(--transBlack);
+    width: 100%;
+    text-align: center;
+    font-size: 16px;
+  }
+
+  &__list {
+    padding: 10px 0;
   }
 }
 
@@ -104,9 +144,23 @@
     }
     span {
       font-size: 20px;
+      font-weight: 700;
     }
     &:hover {
       background-color: var(--black);
+    }
+  }
+  &__moneyBlock {
+    position: relative;
+    flex-direction: column;
+    .moneyChangeBlock {
+      position: absolute;
+      top: -15px;
+    }
+    .moneyChange {
+      position: absolute;
+      opacity: 0;
+      font-weight: 700;
     }
   }
   &__block {
@@ -205,6 +259,11 @@
     img {
       max-width: 100%;
     }
+    &:hover {
+      padding: 2px;
+      background-color: var(--black);
+      transition: 0.1s ease-in-out;
+    }
   }
   &__block {
     display: flex;
@@ -222,7 +281,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 10px;
+    padding: 10px 20px;
     margin-left: auto;
   }
 
@@ -234,6 +293,15 @@
     padding: 2px;
     img {
       max-width: 100%;
+    }
+  }
+  &__options-btn {
+    display: flex;
+    background-color: transparent;
+    border: none;
+    padding: 0 15px 0 0;
+    img {
+      width: 40px;
     }
   }
 }
@@ -304,7 +372,7 @@
   display: flex;
   flex-direction: column;
   position: absolute;
-  top: 40px;
+  top: 10px;
   background-color: var(--transDarkGray);
   pointer-events: all;
   border-radius: 0 10px 10px 0;
@@ -333,64 +401,34 @@
 }
 .musicPlayer {
   display: flex;
-  position: absolute;
-  top: 0;
-  right: 0;
-  gap: 5px;
-  background-color: var(--transDarkGray);
+  margin: 0 auto;
+  gap: 7px;
+  align-items: center;
   padding: 5px;
-  border-radius: 0 0 0 10px;
+  border-radius: 0 10px 0 0;
   pointer-events: all;
   img {
     width: 17px;
   }
+  .playMusicBtn {
+    background-image: url(/img/buttonIcons/pause.png);
+    width: 17px;
+    height: 17px;
+    background-size: contain;
+    background-color: unset;
+    border: none;
+  }
+  .nextMusicBtn {
+    background-image: url(/img/buttonIcons/next.png);
+    width: 17px;
+    height: 17px;
+    background-size: contain;
+    background-color: unset;
+    border: none;
+    background-repeat: no-repeat;
+  }
 }
-.musicBtn {
-  background-image: url(/img/buttonIcons/pause.png);
-  width: 17px;
-  height: 17px;
-  background-size: contain;
-  background-color: unset;
-  border: none;
-}
+
 [data-locked] {
   filter: brightness(40%);
-}
-.mainMenu-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  z-index: 9999;
-  pointer-events: all;
-  img {
-    position: absolute;
-    z-index: 99999;
-    top: 10%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 900px;
-    box-shadow: 5px 5px 10px 5px rgba(0, 0, 0, 0.5);
-    border-radius: 30px 0 30px 0;
-  }
-  button {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 99999;
-    padding: 5px 15px;
-    background-color: unset;
-    color: var(--white);
-    font-size: 22px;
-    border: none;
-    font-weight: 500px;
-  }
-  video {
-    width: 100%;
-    height: 100%;
-    scale: 1.1;
-  }
 }

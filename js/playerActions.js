@@ -10,7 +10,6 @@ function handleMouseEnter(event) {
     const img = document.createElement("img");
     const xSize = allBuildings.find((bld) => bld.name === currentTool).xSize;
     const zSize = allBuildings.find((bld) => bld.name === currentTool).zSize;
-
     if (
       currentTool != "demolition" &&
       currentTool != "" &&
@@ -88,6 +87,9 @@ function handleMouseEnter(event) {
   }
 }
 function factoryConnectionCheck(tile) {
+  const allConnectedBld = document.querySelectorAll(".connection-hover");
+  allConnectedBld.forEach((e) => e.classList.remove("connection-hover"));
+
   const connectedBuilding = document.querySelector(".connection-hover");
   const pattern = /(inOut1|inOut2|inOut3|Out|In|storage|terminal)/;
   let neighborsTiles = findNeighbors(tile);
@@ -145,6 +147,8 @@ function updateCellStyle() {
 }
 
 function resetGhost() {
+  if (!CELLS) return;
+
   //ALL TREES
   const allTrees = document.querySelectorAll(`[data-image-type="natureFeature"`);
   currentTool = "";
@@ -152,6 +156,7 @@ function resetGhost() {
   removeGhostBorders();
   const connectedBuilding = document.querySelector(".connection-hover");
   connectedBuilding && connectedBuilding.classList.remove("connection-hover");
+
   CELLS.forEach((cell) => {
     cell.removeEventListener("mouseenter", handleMouseEnter);
     cell.removeEventListener("mouseleave", handleMouseLeave);
@@ -264,14 +269,25 @@ function multiplyBuilding(tilesList, event) {
 function placeMultiplyGhost(event) {
   multiplyBuilding(multiplyTilesList, event);
 }
-
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
 function updateMoney() {
   const moneySpan = document.querySelector(".moneyAmount");
-  const formattedString = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(money);
+  const formattedString = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 0,
+  }).format(money);
+
   moneySpan.textContent = formattedString;
   +money;
 }
-setInterval(() => updateMoney(), 1000);
+updateMoney();
 //PAUSE
 
 // function handleVisibilityChange() {

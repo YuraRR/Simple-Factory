@@ -6,27 +6,44 @@ class in3Out1Bld extends Building {
   }
   processing(clickArea) {
     this.tileData = this.tile.dataset;
-    this.tileData.productionTime = this.productionTime;
-    if (!this.tileData.firstMatAmount) {
-      this.tileData.firstMatAmount = 0;
-      this.tileData.secondMatAmount = 0;
+    if (!this.tileData.materialAmount1) {
+      this.tileData.materialAmount1 = 0;
+      this.tileData.materialAmount2 = 0;
+      this.tileData.materialAmount3 = 0;
       this.tileData.itemAmountOutput1 = 0;
-      this.tileData.thirdMatAmount = 0;
     }
 
-    const menu = this.createMenu(
-      ThreeMatsProcessingMenu,
-      this.name,
-      buildingsMenuId[`${this.name}MenuId`]++,
-      clickArea
-    );
-    const recipeObj = allItems.find((recipe) => recipe.producedIn === this.name);
-    this.itemProcessingMaterial(this.tile, menu, recipeObj);
+    const menu = this.createMenu(3, this.name, buildingsMenuId[`${this.name}MenuId`]++, clickArea, this);
 
-    this.tileData.firstMatName = recipeObj.materials.res1Name;
-    this.tileData.secondMatName = recipeObj.materials.res2Name;
-    this.tileData.thirdMatName = recipeObj.materials.res3Name;
-    this.tileData.itemTypeOutput1 = recipeObj.name;
+    const checkInterval = setInterval(() => {
+      if (this.tileData.materialName1) {
+        const recipeObj = allItems.find(
+          (recipe) =>
+            recipe.producedIn == this.name &&
+            (recipe.materials.res1Name == this.tileData.materialName1 ||
+              recipe.materials.res2Name == this.tileData.materialName1 ||
+              recipe.materials.res3Name == this.tileData.materialName1)
+        );
+        if (!recipeObj) return;
+
+        this.itemProcessingMaterial(this.tile, menu, recipeObj);
+        this.tileData.materialName1 = recipeObj.materials.res1Name;
+        this.tileData.materialName2 = recipeObj.materials.res2Name;
+        this.tileData.materialName3 = recipeObj.materials.res3Name;
+
+        this.tileData.itemTypeOutput1 = recipeObj.name;
+        clearInterval(checkInterval);
+
+        const storageObj = {
+          id: this.tileData.buildingId,
+          resName: this.tileData.itemTypeOutput1,
+          resAmount: +this.tileData.itemAmountOutput1,
+          storageType: "factory",
+        };
+
+        storageResources.push(storageObj);
+      }
+    }, 1000);
   }
 }
 class ConcretePlant extends in3Out1Bld {
@@ -45,34 +62,32 @@ class Foundry extends Building {
 
   processing(clickArea) {
     this.tileData = this.tile.dataset;
-    this.tileData.productionTime = this.productionTime;
-    if (!this.tileData.firstMatAmount) {
-      this.tileData.firstMatAmount = 0;
-      this.tileData.secondMatAmount = 0;
+    if (!this.tileData.materialAmount1) {
+      this.tileData.materialAmount1 = 0;
+      this.tileData.materialAmount2 = 0;
+      this.tileData.materialAmount3 = 0;
       this.tileData.itemAmountOutput1 = 0;
       this.tileData.itemAmountOutput2 = 0;
       this.tileData.itemAmountOutput3 = 0;
-      this.tileData.thirdMatAmount = 0;
       this.tileData.semiFinishedAmount = 0;
     }
-    const menu = this.createMenu(
-      ThreeMatsProcessingMenu,
-      this.name,
-      buildingsMenuId[`${this.name}MenuId`]++,
-      clickArea,
-      this
-    );
-    const recipeObj = allItems.find((recipe) => recipe.producedIn === "foundry");
-    this.itemProcessingMaterial(this.tile, menu, recipeObj);
+    const menu = this.createMenu(3, this.name, buildingsMenuId[`${this.name}MenuId`]++, clickArea, this);
+    const waitInterval = setInterval(() => {
+      if (this.tileData.materialName1) {
+        const recipeObj = allItems.find((recipe) => recipe.producedIn === this.name);
+        this.itemProcessingMaterial(this.tile, menu, recipeObj);
 
-    this.tileData.firstMatName = recipeObj.materials.res1Name;
-    this.tileData.secondMatName = recipeObj.materials.res2Name;
-    this.tileData.thirdMatName = recipeObj.materials.res3Name;
-    this.tileData.semiFinishedType = recipeObj.name;
+        this.tileData.materialName1 = recipeObj.materials.res1Name;
+        this.tileData.materialName2 = recipeObj.materials.res2Name;
+        this.tileData.materialName3 = recipeObj.materials.res3Name;
+        this.tileData.semiFinishedType = recipeObj.name;
 
-    this.tileData.itemTypeOutput1 = recipeObj.consumptionFor[0];
-    this.tileData.itemTypeOutput2 = recipeObj.consumptionFor[1];
-    this.tileData.itemTypeOutput3 = recipeObj.consumptionFor[2];
+        this.tileData.itemTypeOutput1 = recipeObj.consumptionFor[0];
+        this.tileData.itemTypeOutput2 = recipeObj.consumptionFor[1];
+        this.tileData.itemTypeOutput3 = recipeObj.consumptionFor[2];
+        clearInterval(waitInterval);
+      }
+    }, 1000);
   }
 }
 class Assembly extends in3Out1Bld {

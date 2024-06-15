@@ -17,7 +17,8 @@ class Connector extends Conveyor {
     const previousTile = directionMapping[this.tileData.direction];
     const previousMainTile = findMainTile(previousTile);
     const nextTile = findTargetTileByDirection(this.tile, false);
-    const nextMainTile = findTargetTileByDirection(this.tile, true);
+    const nextMainTile = findTargetTileByDirection(this.tile, true) || nextTile;
+    const nextTileData = nextMainTile.dataset;
     const buildingsCatList = [
       "in1Out1",
       "in1Out2",
@@ -35,7 +36,7 @@ class Connector extends Conveyor {
       const previousMainTile = findMainTile(previousTile);
       console.log(previousMainTile);
       if (!previousMainTile) return;
-
+      document.querySelector(".tool-menu__modal").classList.add("hidden");
       const tileData = previousMainTile.dataset;
       const outputItems = [tileData.itemTypeOutput1, tileData.itemTypeOutput2, tileData.itemTypeOutput3];
       const selectBlock = document.querySelector(".selectConnectorItemBlock");
@@ -70,13 +71,22 @@ class Connector extends Conveyor {
     this.tile.onclick = () => setOutputItem(this.tile);
     this.tile.dataset.connectorType =
       "export" && previousMainTile && previousMainTile.dataset.semiFinishedType ? setOutputItem(this.tile) : "";
-    setInterval(() => {
+
+    setTimeout(checkConnType.bind(this), 0);
+
+    observeDatasetChange(nextTile, "building-type", checkConnType.bind(this));
+    observeDatasetChange(previousTile, "building-type", checkConnType.bind(this));
+
+    function checkConnType() {
+      let interval = this.tile.dataset.intervalId;
+
       if (
         buildingsCatList.includes(previousTile.dataset.buildingCategory) &&
         buildingsCatList.includes(nextTile.dataset.buildingCategory)
       ) {
         if (this.tile.dataset.connectorType == "export" || this.tile.dataset.connectorType == "import") {
-          clearInterval(this.tile.dataset.intervalId);
+          console.log(interval);
+          clearInterval(interval);
           this.tile.dataset.intervalId = setInterval(exportItemFromBld.bind(this), 500);
         }
 
@@ -84,29 +94,29 @@ class Connector extends Conveyor {
         changeConnImage("mix", this.tileData.direction);
       } else if (buildingsCatList.includes(previousTile.dataset.buildingCategory)) {
         if (this.tile.dataset.connectorType == "mixed" || this.tile.dataset.connectorType == "import") {
-          clearInterval(this.tile.dataset.intervalId);
+          clearInterval(interval);
           this.tile.dataset.intervalId = setInterval(exportItemFromBld.bind(this), 500);
         }
         this.tile.dataset.connectorType = "export";
         changeConnImage("exp", this.tileData.direction);
       } else if (buildingsCatList.includes(nextTile.dataset.buildingCategory)) {
         if (this.tile.dataset.connectorType == "export" || this.tile.dataset.connectorType == "mixed") {
-          clearInterval(this.tile.dataset.intervalId);
+          clearInterval(interval);
           this.tile.dataset.intervalId = setInterval(exportItemFromBld.bind(this), 500);
         }
         this.tile.dataset.connectorType = "import";
         changeConnImage("imp", this.tileData.direction);
       }
-      function changeConnImage(type, dir) {
-        const imageSrc = {
-          up: `/img/conveyors/connectorTop-${type}.png`,
-          right: `/img/conveyors/connectorRight-${type}.png`,
-          down: `/img/conveyors/connectorDown-${type}.png`,
-          left: `/img/conveyors/connectorLeft-${type}.png`,
-        };
-        connectorImage.src = imageSrc[dir];
-      }
-    }, 500);
+    }
+    function changeConnImage(type, dir) {
+      const imageSrc = {
+        up: `/img/conveyors/connectorTop-${type}.png`,
+        right: `/img/conveyors/connectorRight-${type}.png`,
+        down: `/img/conveyors/connectorDown-${type}.png`,
+        left: `/img/conveyors/connectorLeft-${type}.png`,
+      };
+      imageSrc[dir] && (connectorImage.src = imageSrc[dir]);
+    }
     function checkOutput(factoryData, connectorData) {
       switch (connectorData.connectorFilter) {
         case factoryData.itemTypeOutput1:
@@ -120,23 +130,50 @@ class Connector extends Conveyor {
 
     function exportItemFromBld() {
       const mainFactoryTile = findMainTile(previousTile);
+      const factoryData = mainFactoryTile && mainFactoryTile.dataset;
       if (!mainFactoryTile) return;
 
-      const buildingType = mainFactoryTile.dataset.buildingType;
-      const isFoundry =
+      const buildingType = factoryData.buildingType;
+      const isMultiplyOutputs =
         buildingType == "foundry" || buildingType == "smallFoundry" || buildingType == "oilRefinery";
-      const currentOutputAmount = isFoundry
-        ? checkOutput(mainFactoryTile.dataset, this.tileData)
-        : "itemAmountOutput1";
-
+      const outputAmount = checkOutput(factoryData, this.tileData);
+      const currentOutputAmount = isMultiplyOutputs ? outputAmount : "itemAmountOutput1";
+      const isStorage = factoryData.buildingCategory == "storage";
       if (
-        mainFactoryTile.dataset[currentOutputAmount] > 0 &&
-        this.tileData.itemType == "" &&
-        (nextTile.dataset.buildingCategory == "conveyor" || nextTile.dataset.type == "building")
+        factoryData[currentOutputAmount] > 0 &&
+        nextTileData.buildingCategory != "conveyor" &&
+        nextTileData.buildingCategory != "storage"
       ) {
-        const isStorage = mainFactoryTile.dataset.buildingCategory == "storage";
+        const materialsNames = [
+          nextTileData && nextTileData.materialName1,
+          nextTileData && nextTileData.materialName2,
+          nextTileData && nextTileData.materialName3,
+        ];
+
+        for (let i = 0; i < 3; i++) {
+          if (
+            materialsNames[i] != undefined &&
+            materialsNames[i] == factoryData[`itemTypeOutput${i + 1}`] &&
+            +nextTileData[`materialAmount${i + 1}`] < 50
+          ) {
+            this.moveItem(mainFactoryTile, this.tile, isStorage ? undefined : this.tileData.connectorFilter);
+            factoryData[currentOutputAmount]--;
+          }
+        }
+      } else if (
+        factoryData[currentOutputAmount] > 0 &&
+        this.tileData.itemType == "" &&
+        nextTileData.buildingCategory == "conveyor"
+      ) {
         this.moveItem(mainFactoryTile, this.tile, isStorage ? undefined : this.tileData.connectorFilter);
-        mainFactoryTile.dataset[currentOutputAmount]--;
+        factoryData[currentOutputAmount]--;
+      } else if (
+        nextTileData.buildingCategory == "storage" &&
+        factoryData[currentOutputAmount] > 0 &&
+        +nextTileData.itemAmountOutput1 < +nextTileData.storageCapacity
+      ) {
+        this.moveItem(mainFactoryTile, this.tile, isStorage ? undefined : this.tileData.connectorFilter);
+        factoryData[currentOutputAmount]--;
       }
     }
     this.tile.dataset.intervalId = setInterval(exportItemFromBld.bind(this), 500);

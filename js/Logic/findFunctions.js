@@ -3,7 +3,7 @@ function findMainTile(building) {
   const allBuildingTiles = document.querySelectorAll(`[data-building-id="${currentId}"]`);
   return Array.from(allBuildingTiles).find(
     (tile) =>
-      tile.dataset.firstMatAmount ||
+      tile.dataset.materialAmount1 ||
       tile.dataset.itemAmountOutput1 ||
       tile.dataset.buildingType == "tradingTerminal"
   );
@@ -39,7 +39,7 @@ function findTargetTileByDirection(tile, isFindMainTile) {
 function findTileByMouse(event) {
   if (event.target.classList.contains("grid-cell")) {
     multiplyTilesList.push(event.target);
-    setTimeout(() => {
+    deltaTimeout(() => {
       const allGhostTiles = document.querySelectorAll(".multiply-hover");
       [...allGhostTiles].map((tile) => tile.classList.remove("multiply-hover"));
     }, 0);

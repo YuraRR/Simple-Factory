@@ -14,7 +14,29 @@ class CargoStation extends Building {
     this.direction = buildingDirection;
     this.name = "cargoStation";
     this.tile = tile;
+    this.tileData = tile.dataset;
     Object.assign(this, findTarget);
+  }
+  stationCreate(clickArea) {
+    const factoryImg = document.querySelector(".connection-hover");
+    if (!factoryImg)
+      return notyf.open({ type: "warning", message: "The cargo station needs to be placed near building!" });
+
+    factoryImg.classList.remove("connection-hover");
+    const factoryTile = factoryImg.parentElement;
+    //Datasets
+    this.tileData.direction = { 0: "up", 1: "right", 2: "down", 3: "left" }[buildingDirection];
+    this.tileData.cargoStationType = "Export";
+    this.tileData.cargoStationItem = "Empty";
+    this.tileData.connectedTo = factoryTile.dataset.buildingType;
+    this.tileData.connectedToId = factoryTile.dataset.buildingId;
+
+    const alphabet = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
+    const stationsToBld = document.querySelectorAll(`[data-connected-to-id="${factoryTile.dataset.buildingId}"]`);
+    this.tileData.stationLetter = alphabet[stationsToBld.length - 1];
+    const stationData = this.updateData(factoryTile);
+    this.createMenu("station", this.name, buildingsMenuId[`${this.name}MenuId`]++, clickArea, stationData);
+    stationsList.push(this.tile);
   }
   updateData(mainFactoryTile, type, selectedExportItem) {
     if (mainFactoryTile) {
@@ -29,9 +51,9 @@ class CargoStation extends Building {
       } else if (type == "import") {
         itemName = selectedExportItem;
 
-        if (itemName == data.firstMatName) itemAmount = data.firstMatAmount;
-        else if (itemName == data.secondMatName) itemAmount = data.secondMatAmount;
-        else if (itemName == data.thirdMatName) itemAmount = data.thirdMatAmount;
+        if (itemName == data.materialName1) itemAmount = data.materialAmount1;
+        else if (itemName == data.materialName2) itemAmount = data.materialAmount2;
+        else if (itemName == data.materialName3) itemAmount = data.materialAmount3;
         else itemAmount = 0;
       }
       let itemInfo = allItems.find((item) => item.name == itemName);
@@ -56,19 +78,6 @@ class CargoStation extends Building {
       return itemDataObj;
     }
   }
-  addStationToList(menu, tile) {
-    const stationsList = document.querySelector(".routesInfo-menu__stationsList");
-    const htmlContent = `
-    <div class="routesInfo-menu__stationBlock" id="stationMenu${menu.dataset.cargoStationId}">
-        <span>${formatString(tile.dataset.connectedTo)} ${menu.dataset.menuId}</span>
-    </div>`;
-    stationsList.insertAdjacentHTML("beforeend", htmlContent);
-    const stationBlock = stationsList.querySelector(`#stationMenu${menu.dataset.cargoStationId}`);
-    stationBlock.onclick = () => menu.classList.remove("hidden");
-
-    const noStations = interfaceСont.querySelector(".noStations");
-    stationsList.children.length > 1 ? noStations.classList.add("hidden") : noStations.classList.remove("hidden");
-  }
 }
 
 class Garage extends Building {
@@ -78,6 +87,9 @@ class Garage extends Building {
     this.name = "garage";
     this.tile = tile;
     Object.assign(this, findTarget);
+  }
+  garageCreate(clickArea) {
+    this.createMenu("garage", this.name, buildingsMenuId[`${this.name}MenuId`]++, clickArea);
   }
 }
 class TradingTerminal extends Building {
