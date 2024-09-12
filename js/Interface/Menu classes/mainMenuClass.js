@@ -76,8 +76,8 @@ class BuildingMenu {
           </div>
           <div class="recipeSelect hidden"></div>
           <div class="indicatorsBlock">
-            <img src="./img/resourcesIcons/water.png" class="waterImage"/>
-            <img src="./img/resourcesIcons/energy.png" class="energyImage"/>
+            <img src="./img/resourcesIcons/water.png" class="waterImage hidden"/>
+            <img src="./img/resourcesIcons/energy.png" class="energyImage hidden"/>
           </div>
         </div>
         <div class="progressBarBlock">
@@ -386,6 +386,7 @@ class BuildingMenu {
     const energyImageBld = this.tile.querySelector(".energyImage");
 
     this.tileData.waterRequired == "true" && waterImage.classList.remove("hidden");
+
     if (this.tileData.fluidType == "water") {
       waterImage.style.setProperty("background-color", "var(--transGreen)");
       waterImage.style.animation = "none";

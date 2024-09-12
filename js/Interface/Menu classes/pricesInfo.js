@@ -5,6 +5,8 @@ function createPricesMenu() {
 
   allItems.forEach((item) => {
     if (item.isMovable != false && item.isAltRecipe != true) {
+      console.log("Da");
+
       const itemBlock = document.createElement("div");
       itemBlock.classList.add("pricesInfo-menu__item");
       itemBlock.innerHTML = `
@@ -89,4 +91,3 @@ function createPricesMenu() {
     }
   });
 }
-createPricesMenu();

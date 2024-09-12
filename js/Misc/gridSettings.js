@@ -101,7 +101,9 @@ function startGame() {
 }
 
 window.addEventListener("load", function () {
-  document.getElementById("startGame").addEventListener("click", async () => {
+  const startButton = document.getElementById("startGame");
+  startButton.addEventListener("click", async () => {
+    startButton.textContent = "Loading...";
     await preloadImages(allPreloadImages);
     startGame();
   });
