@@ -76,13 +76,11 @@ class Generator {
     }
     if (tileType == "forest") {
       const forestTile = randomArrayElem(allTiles);
-      console.log(forestTile);
       playAmbientSound(forestTile, "birds");
     }
     if (tileType == "water") {
       const waterTile = randomArrayElem(allTiles);
       playAmbientSound(waterTile, "lake");
-      console.log(waterTile);
     }
   }
 
@@ -387,17 +385,21 @@ function randomArrayElem(nodeList) {
 
 function spawnObj(objClass, amount) {
   for (let i = 0; i < amount; i++) {
-    function findEmptyTile() {
+    let tileFound = false;
+
+    while (!tileFound) {
       const x = randomId();
       const z = randomId();
       const randomTile = document.getElementById(`${x}.${z}`);
-      randomTile.dataset.groundType == "grass" && randomTile.dataset.type == "empty"
-        ? new objClass(x, z).spawn()
-        : findEmptyTile();
+
+      if (randomTile.dataset.groundType === "grass" && randomTile.dataset.type === "empty") {
+        new objClass(x, z).spawn();
+        tileFound = true;
+      }
     }
-    findEmptyTile();
   }
 }
+
 function generateWorld() {
   spawnTerminal();
   spawnObj(Water, 1);

@@ -56,7 +56,5 @@ async function preloadImages(imageArray) {
   };
 
   const images = await Promise.all(imageArray.map((src) => loadImage(src)));
-  console.log("All images preloaded:", images);
-
   return images;
 }
