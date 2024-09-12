@@ -23,7 +23,7 @@ const createSmoke = (tile, isSecondSmoke) => {
 
 const createSmokeImage = () => {
   const smokeImg = document.createElement("img");
-  smokeImg.src = "/img/animations/smoke.gif";
+  smokeImg.src = "./img/animations/smoke.gif";
   return smokeImg;
 };
 

@@ -69,7 +69,7 @@ class Building {
     } else if (this.name == "pipe") {
       img.dataset.imageType = this.name;
     } else {
-      img.src = `/img/buildings/${this.name}.webp`;
+      img.src = `./img/buildings/${this.name}.webp`;
     }
 
     const [x, z] = findXZpos(lastTile);

@@ -651,7 +651,7 @@ const allItems = [
     producedIn: "",
     processingIn: [""],
     consumptionFor: "",
-    imageSrc: "/img/resourcesIcons/water.png",
+    imageSrc: "./img/resourcesIcons/water.png",
     materials: {
       time: 0,
     },
@@ -663,7 +663,7 @@ const allItems = [
     producedIn: "powerPlant",
     processingIn: [""],
     consumptionFor: "",
-    imageSrc: "/img/resourcesIcons/energy.png",
+    imageSrc: "./img/resourcesIcons/energy.png",
     materials: {
       res1Name: "Refined Coal",
       res1Amount: 1,

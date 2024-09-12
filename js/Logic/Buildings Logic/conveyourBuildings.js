@@ -110,10 +110,10 @@ class Connector extends Conveyor {
     }
     function changeConnImage(type, dir) {
       const imageSrc = {
-        up: `/img/conveyors/connectorTop-${type}.png`,
-        right: `/img/conveyors/connectorRight-${type}.png`,
-        down: `/img/conveyors/connectorDown-${type}.png`,
-        left: `/img/conveyors/connectorLeft-${type}.png`,
+        up: `./img/conveyors/connectorTop-${type}.png`,
+        right: `./img/conveyors/connectorRight-${type}.png`,
+        down: `./img/conveyors/connectorDown-${type}.png`,
+        left: `./img/conveyors/connectorLeft-${type}.png`,
       };
       imageSrc[dir] && (connectorImage.src = imageSrc[dir]);
     }
@@ -242,16 +242,16 @@ class UndergroundConveyor extends Conveyor {
       const bldImage = this.tile.querySelector(`[data-image-type="undergroundConveyor"]`);
       switch (entranceTile.dataset.direction) {
         case "up":
-          bldImage.src = "/img/conveyors/ugdConveyorExportTop.png";
+          bldImage.src = "./img/conveyors/ugdConveyorExportTop.png";
           break;
         case "right":
-          bldImage.src = "/img/conveyors/ugdConveyorExportRight.png";
+          bldImage.src = "./img/conveyors/ugdConveyorExportRight.png";
           break;
         case "down":
-          bldImage.src = "/img/conveyors/ugdConveyorExportDown.png";
+          bldImage.src = "./img/conveyors/ugdConveyorExportDown.png";
           break;
         case "left":
-          bldImage.src = "/img/conveyors/ugdConveyorExportLeft.png";
+          bldImage.src = "./img/conveyors/ugdConveyorExportLeft.png";
           break;
       }
       this.tileData.direction = entranceTile.dataset.direction;
@@ -298,12 +298,12 @@ class Pipe extends DynamicBuildings {
       case 0:
       case 2:
         img.dataset.pipeType = "vertical";
-        img.src = `/img/pipes/pipe-vertical.png`;
+        img.src = `./img/pipes/pipe-vertical.png`;
         break;
       case 1:
       case 3:
         img.dataset.pipeType = "horizontal";
-        img.src = `/img/pipes/pipe-horizontal.png`;
+        img.src = `./img/pipes/pipe-horizontal.png`;
 
         break;
     }

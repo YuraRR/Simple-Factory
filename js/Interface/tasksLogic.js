@@ -32,7 +32,7 @@ function addTask(id) {
         break;
       case "building":
         !taskData.subtype && (updatingValue.textContent = buildingsMenuId[menuName] - 1);
-        console.log(buildingsMenuId[menuName]);
+
         if (buildingsMenuId[menuName] - 1 < goalAmount) return;
         if (taskData.subtype) {
           if (lastBuilding && lastBuilding.dataset.itemTypeOutput1 == taskData.subtype) {

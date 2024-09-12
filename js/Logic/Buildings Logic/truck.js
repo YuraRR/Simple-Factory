@@ -205,16 +205,16 @@ class Truck extends Building {
     //Starting position
     switch (directionsList[1]) {
       case "top":
-        truckImg.src = "/img/transport/truckTop.png";
+        truckImg.src = "./img/transport/truckTop.png";
         break;
       case "right":
-        truckImg.src = "/img/transport/truckRight.png";
+        truckImg.src = "./img/transport/truckRight.png";
         break;
       case "down":
-        truckImg.src = "/img/transport/truckDown.png";
+        truckImg.src = "./img/transport/truckDown.png";
         break;
       case "left":
-        truckImg.src = "/img/transport/truckLeft.png";
+        truckImg.src = "./img/transport/truckLeft.png";
         break;
     }
     truckBlock.style.top = "0";
@@ -260,22 +260,22 @@ class Truck extends Building {
                 case "top":
                   property = "top";
                   offset = -40;
-                  truckImg.src = "/img/transport/truckTop.png";
+                  truckImg.src = "./img/transport/truckTop.png";
                   break;
                 case "right":
                   property = "left";
                   offset = 40;
-                  truckImg.src = "/img/transport/truckRight.png";
+                  truckImg.src = "./img/transport/truckRight.png";
                   break;
                 case "down":
                   property = "top";
                   offset = 40;
-                  truckImg.src = "/img/transport/truckDown.png";
+                  truckImg.src = "./img/transport/truckDown.png";
                   break;
                 case "left":
                   property = "left";
                   offset = -40;
-                  truckImg.src = "/img/transport/truckLeft.png";
+                  truckImg.src = "./img/transport/truckLeft.png";
                   break;
               }
 

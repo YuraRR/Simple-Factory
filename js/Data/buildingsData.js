@@ -385,10 +385,10 @@ const allBuildings = [
       Rubber: 2,
     },
     imageSrc: {
-      0: "/img/conveyors/conveyor-Up.gif",
-      1: "/img/conveyors/conveyor-Right.gif",
-      2: "/img/conveyors/conveyor-Down.gif",
-      3: "/img/conveyors/conveyor-Left.gif",
+      0: "./img/conveyors/conveyor-Up.gif",
+      1: "./img/conveyors/conveyor-Right.gif",
+      2: "./img/conveyors/conveyor-Down.gif",
+      3: "./img/conveyors/conveyor-Left.gif",
     },
     description: `Moves items between factories. 
     First you need to place Connector direction from the building, after place Conveyors in in the right direction.
@@ -406,10 +406,10 @@ const allBuildings = [
       Bricks: 4,
     },
     imageSrc: {
-      0: "/img/conveyors/connectorTop-exp.png",
-      1: "/img/conveyors/connectorRight-exp.png",
-      2: "/img/conveyors/connectorDown-exp.png",
-      3: "/img/conveyors/connectorLeft-exp.png",
+      0: "./img/conveyors/connectorTop-exp.png",
+      1: "./img/conveyors/connectorRight-exp.png",
+      2: "./img/conveyors/connectorDown-exp.png",
+      3: "./img/conveyors/connectorLeft-exp.png",
     },
     description: `Used to move items between buildings and conveyors.
     An arrow towards the building imports it inside, an arrow away from the building exports the item to the conveyor.
@@ -427,10 +427,10 @@ const allBuildings = [
       Rubber: 2,
     },
     imageSrc: {
-      0: "/img/conveyors/splitterUp.png",
-      1: "/img/conveyors/splitterRight.png",
-      2: "/img/conveyors/splitterDown.png",
-      3: "/img/conveyors/splitterLeft.png",
+      0: "./img/conveyors/splitterUp.png",
+      1: "./img/conveyors/splitterRight.png",
+      2: "./img/conveyors/splitterDown.png",
+      3: "./img/conveyors/splitterLeft.png",
     },
     description: `Used to evenly split items from conveyors in 3 directions. Orange side is used to input items.`,
     unlockPrice: 600,
@@ -446,10 +446,10 @@ const allBuildings = [
       Rubber: 2,
     },
     imageSrc: {
-      0: "/img/conveyors/ugdConveyorImportTop.png",
-      1: "/img/conveyors/ugdConveyorImportRight.png",
-      2: "/img/conveyors/ugdConveyorImportDown.png",
-      3: "/img/conveyors/ugdConveyorImportLeft.png",
+      0: "./img/conveyors/ugdConveyorImportTop.png",
+      1: "./img/conveyors/ugdConveyorImportRight.png",
+      2: "./img/conveyors/ugdConveyorImportDown.png",
+      3: "./img/conveyors/ugdConveyorImportLeft.png",
     },
     description: `Moves items under the ground. To correct work need to place entrance and exit over highlighted tiles. 
     Max length is 4 tiles from the entrance `,
@@ -464,10 +464,10 @@ const allBuildings = [
       "Iron Pipes": 2,
     },
     imageSrc: {
-      0: "/img/pipes/pipe-vertical.png",
-      1: "/img/pipes/pipe-horizontal.png",
-      2: "/img/pipes/pipe-vertical.png",
-      3: "/img/pipes/pipe-horizontal.png",
+      0: "./img/pipes/pipe-vertical.png",
+      1: "./img/pipes/pipe-horizontal.png",
+      2: "./img/pipes/pipe-vertical.png",
+      3: "./img/pipes/pipe-horizontal.png",
     },
     description: `Pipes are used to connect buildings to water. Need to start pipeline from the Water Pump`,
     unlockPrice: 300,
@@ -508,10 +508,10 @@ const allBuildings = [
     description: `Used to delivery resources to others Cargo Stations. 
     Can be placed only near buildings. The station should be placed towards the building.`,
     imageSrc: {
-      0: "/img/buildings/cargoStationUp.webp",
-      1: "/img/buildings/cargoStationRight.webp",
-      2: "/img/buildings/cargoStationDown.webp",
-      3: "/img/buildings/cargoStationLeft.webp",
+      0: "./img/buildings/cargoStationUp.webp",
+      1: "./img/buildings/cargoStationRight.webp",
+      2: "./img/buildings/cargoStationDown.webp",
+      3: "./img/buildings/cargoStationLeft.webp",
     },
     unlockPrice: 0,
   },
@@ -544,7 +544,7 @@ const allBuildings = [
     xSize: 5,
     zSize: 5,
     resources: ["Energy"],
-    description: `Consumes coal to produce energy. Gives 100 mW <img src="/img/resourcesIcons/energy.png"></img> during Refined Coal consumption.`,
+    description: `Consumes coal to produce energy. Gives 100 mW <img src="./img/resourcesIcons/energy.png"></img> during Refined Coal consumption.`,
     cost: {
       "Concrete Block": 60,
       Bricks: 70,
@@ -561,7 +561,7 @@ const allBuildings = [
     xSize: 1,
     zSize: 1,
     resources: ["Energy"],
-    description: `Wind Turbine is spinning and giving energy. Gives 2.5 mW <img src="/img/resourcesIcons/energy.png"></img> permanent.`,
+    description: `Wind Turbine is spinning and giving energy. Gives 2.5 mW <img src="./img/resourcesIcons/energy.png"></img> permanent.`,
     cost: {
       Gravel: 10,
       "Steel Beams": 14,

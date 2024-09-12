@@ -104,7 +104,7 @@ class TruckMenu {
     <span class="truckMenu__routeName">
     Cargo Station ${this.exportStationId} — Cargo Station ${this.importStationId}</span>
     <span class="truckMenu__truckState">Loading</span>
-    <button class="truckMenu__sell-button">Sell truck <img src="./img/buttonIcons/sellIcon.png"></button>
+    <button class="truckMenu__sell-button">Sell truck <img src="../img/buttonIcons/sellIcon.png"></button>
     <button class="close-button"></button>`;
     menu.innerHTML = menuContent;
     menu.querySelectorAll("img").forEach((image) => {
@@ -164,7 +164,7 @@ function updateTrucksInGarage(menu, tile, type) {
   for (let i = 0; i < tile.dataset.trucksInGarage; i++) {
     const htmlContent = `
     <div class="garageMenu__truck" data-truck-id-garage="${i}">
-      <img class="truck-image__img" src="/img/transport/truckDown.png" >
+      <img class="truck-image__img" src="./img/transport/truckDown.png" >
       <button class="garageMenu__setToRoute"></button>
       <div class="garageMenu__routeSelect hidden"></div>
     </div>`;

@@ -99,6 +99,22 @@
   width: 50px;
   height: 100px;
 }
+.oilRefinerySmoke {
+  @include smokeBase();
+  filter: brightness(0.2) blur(0.6px) opacity(0);
+  top: -113px;
+  right: 149px;
+  width: 100px;
+  height: 150px;
+}
+.oilRefinerySmoke2 {
+  @include smokeBase();
+  filter: brightness(0.4) blur(0.6px) opacity(0);
+  top: -158px;
+  right: 118px;
+  width: 50px;
+  height: 100px;
+}
 .smallFoundrySmoke {
   @include smokeBase();
   filter: brightness(0.2) blur(0.6px) opacity(0.9);

@@ -93,7 +93,7 @@ class SourceBuildingsMenu extends BuildingMenu {
       <p class="upgradeBlock__title">${upgradeType}</p>
       <div class="upgradeBlock__costBlock">
         <p class="upgradeBlock__costText">15</p>
-        <img class="upgradeBlock__costImage" src="/img/resourcesIcons/explosives.png" />
+        <img class="upgradeBlock__costImage" src="./img/resourcesIcons/explosives.png" />
       </div>
       <button class="upgradeBlock__btn">Upgrade 0/3</button>
     </div>`;
@@ -177,7 +177,7 @@ class StorageBuildingsMenu extends BuildingMenu {
     button.addEventListener("click", () => {
       this.tileData.storageCapacity = 200;
       this.tileData.buildingType = "mediumStorage";
-      storageImg.src = "/img/buildings/mediumStorage.webp";
+      storageImg.src = "./img/buildings/mediumStorage.webp";
       storageImg.dataset.imageType = "mediumStorage";
       menu.querySelector("h3").textContent = `medium Storage ${this.id}`;
     });

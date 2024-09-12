@@ -57,7 +57,7 @@ class BuildingMenu {
           ${createBuildingMenuItems(this.matAmount)}
           <div class="buildingMenu__timeBlock">
             <div class="buildingMenu__clock">
-              <img src="/img/buttonIcons/whiteClock.png" class="timeImage" draggable="false" />
+              <img src="./img/buttonIcons/whiteClock.png" class="timeImage" draggable="false" />
               <span class="resTime">0s / 60s</span>
             </div>
             <div class="buildingMenu__arrow">

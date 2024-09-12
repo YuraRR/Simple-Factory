@@ -17,13 +17,13 @@ function addBuildingsToMenu() {
     const buttonBlock = document.createElement("div");
 
     const buildingImage =
-      typeof buildingInfo.imageSrc == "string" ? buildingInfo.imageSrc : `/img/buildings/${bld.name}.webp`;
+      typeof buildingInfo.imageSrc == "string" ? buildingInfo.imageSrc : `./img/buildings/${bld.name}.webp`;
     buttonBlock.classList.add("tool-menu__block");
     buttonBlock.innerHTML = `
     <button class="tool-menu__btn" id="${bld.name}" data-locked>
       <img src=${buildingImage} draggable="false" />
     </button>
-    <img class="lockImage" src="/img/buttonIcons/lock.png" draggable="false" />
+    <img class="lockImage" src="./img/buttonIcons/lock.png" draggable="false" />
     <div class="unlockBld hidden">
       <button class="tool-menu__unlockBtn">Unlock <span class="green">$${buildingInfo.unlockPrice}</span></button>
       <button class="tool-menu__cancelBtn">Cancel</button>
@@ -100,7 +100,7 @@ function recipeTipBlock(bld, buildingInfo) {
       </div>
  
       <div class="recipe__timeBlock">
-          <span class="resAmountPerMin">60 <img src="/img/buttonIcons/whiteClock.png" class="timeImage"/></span>
+          <span class="resAmountPerMin">60 <img src="./img/buttonIcons/whiteClock.png" class="timeImage"/></span>
           <img class="recipe__arrow" src="img/buttonIcons/arrow.png" />
       </div>
       <div class="recipe__product">
@@ -168,7 +168,7 @@ function resourcesTipBlock(bld, buildingInfo) {
       <div class = "timeBlock"> 
         <span class="resAmountPerMin">${resTime} / </span>
         <span class="resTime">60</span>
-        <img src="/img/buttonIcons/whiteClock.png" class="timeImage" draggable="false" />
+        <img src="./img/buttonIcons/whiteClock.png" class="timeImage" draggable="false" />
       </div>
     <div>`;
     resourcesBlock.insertAdjacentHTML("beforeend", tipResourceHtml);
@@ -372,7 +372,6 @@ function modesButtons() {
 }
 modesButtons();
 function dragElement(id) {
-  console.log(id);
   const position = { x: 0, y: 0 };
   const container = document.querySelector("#limit-container");
   interact(`#${id}`).draggable({

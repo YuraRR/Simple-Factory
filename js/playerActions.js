@@ -21,7 +21,7 @@ function handleMouseEnter(event) {
 
       const buildingImage = buildingInfo.imageSrc
         ? buildingInfo.imageSrc
-        : `/img/buildings/${buildingInfo.name}.webp`;
+        : `./img/buildings/${buildingInfo.name}.webp`;
 
       img.src = buildingImage;
 

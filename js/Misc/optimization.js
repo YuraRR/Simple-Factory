@@ -45,3 +45,18 @@ function disconnectObserver(elementId) {
     delete observers[elementId];
   }
 }
+async function preloadImages(imageArray) {
+  const loadImage = (src) => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = src;
+      img.onload = () => resolve(img);
+      img.onerror = (err) => reject(err);
+    });
+  };
+
+  const images = await Promise.all(imageArray.map((src) => loadImage(src)));
+  console.log("All images preloaded:", images);
+
+  return images;
+}

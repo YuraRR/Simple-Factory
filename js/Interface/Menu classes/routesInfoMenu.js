@@ -10,14 +10,14 @@ function addRouteInfoToMenu(id, color) {
         <select class="routesInfo-menu__station" id="export${id}" data-station-a>
           <option value="" selected disabled>Export Station</option>
         </select>
-        <img class="routesInfo-menu__arrowRight" src="/img/buttonIcons/arrow.png" />
+        <img class="routesInfo-menu__arrowRight" src="./img/buttonIcons/arrow.png" />
         <select class="routesInfo-menu__station" id="import${id}" data-station-b>
           <option value="" selected disabled>Import Station</option>
         </select>
       </div>
 
       <div class="routesInfo-menu__item">
-        <img class="routesInfo-menu__itemImg" src="/img/resourcesIcons/noItem.webp" />
+        <img class="routesInfo-menu__itemImg" src="./img/resourcesIcons/noItem.webp" />
         <span class="routesInfo-menu__itemName">Select Item</span>
         <div class="routesInfo-menu__itemSelect hidden"></div>
       </div>
@@ -39,7 +39,7 @@ function addRouteInfoToMenu(id, color) {
         <input type="checkbox" id="isInfinite" name="isInfinite">
       </div>
       <button id="addTruck">Add truck 
-      <img class="routesInfo-menu__plus" src="/img/buttonIcons/whitePlus.png" />
+      <img class="routesInfo-menu__plus" src="./img/buttonIcons/whitePlus.png" />
     </button>
     </div>`;
 
@@ -300,7 +300,7 @@ function addTruckToRouteInfo({ truckId, routeId, resourcesLeft, truckBlock }) {
   const htmlContent = `
     <div class="routesInfo-menu__truck" id="truck_${truckId}">
       <div class="routesInfo-menu__truck-info ">
-      <img class="truck-image__img" src="/img/transport/truckDown.png" >
+      <img class="truck-image__img" src="./img/transport/truckDown.png" >
          <span class="truck-info__id">Truck ID: ${truckId}</span>
          <span class="truck-info__resources-left">Resources Left: ${
            resourcesLeft < 1000 ? resourcesLeft : "Ꝏ"

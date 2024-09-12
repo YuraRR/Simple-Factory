@@ -216,7 +216,9 @@ function stopMusic() {
   const stopButton = document.querySelector(".playMusicBtn");
   stopButton.onclick = () => {
     stopButton.style.backgroundImage =
-      stopButton.dataset.player == "stoped" ? "url(/img/buttonIcons/pause.png)" : "url(/img/buttonIcons/play.png)";
+      stopButton.dataset.player == "stoped"
+        ? "url(./img/buttonIcons/pause.png)"
+        : "url(./img/buttonIcons/play.png)";
     if (stopButton.dataset.player == "stoped") {
       stopButton.dataset.player = "playing";
       currentMusic.volume = 0.2;

@@ -138,7 +138,7 @@ class DynamicBuildings extends Building {
             const pipeImg = obj.querySelector('[data-image-type="pipe"]:not([data-ghost-img="true"]');
             if (pipeImg.dataset.pipeType != "connector") {
               pipeImg.dataset.pipeType = type;
-              pipeImg.src = `/img/pipes/pipe-${type}.png`;
+              pipeImg.src = `./img/pipes/pipe-${type}.png`;
             }
             break;
           case "conveyor":
@@ -153,7 +153,7 @@ class DynamicBuildings extends Building {
 
             if (obj.dataset.direction == direction) {
               conveyorImg.dataset.conveyorType = type;
-              conveyorImg.src = `/img/conveyors/conveyor-${type}.gif`;
+              conveyorImg.src = `./img/conveyors/conveyor-${type}.gif`;
             }
 
             break;

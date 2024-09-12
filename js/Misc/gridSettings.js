@@ -101,7 +101,8 @@ function startGame() {
 }
 
 window.addEventListener("load", function () {
-  document.getElementById("startGame").addEventListener("click", () => {
+  document.getElementById("startGame").addEventListener("click", async () => {
+    await preloadImages(allPreloadImages);
     startGame();
   });
 });
