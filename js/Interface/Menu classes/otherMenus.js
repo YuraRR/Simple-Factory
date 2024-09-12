@@ -23,13 +23,13 @@ class SourceBuildingsMenu extends BuildingMenu {
       <div class="sourceBldMenu__items">
         <div class="sourceBldMenu__product">
           <div class="sourceBldMenu__item">
-            <img src=".img/resourcesIcons/noItem.webp" class="productImage" />
+            <img src="./img/resourcesIcons/noItem.webp" class="productImage" />
             <span class="productName">Empty</span>
             <span class="productAmount">0</span>
           </div>
         </div>
         <div class="indicatorsBlock">
-          <img src=".img/resourcesIcons/energy.png" class = "energyImage hidden"/>
+          <img src="./img/resourcesIcons/energy.png" class = "energyImage hidden"/>
         </div>
         <span class="sourceBldMenu__productivity"></span>
       </div>
@@ -138,7 +138,7 @@ class StorageBuildingsMenu extends BuildingMenu {
       <div class="storageBldMenu__items">
         <div class="storageBldMenu__product">
           <div class="storageBldMenu__item">
-            <img src=".img/resourcesIcons/noItem.webp" class="productImage" />
+            <img src="./img/resourcesIcons/noItem.webp" class="productImage" />
             <span class="productAmount">0</span>
             <span class="productName">Empty</span>
           </div>

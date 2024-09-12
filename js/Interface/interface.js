@@ -101,7 +101,7 @@ function recipeTipBlock(bld, buildingInfo) {
  
       <div class="recipe__timeBlock">
           <span class="resAmountPerMin">60 <img src="./img/buttonIcons/whiteClock.png" class="timeImage"/></span>
-          <img class="recipe__arrow" src=".img/buttonIcons/arrow.png" />
+          <img class="recipe__arrow" src="./img/buttonIcons/arrow.png" />
       </div>
       <div class="recipe__product">
     
@@ -178,12 +178,12 @@ function resourcesTipBlock(bld, buildingInfo) {
 function addEnergyAndWaterIcons(tip, buildingInfo) {
   const waterAndEnergyBlock = tip.querySelector(".waterAndEnergyBlock");
   if (buildingInfo.isWaterNeeded) {
-    const waterHTML = `<img src=".img/resourcesIcons/water.png" data-water-icon/>`;
+    const waterHTML = `<img src="./img/resourcesIcons/water.png" data-water-icon/>`;
     waterAndEnergyBlock.insertAdjacentHTML("beforeend", waterHTML);
   }
   if (buildingInfo.energyConsumption) {
     const energyHTML = `
-    <img src=".img/resourcesIcons/energy.png" data-energy-icon/>
+    <img src="./img/resourcesIcons/energy.png" data-energy-icon/>
     <span class="energyAmount">${buildingInfo.energyConsumption} mW</span>`;
     waterAndEnergyBlock.insertAdjacentHTML("beforeend", energyHTML);
   }

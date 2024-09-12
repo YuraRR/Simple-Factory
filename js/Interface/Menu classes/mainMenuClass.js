@@ -29,7 +29,7 @@ class BuildingMenu {
       console.log(dataMaterial);
       return `
     <div class="buildingMenu__item">
-      <img src=".img/resourcesIcons/noItem.webp" class="materialImage" data-material-img="${dataMaterial}" />
+      <img src="./img/resourcesIcons/noItem.webp" class="materialImage" data-material-img="${dataMaterial}" />
       <div class="buildingMenu__amounts">
         <span class="materialAmount" data-material="${dataMaterial}">0</span>
         <span class="materialAmountPerMin">(0/0)</span>
@@ -61,12 +61,12 @@ class BuildingMenu {
               <span class="resTime">0s / 60s</span>
             </div>
             <div class="buildingMenu__arrow">
-              <img src=".img/buttonIcons/arrow.png" />
+              <img src="./img/buttonIcons/arrow.png" />
             </div>
           </div>
           <div class="buildingMenu__product">
             <div class="buildingMenu__item">
-              <img src=".img/resourcesIcons/noItem.webp" class="productImage"/>
+              <img src="./img/resourcesIcons/noItem.webp" class="productImage"/>
               <div class="buildingMenu__amounts">
                 <span class="productAmount">0</span>
                 <span class="productAmountPerMin">(0/0)</span>
@@ -76,8 +76,8 @@ class BuildingMenu {
           </div>
           <div class="recipeSelect hidden"></div>
           <div class="indicatorsBlock">
-            <img src=".img/resourcesIcons/water.png" class="waterImage"/>
-            <img src=".img/resourcesIcons/energy.png" class="energyImage"/>
+            <img src="./img/resourcesIcons/water.png" class="waterImage"/>
+            <img src="./img/resourcesIcons/energy.png" class="energyImage"/>
           </div>
         </div>
         <div class="progressBarBlock">
@@ -137,7 +137,7 @@ class BuildingMenu {
               </div>
             </div>
             <div class="structureBlock__arrow">
-              <img src=".img/buttonIcons/arrow.png" />
+              <img src="./img/buttonIcons/arrow.png" />
             </div>
             <div class="structureBlock__product">
               <div class="structureBlock__item" id="${recipe}_${recipeObj.product}_${menu.id}">

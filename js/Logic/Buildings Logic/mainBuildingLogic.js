@@ -48,8 +48,8 @@ class Building {
     function addIndicators(tile) {
       const htmlContent = `          
       <div class="bldIndicatorsBlock">
-        <img src=".img/resourcesIcons/water.png" class = "waterImage ${!isWaterNeeded ? "hidden" : ""}"/>
-        <img src=".img/resourcesIcons/energy.png" class = "energyImage ${
+        <img src="./img/resourcesIcons/water.png" class = "waterImage ${!isWaterNeeded ? "hidden" : ""}"/>
+        <img src="./img/resourcesIcons/energy.png" class = "energyImage ${
           totalEnergy >= buildingObj.energyConsumption ? "hidden" : ""
         }"/>
       </div>`;
