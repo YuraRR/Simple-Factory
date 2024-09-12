@@ -6,7 +6,7 @@ const allItems = [
     producedIn: "mineshaft",
     processingIn: ["crushingPlant"],
     consumptionFor: ["Refined Iron", "Crushed Iron"],
-    imageSrc: "img/resourcesIcons/rawIronOre.png",
+    imageSrc: ".img/resourcesIcons/rawIronOre.png",
     materials: {
       time: 4000,
       prodAmount: 1,
@@ -19,7 +19,7 @@ const allItems = [
     producedIn: "mineshaft",
     processingIn: ["crushingPlant"],
     consumptionFor: ["Refined Copper", "Crushed Copper"],
-    imageSrc: "img/resourcesIcons/rawCopperOre.png",
+    imageSrc: ".img/resourcesIcons/rawCopperOre.png",
     materials: {
       time: 4000,
       prodAmount: 1,
@@ -32,7 +32,7 @@ const allItems = [
     producedIn: "mineshaft",
     processingIn: ["oreProcessing", "smallFoundry"],
     consumptionFor: ["Refined Coal", "Molten Iron(impure)", "Molten Copper(impure)"],
-    imageSrc: "img/resourcesIcons/coalOre.png",
+    imageSrc: ".img/resourcesIcons/coalOre.png",
     materials: {
       time: 4000,
       prodAmount: 1,
@@ -45,7 +45,7 @@ const allItems = [
     producedIn: "mineshaft",
     processingIn: ["oreProcessing"],
     consumptionFor: ["Sulfur"],
-    imageSrc: "img/resourcesIcons/sulfurOre.png",
+    imageSrc: ".img/resourcesIcons/sulfurOre.png",
     materials: {
       time: 4000,
       prodAmount: 1,
@@ -66,7 +66,7 @@ const allItems = [
       time: 8000,
       prodAmount: 2,
     },
-    imageSrc: "img/resourcesIcons/refinedIron.png",
+    imageSrc: ".img/resourcesIcons/refinedIron.png",
     price: 90,
   },
   {
@@ -82,7 +82,7 @@ const allItems = [
       time: 8000,
       prodAmount: 2,
     },
-    imageSrc: "img/resourcesIcons/refinedCopper.png",
+    imageSrc: ".img/resourcesIcons/refinedCopper.png",
     price: 90,
   },
   {
@@ -98,7 +98,7 @@ const allItems = [
       time: 8000,
       prodAmount: 2,
     },
-    imageSrc: "img/resourcesIcons/refinedCoal.png",
+    imageSrc: ".img/resourcesIcons/refinedCoal.png",
     price: 90,
   },
   {
@@ -114,7 +114,7 @@ const allItems = [
       time: 8000,
       prodAmount: 2,
     },
-    imageSrc: "img/resourcesIcons/sulfur.png",
+    imageSrc: ".img/resourcesIcons/sulfur.png",
     price: 90,
   },
   //CRUSHED ORES
@@ -130,7 +130,7 @@ const allItems = [
       time: 6000,
       prodAmount: 4,
     },
-    imageSrc: "img/resourcesIcons/crushedIron.png",
+    imageSrc: ".img/resourcesIcons/crushedIron.png",
     price: 60,
   },
   {
@@ -145,7 +145,7 @@ const allItems = [
       time: 6000,
       prodAmount: 4,
     },
-    imageSrc: "img/resourcesIcons/crushedCopper.png",
+    imageSrc: ".img/resourcesIcons/crushedCopper.png",
     price: 60,
   },
   //IRON PARTS
@@ -167,7 +167,7 @@ const allItems = [
       prodAmount: 16,
     },
 
-    imageSrc: "img/resourcesIcons/moltenIron.png",
+    imageSrc: ".img/resourcesIcons/moltenIron.png",
     price: 60,
   },
   {
@@ -187,7 +187,7 @@ const allItems = [
       time: 24000,
       prodAmount: 10,
     },
-    imageSrc: "img/resourcesIcons/moltenIron.png",
+    imageSrc: ".img/resourcesIcons/moltenIron.png",
     price: 60,
   },
   {
@@ -202,7 +202,7 @@ const allItems = [
       prodAmount: 6,
       time: 12000,
     },
-    imageSrc: "img/resourcesIcons/ironFeedstock.png",
+    imageSrc: ".img/resourcesIcons/ironFeedstock.png",
     price: 160,
   },
   {
@@ -215,7 +215,7 @@ const allItems = [
       prodAmount: 5,
       time: 10000,
     },
-    imageSrc: "img/resourcesIcons/ironPipes.png",
+    imageSrc: ".img/resourcesIcons/ironPipes.png",
     price: 120,
   },
 
@@ -230,7 +230,7 @@ const allItems = [
       prodAmount: 5,
       time: 10000,
     },
-    imageSrc: "img/resourcesIcons/ironGears.png",
+    imageSrc: ".img/resourcesIcons/ironGears.png",
     price: 120,
   },
 
@@ -253,7 +253,7 @@ const allItems = [
       prodAmount: 16,
     },
 
-    imageSrc: "img/resourcesIcons/moltenCopper.png",
+    imageSrc: ".img/resourcesIcons/moltenCopper.png",
     price: 60,
   },
   {
@@ -273,7 +273,7 @@ const allItems = [
       time: 24000,
       prodAmount: 10,
     },
-    imageSrc: "img/resourcesIcons/moltenCopper.png",
+    imageSrc: ".img/resourcesIcons/moltenCopper.png",
     price: 60,
   },
   {
@@ -287,7 +287,7 @@ const allItems = [
       prodAmount: 5,
       time: 12000,
     },
-    imageSrc: "img/resourcesIcons/copperPlate.png",
+    imageSrc: ".img/resourcesIcons/copperPlate.png",
     price: 110,
   },
   {
@@ -300,7 +300,7 @@ const allItems = [
       prodAmount: 5,
       time: 12000,
     },
-    imageSrc: "img/resourcesIcons/copperCoil.png",
+    imageSrc: ".img/resourcesIcons/copperCoil.png",
     price: 110,
   },
   //STEEL PARTS
@@ -317,7 +317,7 @@ const allItems = [
       time: 6000,
       prodAmount: 12,
     },
-    imageSrc: "img/resourcesIcons/moltenIron.png",
+    imageSrc: ".img/resourcesIcons/moltenIron.png",
     price: 60,
   },
   {
@@ -332,7 +332,7 @@ const allItems = [
       prodAmount: 5,
       time: 12000,
     },
-    imageSrc: "img/resourcesIcons/steelBeams.png",
+    imageSrc: ".img/resourcesIcons/steelBeams.png",
     price: 190,
   },
   {
@@ -345,7 +345,7 @@ const allItems = [
       prodAmount: 2,
       time: 12000,
     },
-    imageSrc: "img/resourcesIcons/steelBolts.png",
+    imageSrc: ".img/resourcesIcons/steelBolts.png",
     price: 120,
   },
   {
@@ -358,7 +358,7 @@ const allItems = [
       prodAmount: 5,
       time: 12000,
     },
-    imageSrc: "img/resourcesIcons/steelPlates.png",
+    imageSrc: ".img/resourcesIcons/steelPlates.png",
     price: 200,
   },
   //BUILDING MATERIALS
@@ -367,7 +367,7 @@ const allItems = [
     producedIn: "stoneQuarry",
     processingIn: ["crushingPlant"],
     consumptionFor: ["Gravel"],
-    imageSrc: "img/resourcesIcons/stone.png",
+    imageSrc: ".img/resourcesIcons/stone.png",
     materials: {
       time: 4000,
       prodAmount: 2,
@@ -379,7 +379,7 @@ const allItems = [
     producedIn: "crushingPlant",
     processingIn: ["concretePlant"],
     consumptionFor: ["Concrete Block"],
-    imageSrc: "img/resourcesIcons/gravel.png",
+    imageSrc: ".img/resourcesIcons/gravel.png",
     materials: {
       res1Name: "Stone",
       res1Amount: 3,
@@ -393,7 +393,7 @@ const allItems = [
     producedIn: "sandQuarry",
     processingIn: ["concretePlant", "glassFactory", "foundry", "brickFactory"],
     consumptionFor: ["Concrete Block", "Glass"],
-    imageSrc: "img/resourcesIcons/sand.png",
+    imageSrc: ".img/resourcesIcons/sand.png",
     materials: {
       time: 4000,
       prodAmount: 2,
@@ -405,7 +405,7 @@ const allItems = [
     producedIn: "limestoneQuarry",
     processingIn: ["crushingPlant"],
     consumptionFor: ["Crushed Limestone"],
-    imageSrc: "img/resourcesIcons/limestone.png",
+    imageSrc: ".img/resourcesIcons/limestone.png",
     materials: {
       time: 4000,
       prodAmount: 2,
@@ -417,7 +417,7 @@ const allItems = [
     producedIn: "crushingPlant",
     processingIn: ["cementPlant", "foundry"],
     consumptionFor: ["Cement", "Molten Iron"],
-    imageSrc: "img/resourcesIcons/crushedLimestone.png",
+    imageSrc: ".img/resourcesIcons/crushedLimestone.png",
     materials: {
       res1Name: "Limestone",
       res1Amount: 3,
@@ -431,7 +431,7 @@ const allItems = [
     producedIn: "clayQuarry",
     processingIn: ["cementPlant", "brickFactory"],
     consumptionFor: ["Cement", "Bricks"],
-    imageSrc: "img/resourcesIcons/clay.png",
+    imageSrc: ".img/resourcesIcons/clay.png",
     materials: {
       time: 4000,
       prodAmount: 2,
@@ -443,7 +443,7 @@ const allItems = [
     producedIn: "cementPlant",
     processingIn: ["concretePlant"],
     consumptionFor: ["Concrete Block"],
-    imageSrc: "img/resourcesIcons/Cement.png",
+    imageSrc: ".img/resourcesIcons/Cement.png",
     materials: {
       res1Name: "Crushed Limestone",
       res1Amount: 6,
@@ -460,7 +460,7 @@ const allItems = [
     processingIn: [""],
     consumptionFor: "",
     producedFrom: ["Cement", "Gravel", "Sand"],
-    imageSrc: "img/resourcesIcons/concreteBlock.png",
+    imageSrc: ".img/resourcesIcons/concreteBlock.png",
     materials: {
       res1Name: "Cement",
       res1Amount: 6,
@@ -487,7 +487,7 @@ const allItems = [
       time: 16000,
       prodAmount: 12,
     },
-    imageSrc: "img/resourcesIcons/brick.png",
+    imageSrc: ".img/resourcesIcons/brick.png",
     price: 110,
   },
   {
@@ -503,7 +503,7 @@ const allItems = [
       time: 12000,
       prodAmount: 10,
     },
-    imageSrc: "img/resourcesIcons/glass.png",
+    imageSrc: ".img/resourcesIcons/glass.png",
     price: 125,
   },
   //WOOD MATERIALS
@@ -516,7 +516,7 @@ const allItems = [
       time: 60000,
       prodAmount: 30,
     },
-    imageSrc: "img/resourcesIcons/wood.png",
+    imageSrc: ".img/resourcesIcons/wood.png",
     price: 30,
   },
   {
@@ -531,7 +531,7 @@ const allItems = [
       isWaterNeeded: false,
       time: 12000,
     },
-    imageSrc: "img/resourcesIcons/planks.png",
+    imageSrc: ".img/resourcesIcons/planks.png",
     price: 45,
   },
 
@@ -541,7 +541,7 @@ const allItems = [
     producedIn: "rubberTreePlantation",
     processingIn: ["chemicalPlant"],
     consumptionFor: "Rubber(natural)",
-    imageSrc: "img/resourcesIcons/latex.png",
+    imageSrc: ".img/resourcesIcons/latex.png",
     materials: {
       time: 4000,
       prodAmount: 1,
@@ -553,7 +553,7 @@ const allItems = [
     producedIn: "",
     processingIn: ["assembly", "smallAssembly"],
     consumptionFor: "",
-    imageSrc: "img/resourcesIcons/rubber.png",
+    imageSrc: ".img/resourcesIcons/rubber.png",
     materials: {
       res1Name: "Oil",
       res1Amount: 6,
@@ -569,7 +569,7 @@ const allItems = [
     isAltRecipe: true,
     producedIn: "chemicalPlant",
     processingIn: [""],
-    imageSrc: "img/resourcesIcons/rubber.png",
+    imageSrc: ".img/resourcesIcons/rubber.png",
     materials: {
       res1Name: "Latex",
       res1Amount: 8,
@@ -587,7 +587,7 @@ const allItems = [
     producedIn: "",
     processingIn: ["oilRefinery"],
     consumptionFor: "Oil",
-    imageSrc: "img/resourcesIcons/oilBarrel.png",
+    imageSrc: ".img/resourcesIcons/oilBarrel.png",
     materials: {
       res1Name: "",
       res1Amount: "",
@@ -603,7 +603,7 @@ const allItems = [
     producedIn: "oilRefinery",
     processingIn: [""],
     consumptionFor: ["Rubber", "Plastic"],
-    imageSrc: "img/resourcesIcons/oil.png",
+    imageSrc: ".img/resourcesIcons/oil.png",
     materials: {
       res1Name: "Oil Barrel",
       res1Amount: 6,
@@ -619,7 +619,7 @@ const allItems = [
     producedIn: "",
     processingIn: ["assembly"],
     consumptionFor: "",
-    imageSrc: "img/resourcesIcons/plastic.png",
+    imageSrc: ".img/resourcesIcons/plastic.png",
     materials: {
       res1Name: "Oil",
       res1Amount: 6,
@@ -633,7 +633,7 @@ const allItems = [
     producedIn: "chemicalPlant",
     processingIn: [""],
     consumptionFor: "",
-    imageSrc: "img/resourcesIcons/explosives.png",
+    imageSrc: ".img/resourcesIcons/explosives.png",
     materials: {
       res1Name: "Sulfur",
       res1Amount: 4,
@@ -681,7 +681,7 @@ const allItems = [
     isAltRecipe: true,
     producedIn: "smallAssembly",
     processingIn: [""],
-    imageSrc: "img/resourcesIcons/mechanicalParts.png",
+    imageSrc: ".img/resourcesIcons/mechanicalParts.png",
     materials: {
       res1Name: "Iron Gears",
       res1Amount: 10,
@@ -696,7 +696,7 @@ const allItems = [
     name: "Mechanical Parts",
     producedIn: "smallAssembly",
     processingIn: ["assembly"],
-    imageSrc: "img/resourcesIcons/mechanicalParts.png",
+    imageSrc: ".img/resourcesIcons/mechanicalParts.png",
     materials: {
       res1Name: "Iron Gears",
       res1Amount: 10,
@@ -712,7 +712,7 @@ const allItems = [
     name: "Electronic Parts",
     producedIn: "smallAssembly",
     processingIn: ["assembly"],
-    imageSrc: "img/resourcesIcons/electronicParts.png",
+    imageSrc: ".img/resourcesIcons/electronicParts.png",
     materials: {
       res1Name: "Copper Coil",
       res1Amount: 10,
@@ -727,7 +727,7 @@ const allItems = [
     name: "Electronic",
     producedIn: "assembly",
     processingIn: ["assembly"],
-    imageSrc: "img/resourcesIcons/electronic.png",
+    imageSrc: ".img/resourcesIcons/electronic.png",
     materials: {
       res1Name: "Electronic Parts",
       res1Amount: 4,
@@ -745,7 +745,7 @@ const allItems = [
     name: "Car",
     producedIn: "carFactory",
     processingIn: [""],
-    imageSrc: "img/resourcesIcons/car.png",
+    imageSrc: ".img/resourcesIcons/car.png",
     materials: {
       res1Name: "Engine",
       res1Amount: 1,
@@ -762,7 +762,7 @@ const allItems = [
     name: "Engine",
     producedIn: "assembly",
     processingIn: ["carFactory"],
-    imageSrc: "img/resourcesIcons/engine.png",
+    imageSrc: ".img/resourcesIcons/engine.png",
     materials: {
       res1Name: "Iron Pipes",
       res1Amount: 10,
@@ -779,7 +779,7 @@ const allItems = [
     name: "Chassis",
     producedIn: "assembly",
     processingIn: ["carFactory"],
-    imageSrc: "img/resourcesIcons/chassis.png",
+    imageSrc: ".img/resourcesIcons/chassis.png",
     materials: {
       res1Name: "Steel Plates",
       res1Amount: 10,
@@ -796,7 +796,7 @@ const allItems = [
     name: "Car Body",
     producedIn: "assembly",
     processingIn: ["carFactory"],
-    imageSrc: "img/resourcesIcons/carBody.png",
+    imageSrc: ".img/resourcesIcons/carBody.png",
     materials: {
       res1Name: "Steel Plates",
       res1Amount: 20,
