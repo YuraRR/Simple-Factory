@@ -1,30 +1,30 @@
 const sounds = {
   //CLICKS
-  click1: { src: "/sounds/click1.mp3", volume: 0.3 },
-  click2: { src: "/sounds/click2.mp3", volume: 0.3 },
-  click3: { src: "/sounds/click3.mp3", volume: 0.3 },
+  click1: { src: "./sounds/click1.mp3", volume: 0.3 },
+  click2: { src: "./sounds/click2.mp3", volume: 0.3 },
+  click3: { src: "./sounds/click3.mp3", volume: 0.3 },
   //CONSTRUCTION
-  hammer: { src: "/sounds/tools/hammer.mp3", volume: 0.1 },
-  saw: { src: "/sounds/tools/saw.mp3", volume: 0.1 },
-  saw2: { src: "/sounds/tools/saw2.mp3", volume: 0.1 },
-  saw3: { src: "/sounds/tools/saw3.mp3", volume: 0.1 },
-  treeCut: { src: "/sounds/tools/treeCut.m4a", volume: 0.8 },
-  treeCut2: { src: "/sounds/tools/treeCut2.mp3", volume: 0.8 },
-  gravel: { src: "/sounds/tools/gravel.mp3", volume: 0.4 },
-  gravel2: { src: "/sounds/tools/gravel2.mp3", volume: 0.4 },
+  hammer: { src: "./sounds/tools/hammer.mp3", volume: 0.1 },
+  saw: { src: "./sounds/tools/saw.mp3", volume: 0.1 },
+  saw2: { src: "./sounds/tools/saw2.mp3", volume: 0.1 },
+  saw3: { src: "./sounds/tools/saw3.mp3", volume: 0.1 },
+  treeCut: { src: "./sounds/tools/treeCut.m4a", volume: 0.8 },
+  treeCut2: { src: "./sounds/tools/treeCut2.mp3", volume: 0.8 },
+  gravel: { src: "./sounds/tools/gravel.mp3", volume: 0.4 },
+  gravel2: { src: "./sounds/tools/gravel2.mp3", volume: 0.4 },
   //BUILDINGS
-  quarry: { src: "/sounds/buildingsSounds/quarry.mp3", volume: 0.3 },
-  oreProcessing: { src: "/sounds/buildingsSounds/oreProcessing.mp3", volume: 0.3 },
-  foundry: { src: "/sounds/buildingsSounds/foundry.mp3", volume: 0.1 },
-  storage: { src: "/sounds/buildingsSounds/storage.mp3", volume: 0.1 },
-  oilRefinery: { src: "/sounds/buildingsSounds/oilRefinery.mp3", volume: 1 },
-  lumber: { src: "/sounds/buildingsSounds/lumber.mp3", volume: 0.3 },
-  garage: { src: "/sounds/buildingsSounds/garage.mp3", volume: 0.1 },
+  quarry: { src: "./sounds/buildingsSounds/quarry.mp3", volume: 0.3 },
+  oreProcessing: { src: "./sounds/buildingsSounds/oreProcessing.mp3", volume: 0.3 },
+  foundry: { src: "./sounds/buildingsSounds/foundry.mp3", volume: 0.1 },
+  storage: { src: "./sounds/buildingsSounds/storage.mp3", volume: 0.1 },
+  oilRefinery: { src: "./sounds/buildingsSounds/oilRefinery.mp3", volume: 1 },
+  lumber: { src: "./sounds/buildingsSounds/lumber.mp3", volume: 0.3 },
+  garage: { src: "./sounds/buildingsSounds/garage.mp3", volume: 0.1 },
   //AMBIENT
-  birds: { src: "/sounds/ambient/birds.mp3", volume: 0.4 },
-  wind: { src: "/sounds/ambient/wind.mp3", volume: 0.8 },
-  factoryAmbient: { src: "/sounds/ambient/factoryAmbient.mp3", volume: 0.1 },
-  lake: { src: "/sounds/ambient/lake.mp3", volume: 0.15 },
+  birds: { src: "./sounds/ambient/birds.mp3", volume: 0.4 },
+  wind: { src: "./sounds/ambient/wind.mp3", volume: 0.8 },
+  factoryAmbient: { src: "./sounds/ambient/factoryAmbient.mp3", volume: 0.1 },
+  lake: { src: "./sounds/ambient/lake.mp3", volume: 0.15 },
 };
 
 // Создание и настройка аудио объектов
@@ -129,7 +129,7 @@ let errorSoundIsPlaying = false;
 
 function errorSound() {
   if (!errorSoundIsPlaying) {
-    const error1 = new Audio("/sounds/error1.mp3");
+    const error1 = new Audio("./sounds/error1.mp3");
     error1.volume = 0.5;
     error1.play();
     errorSoundIsPlaying = true;
@@ -141,24 +141,24 @@ function errorSound() {
 function questFinishedSound() {
   const randomNum = Math.random();
 
-  const questSound = randomNum < 0.5 ? new Audio("/sounds/quest.mp3") : new Audio("/sounds/quest2.mp3");
+  const questSound = randomNum < 0.5 ? new Audio("./sounds/quest.mp3") : new Audio("./sounds/quest2.mp3");
 
   questSound.volume = 0.3;
   questSound.play();
 }
 const tracks = [
-  { src: "/sounds/music/Engineer Dreams.mp3" },
-  { src: "/sounds/music/Machines of Tranquility.mp3" },
-  { src: "/sounds/music/Factory of Dreams.mp3" },
-  { src: "/sounds/music/Dark Forest.mp3" },
-  { src: "/sounds/music/Little Sadness.mp3" },
-  { src: "/sounds/music/Factorevo.mp3" },
-  { src: "/sounds/music/Steel and Steam.mp3" },
-  { src: "/sounds/music/An Ocean of Stars  Reworked.mp3" },
-  { src: "/sounds/music/Falling Through the Hourglass.mp3" },
-  { src: "/sounds/music/Into Midnight.mp3" },
-  { src: "/sounds/music/Stories from the Sky.mp3" },
-  { src: "/sounds/music/Our World.mp3" },
+  { src: "./sounds/music/Engineer Dreams.mp3" },
+  { src: "./sounds/music/Machines of Tranquility.mp3" },
+  { src: "./sounds/music/Factory of Dreams.mp3" },
+  { src: "./sounds/music/Dark Forest.mp3" },
+  { src: "./sounds/music/Little Sadness.mp3" },
+  { src: "./sounds/music/Factorevo.mp3" },
+  { src: "./sounds/music/Steel and Steam.mp3" },
+  { src: "./sounds/music/An Ocean of Stars  Reworked.mp3" },
+  { src: "./sounds/music/Falling Through the Hourglass.mp3" },
+  { src: "./sounds/music/Into Midnight.mp3" },
+  { src: "./sounds/music/Stories from the Sky.mp3" },
+  { src: "./sounds/music/Our World.mp3" },
 ];
 
 let currentMusic;
@@ -207,7 +207,7 @@ function playTracks(tracks) {
 }
 
 function moneySound() {
-  const moneySound = new Audio("/sounds/money.mp3");
+  const moneySound = new Audio("./sounds/money.mp3");
   moneySound.volume = 0.2;
   moneySound.play();
 }
