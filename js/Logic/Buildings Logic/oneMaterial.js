@@ -64,7 +64,6 @@ class Sawmill extends Building {
     const recipeObj = allItems.find((recipe) => recipe.producedIn === "sawmill");
     this.itemProcessingMaterial(this.tile, menu, recipeObj);
 
-    console.log(recipeObj.materials.res1Name);
     this.tileData.materialName1 = recipeObj.materials.res1Name;
     this.tileData.itemTypeOutput1 = recipeObj.name;
   }

@@ -92,15 +92,12 @@ function addRouteInfoToMenu(id, color) {
 
     if (itemName == "Select Item") return notyf.error("Select Item!");
 
-    console.log(itemName);
     if (checkRouteValid(exportStationTile, importStationTile, id, color)) {
       createRouteButton.remove();
       showTrucksListBtn.classList.remove("hidden");
       routeBlock.removeAttribute(`data-active-route`);
       exportStationSel.disabled = true;
       importStationSel.disabled = true;
-      console.log(allRoutesList);
-      console.log(id);
     }
   };
 
@@ -160,7 +157,6 @@ function addStationToList(select) {
   const itemSelect = document.querySelector(`[data-active-route] .routesInfo-menu__itemSelect`);
   itemSelect.classList.add("hidden");
   stationsList.forEach((station) => {
-    console.log("Da");
     const factoryData = document.querySelector(`[data-building-id="${station.dataset.connectedToId}"]`).dataset;
     const htmlContent = `
     <option class="routesInfo-menu__stationBlock" value="${station.dataset.stationId}">
@@ -200,8 +196,6 @@ function createRouteElem() {
 }
 
 function selectItem(menu, mainFactoryTile, exportStation, importStation) {
-  console.log(importStation);
-
   const factoryData = mainFactoryTile.dataset;
   const importFactoryName = importStation.dataset.connectedTo;
   const importFactoryData = document.querySelector(
@@ -237,7 +231,6 @@ function selectItem(menu, mainFactoryTile, exportStation, importStation) {
         routeItemName.textContent = item.name;
         setTimeout(() => itemSelect.classList.add("hidden"), 50);
 
-        console.log(1);
         exportStation.dataset.cargoStationItem = item.name;
         importStation.dataset.cargoStationItem = item.name;
         if (factoryData.buildingCategory == "storage") {

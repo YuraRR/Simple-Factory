@@ -141,7 +141,6 @@ function updateTrucksInGarage(menu, tile, type) {
     for (let i = 0; i < allGarageMenu.length; i++) {
       menu = allGarageMenu[i];
       tile = document.getElementById(menu.dataset.parentTileId);
-      console.log(tile);
       let trucksInGarage = parseInt(tile.dataset.trucksInGarage) || 0;
 
       if (type === "minus" && trucksInGarage > 0) {

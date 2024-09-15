@@ -12,7 +12,6 @@ class Building {
   }
   createBuilding() {
     this.tileData = this.tile.dataset;
-    console.log(`Строится ${this.name}`);
     const building = document.getElementById(`${this.x}.${this.z}`);
 
     if (this.name != "pipe") {
@@ -195,9 +194,7 @@ class Building {
     tileData.processItemStarted = "false";
     const materials = recipeObj.materials;
     recipeObj.isAltRecipe == true ? (name = recipeObj.itemName) : "";
-    console.log(name);
     if (tileData.processItemStarted == "false") {
-      console.log(1);
       tileData.intervalId = setInterval(createListToCompare, materials.time / 10);
     }
 
@@ -253,7 +250,6 @@ class Building {
         }
 
         setTimeout(() => {
-          console.log(name);
           if (findItemObjInList(name).type == "semiFinished" && tileData.semiFinishedType == name) {
             const semiFinishedAmount = +tileData.semiFinishedAmount + materials.prodAmount;
             tileData.semiFinishedAmount = semiFinishedAmount;

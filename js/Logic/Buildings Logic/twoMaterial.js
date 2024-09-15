@@ -67,7 +67,6 @@ class in2Out1Bld extends Building {
         storageResources.push(storageObj);
         this.tileData.materialName1 = recipeObj.materials.res1Name;
         this.tileData.materialName2 = recipeObj.materials.res2Name;
-        console.log(recipeObj);
         recipeObj.isAltRecipe == true ? (this.tileData.itemTypeOutput1 = recipeObj.itemName) : recipeObj.name;
         clearInterval(checkInterval);
       }

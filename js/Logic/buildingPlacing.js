@@ -299,7 +299,6 @@ function deleteItemsAfterConstr(itemType, buildingCost) {
         itemTile.dataset.groundItemAmount = +itemTile.dataset.groundItemAmount - buildingCost;
         totalCost -= buildingCost;
         storageResources[index].amount = itemTile.dataset.groundItemAmount;
-        console.log(storageResources);
       } else {
         storageResources.splice(index, 1);
         const itemImg = itemTile.querySelector("img");
@@ -313,7 +312,6 @@ function deleteItemsAfterConstr(itemType, buildingCost) {
     } else {
       if (itemTile && itemTile.dataset.itemAmountOutput1 >= buildingCost) {
         item.resAmount -= buildingCost;
-        console.log(itemTile.dataset.itemAmountOutput1);
         itemTile.dataset.itemAmountOutput1 -= buildingCost;
         break;
       } else {
@@ -331,7 +329,6 @@ function toBlockConstruction() {
   return [...tiles].some((tile) => tile.classList.contains("cantBePlaced"));
 }
 function createPipe(tile) {
-  console.log("Da");
   const newPipe = new Pipe(tile);
   newPipe.getId(tile.id);
   const pipeImg = newPipe.createBuildingImage();

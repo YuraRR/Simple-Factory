@@ -215,7 +215,6 @@ function transperentBuildingsShow() {
 function showUnderground() {
   const allTrees = document.querySelectorAll(`[data-image-type="natureFeature"`);
   !undergroundOpened && currentTool != "pipe" && escapeButton();
-  console.log(32);
   gridContainer.classList.toggle("containerOpacity");
   const allPipes = gridContainer.querySelectorAll(`[data-image-type="pipe"]`);
   const allConnectorPipes = document.querySelectorAll(`[data-pipe-type="connector"]`);

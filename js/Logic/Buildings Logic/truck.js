@@ -11,52 +11,34 @@ class Truck extends Building {
     const pointA = this.tile;
     const pointB = document.querySelector(`[data-station-id="${pointA.dataset.routeTo}"]`);
 
-    // Создаем копию массива closedTilesList для текущего вызова
     const currentClosedTilesList = [...closedTilesList];
-    console.log(currentTile);
-    // Если текущая клетка — конечная точка, завершаем поиск
+
     if (currentTile.id == pointB.id && !this.isRouteFound) {
-      console.log("last");
       this.isRouteFound = true;
       currentClosedTilesList.push(currentTile);
       return currentClosedTilesList;
     }
 
     const neighborsTiles = findNeighbors(currentTile);
-    console.log(neighborsTiles);
+
     let openTilesList = [];
     neighborsTiles.forEach((tile) => {
-      console.log(tile.dataset.roadType, tile == pointA, tile == pointB, !currentClosedTilesList.includes(tile));
       if ((tile.dataset.roadType || tile == pointA || tile == pointB) && !currentClosedTilesList.includes(tile)) {
         openTilesList.push(tile);
       }
     });
-    console.log(openTilesList);
+
     const fCostsList = openTilesList.map((tile) => {
       const hCost = findcost(pointB, tile);
       const gCost = findcost(pointA, tile);
-      // tile.textContent = `H${hCost} G${gCost} F${hCost + gCost}  `;
-      return { tile, cost: hCost + gCost, hCost }; // Возвращаем объект с клеткой, ее стоимостью и hCost
+      return { tile, cost: hCost + gCost, hCost };
     });
 
-    // // Находим минимальную сумму hCost + gCost
-    // const minSumCost = Math.min(...fCostsList.map((item) => item.cost));
-
-    // // Фильтруем клетки с минимальной суммой hCost + gCost
-    // let minFCostTiles = fCostsList.filter((item) => item.cost === minSumCost);
-
-    // // Если есть несколько клеток с одинаковой суммой hCost + gCost, выбираем ту, у которой меньше hCost
-    // minFCostTiles.sort((a, b) => a.hCost - b.hCost);
-
-    // Добавляем текущую клетку в закрытый список перед поиском соседей
     currentClosedTilesList.push(currentTile);
-    console.log(currentClosedTilesList);
-    // Перебираем найденные соседние клетки
     for (let i = 0; i < fCostsList.length; i++) {
       const nextTile = fCostsList[i].tile;
-      console.log(nextTile);
       const result = this.calculateRoute([nextTile, currentClosedTilesList]);
-      if (result) return result; // Возвращаем результат, если он есть
+      if (result) return result;
     }
   }
 
@@ -129,8 +111,6 @@ class Truck extends Building {
         break;
     }
     if (routeAvailable) {
-      console.log(routePointsList);
-      console.log(directionsList);
       this.moveTransportImage(routePointsList, directionsList, "", deliveriesAmount);
       this.createRoute(routePointsList, directionsList);
       importStation.dataset.cargoStationItem = exportStation.dataset.cargoStationItem;
@@ -313,7 +293,6 @@ class Truck extends Building {
                   type: "smallNotyf",
                   message: `8 ${itemName} was sold for ${0.75 * (itemPrice * 8)} $`,
                 });
-                console.log(allRoutesList);
               }
 
               const currentItem = exportStData.cargoStationItem;
@@ -401,36 +380,11 @@ class Truck extends Building {
       }
     });
   }
-  createRoute(routePointsList, directionsList) {
-    const stationA = routePointsList[0];
-    const stationB = routePointsList[routePointsList.length - 1];
-    const isRouteExist = allRoutesList.some((route) => route.id == stationA.dataset.routeId);
 
-    function addStyleToRoute(points, stationA, stationB, color) {
-      const newColor = `routeColor-${Date.now() % 10000}`;
-      const styleElement = document.createElement("style");
-      const lineColor = `.${newColor}::after { background-color: ${color}; }`;
-      const pointColor = `.${newColor}::before { background-color: ${color}; }`;
-      const combinedStyles = lineColor + " " + pointColor;
-
-      styleElement.appendChild(document.createTextNode(combinedStyles));
-      document.head.appendChild(styleElement);
-
-      points.forEach((point) => {
-        point.classList.add(newColor);
-      });
-
-      stationA.classList.add(newColor);
-      stationB.classList.add(newColor);
-    }
-    // this.drawRoute(routeObj);
-  }
   drawRoute(routeObj) {
-    console.log(routeObj);
     routeObj.stationA.classList.add("pointRoute");
     routeObj.stationB.classList.add("pointRoute");
     if (routeObj.drawRoutePointsList[0] != routeObj.stationA) {
-      console.log(routeObj.drawRoutePointsList);
       const reversedDrawRoutePointsList = routeObj.drawRoutePointsList.slice().reverse();
       for (let i = 0; i < routeObj.drawDirectionsList.length; i++) {
         let dir = routeObj.drawDirectionsList[i];

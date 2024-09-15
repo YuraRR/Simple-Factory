@@ -34,7 +34,6 @@ class Connector extends Conveyor {
 
     function setOutputItem(tile) {
       const previousMainTile = findMainTile(previousTile);
-      console.log(previousMainTile);
       if (!previousMainTile) return;
       document.querySelector(".tool-menu__modal").classList.add("hidden");
       const tileData = previousMainTile.dataset;
@@ -48,7 +47,6 @@ class Connector extends Conveyor {
         const itemObj = findItemObjInList(item);
         const itemBlock = document.createElement("div");
         itemBlock.classList.add("selectItem");
-        console.log(itemObj);
         itemBlock.innerHTML = `
         <button class="connectorItem-button">
           <img src="${itemObj.imageSrc}"/>
@@ -85,7 +83,6 @@ class Connector extends Conveyor {
         buildingsCatList.includes(nextTile.dataset.buildingCategory)
       ) {
         if (this.tile.dataset.connectorType == "export" || this.tile.dataset.connectorType == "import") {
-          console.log(interval);
           clearInterval(interval);
           this.tile.dataset.intervalId = setInterval(exportItemFromBld.bind(this), 500);
         }
@@ -266,7 +263,6 @@ class UndergroundConveyor extends Conveyor {
       down: { x: 1, z: 0 },
       left: { x: 0, z: -1 },
     };
-    console.log(this.tileData.direction);
     for (let i = 0; i < 5; i++) {
       const { x: xOffset, z: zOffset } = directionOffsets[this.tileData.direction];
       const x = this.x + xOffset * i;

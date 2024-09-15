@@ -26,7 +26,6 @@ class BuildingMenu {
     this.title = this.name.replace(/([A-Z])/g, " $1");
 
     function createMaterialItem(dataMaterial) {
-      console.log(dataMaterial);
       return `
     <div class="buildingMenu__item">
       <img src="./img/resourcesIcons/noItem.webp" class="materialImage" data-material-img="${dataMaterial}" />
@@ -44,7 +43,7 @@ class BuildingMenu {
       for (let i = 0; i < materialCount; i++) {
         materials.push(createMaterialItem(materialNames[i]));
       }
-      console.log(materials);
+
       return `<div class="buildingMenu__materials">${materials.join("")}</div>`;
     };
 
@@ -115,13 +114,10 @@ class BuildingMenu {
     structureBlock.innerHTML = "";
     for (const recipe in currentRecipes) {
       const recipeObj = currentRecipes[recipe];
-      console.log(currentRecipes[recipe]);
       if (recipeObj.material != materialName) continue;
-      console.log(findItemObjInList(recipeObj));
       const materialImageSrc = findItemObjInList(recipeObj.material).imageSrc;
       const productImageSrc = findItemObjInList(recipeObj.product).imageSrc;
       const structureId = structureBlockId++;
-      console.log(recipeObj.material);
       const htmlContent = `
         <div class="extraRecipe" id="structure_${structureId}">
           <h3>${recipeObj.product}</h3>
@@ -182,16 +178,13 @@ class BuildingMenu {
     const buildingName = this.tileData.buildingType;
     const recipeSelect = menu.querySelector(".recipeSelect");
     const bldCat = this.tileData.buildingCategory;
-    console.log(bldCat);
     const items =
       bldCat == "in2Out2" || bldCat == "in1Out2" || bldCat == "in3Out3"
         ? allItems.filter((item) => item.producedIn == buildingName && item.type == "semiFinished")
         : allItems.filter((item) => item.producedIn == buildingName);
-    console.log(items);
     const productButton = menu.querySelector(".buildingMenu__product");
 
     items.forEach((item) => {
-      // const itemName = item.name.replace("(impure)", "");
       const itemBlock = document.createElement("div");
       itemBlock.classList.add("recipeItem");
       itemBlock.innerHTML = `
@@ -211,7 +204,6 @@ class BuildingMenu {
           this.sellItemsHalfPrice();
         }
 
-        console.log(item.itemName);
         this.tileData.materialName1 = itemMaterials.res1Name;
         if (menu.dataset.menuType == "smallFoundry" || menu.dataset.menuType == "oilRefinery") {
           this.tileData.materialName2 = itemMaterials.res2Name;
@@ -227,7 +219,6 @@ class BuildingMenu {
           this.tileData.itemTypeOutput3 = item.consumptionFor[2];
         } else if (menu.dataset.menuType == "smallAssembly" || menu.dataset.menuType == "chemicalPlant") {
           this.tileData.materialName2 = itemMaterials.res2Name;
-          console.log(item);
           this.tileData.itemTypeOutput1 = item.isAltRecipe == true ? item.itemName : item.name;
         } else if (menu.dataset.menuType == "assembly") {
           this.tileData.materialName2 = itemMaterials.res2Name;
@@ -246,9 +237,7 @@ class BuildingMenu {
         this.buildingObj.itemProcessingMaterial(this.tile, menu, item);
       };
     });
-    console.log(productButton);
     productButton.onclick = () => {
-      console.log("hui");
       recipeSelect.classList.remove("hidden");
     };
     document.addEventListener("click", (event) => {
@@ -338,7 +327,6 @@ class BuildingMenu {
           opPerMin * itemMaterials.res1Amount
         })`;
 
-        console.log(itemMaterials.res2Amount);
         secondMaterialAmountPerMin &&
           (secondMaterialAmountPerMin.textContent = `(${itemMaterials.res2Amount} / ${
             opPerMin * itemMaterials.res2Amount
